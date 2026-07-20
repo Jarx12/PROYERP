@@ -1,0 +1,39 @@
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+  
+  <header style="margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
+    <h1 style="color: #1a202c; margin: 0;">📊 Panel de Control - ERP Básico</h1>
+    <p style="color: #718096; margin: 5px 0 0 0;">Bienvenido al sistema de gestión centralizado.</p>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+    
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
+      <h2 style="color: #2b6cb0; margin-top: 0;">👥 Personal y Nómina</h2>
+      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_employees %></p>
+      <p style="color: #718096; font-size: 14px;">Empleados registrados en el sistema.</p>
+      <%= link_to "Gestionar Empleados →", employees_path, style: "display: inline-block; margin-top: 15px; color: #3182ce; text-decoration: none; font-weight: bold;" %>
+    </div>
+
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
+      <h2 style="color: #dd6b20; margin-top: 0;">📄 Documentación</h2>
+      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_documents %></p>
+      <p style="color: #718096; font-size: 14px;">Archivos y anexos almacenados de forma segura.</p>
+      <%= link_to "Ver Documentos →", documents_path, style: "display: inline-block; margin-top: 15px; color: #dd6b20; text-decoration: none; font-weight: bold;" %>
+    </div>
+
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
+    <h2 style="color: #38a169; margin-top: 0;">📦 Inventario</h2>
+    <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_products %></p>
+    <p style="color: #718096; font-size: 14px;">Control de existencias y catálogo de productos.</p>
+    <%= link_to "Gestionar Inventario →", products_path, style: "display: inline-block; margin-top: 15px; color: #38a169; text-decoration: none; font-weight: bold;" %>
+    </div>
+
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff; opacity: 0.7;">
+      <h2 style="color: #4a5568; margin-top: 0;">🚗 Flota Vehicular</h2>
+      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;">-</p>
+      <p style="color: #718096; font-size: 14px;">Módulo en espera. Asignación de autos a empleados.</p>
+      <span style="display: inline-block; margin-top: 15px; color: #a0aec0; font-weight: bold;">Módulo Pendiente</span>
+    </div>
+
+  </div>
+</div>

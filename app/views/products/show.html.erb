@@ -1,0 +1,92 @@
+<% content_for :title, "Producto: #{@product.name}" %>
+
+<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 950px; margin: 0 auto; line-height: 1.25;">
+
+  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <%= link_to "← Volver al inventario", products_path, style: "color: #718096; text-decoration: none; font-size: 14px;" %>
+    
+    <div style="display: flex; gap: 10px;">
+      <%= link_to "📝 Editar Producto", edit_product_path(@product), style: "padding: 8px 14px; border: 1px solid #cbd5e0; border-radius: 6px; color: #4a5568; text-decoration: none; font-size: 13px; font-weight: bold; background-color: white;" %>
+      <%= link_to "+ Registrar Movimiento", new_movement_product_path(@product), style: "padding: 8px 14px; border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; background-color: #38a169;" %>
+    </div>
+  </div>
+
+  <!-- Ficha Principal del Producto -->
+  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div>
+        <span style="font-family: monospace; font-size: 12px; font-weight: bold; color: #718096; background-color: #edf2f7; padding: 3px 8px; border-radius: 4px;">
+          SKU: <%= @product.sku %>
+        </span>
+        <h1 style="color: #1a202c; font-size: 26px; margin: 10px 0 5px 0; font-weight: bold;"><%= @product.name %></h1>
+        <p style="color: #4a5568; font-size: 14px; margin: 0;"><%= @product.description.presence || "Sin descripción detallada registrada." %></p>
+      </div>
+
+      <!-- Indicador de Stock Prominente -->
+      <div style="text-align: right; background-color: #f7fafc; padding: 15px 20px; border-radius: 8px; border: 1px solid #edf2f7;">
+        <span style="font-size: 11px; text-transform: uppercase; font-weight: bold; color: #718096; display: block;">Stock Actual</span>
+        <span style="font-size: 32px; font-weight: bold; color: <%= @product.stock_current <= @product.stock_minimum ? '#e53e3e' : '#2d3748' %>;">
+          <%= @product.stock_current %>
+        </span>
+        <span style="font-size: 12px; color: #a0aec0; display: block; margin-top: 2px;">
+          Mínimo requerido: <%= @product.stock_minimum %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historial / Bitácora de Movimientos -->
+<div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
+  <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background-color: #f7fafc;">
+    <h2 style="font-size: 18px; margin: 0; color: #2d3748; font-weight: bold;">📋 Historial de Movimientos</h2>
+    <span style="font-size: 13px; color: #718096;"><%= @product.stock_movements.count %> registros</span>
+  </div>
+
+  <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+    <thead>
+      <tr style="border-bottom: 2px solid #e2e8f0; color: #718096; font-size: 12px; text-transform: uppercase;">
+        <th style="padding: 12px 20px; font-weight: bold;">Fecha / Hora</th>
+        <th style="padding: 12px 20px; font-weight: bold; text-align: center;">Tipo</th>
+        <th style="padding: 12px 20px; font-weight: bold; text-align: center;">Cantidad</th>
+        <th style="padding: 12px 20px; font-weight: bold;">Motivo / Referencia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @product.stock_movements.any? %>
+        <% @product.stock_movements.order(created_at: :desc).each do |movement| %>
+          <% is_input = movement.movement_type == "input" %>
+          <tr style="border-bottom: 1px solid #edf2f7; color: #2d3748;">
+            <td style="padding: 12px 20px; color: #718096; font-size: 13px;">
+              <%= movement.created_at.strftime("%d/%m/%Y %H:%M") %>
+            </td>
+            <td style="padding: 12px 20px; text-align: center;">
+              <% if is_input %>
+                <span style="background-color: #c6f6d5; color: #22543d; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                  ⬆️ Entrada
+                </span>
+              <% else %>
+                <span style="background-color: #fed7d7; color: #9b2c2c; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                  ⬇️ Salida
+                </span>
+              <% end %>
+            </td>
+            <td style="padding: 12px 20px; text-align: center; font-weight: bold; color: <%= is_input ? '#276749' : '#c53030' %>;">
+              <%= is_input ? "+#{movement.quantity}" : "-#{movement.quantity}" %>
+            </td>
+            <td style="padding: 12px 20px; color: #4a5568;">
+              <%= movement.reason %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="4" style="padding: 30px; text-align: center; color: #a0aec0;">
+            No se han registrado movimientos para este producto aún.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+</div>

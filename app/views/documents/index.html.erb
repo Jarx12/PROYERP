@@ -1,0 +1,68 @@
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
+  
+  <header style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
+    <div>
+      <h1 style="color: #1a202c; margin: 0;">📄 Repositorio de Documentos</h1>
+      <p style="color: #718096; margin: 5px 0 0 0;">Gestión de archivos, contratos y anexos del personal.</p>
+    </div>
+    <%= link_to "➕ Nuevo Documento", new_document_path, style: "background-color: #dd6b20; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: bold;" %>
+  </header>
+
+  <table style="width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left;">
+    <thead>
+      <tr style="background-color: #f7fafc; border-bottom: 2px solid #e2e8f0;">
+        <th style="padding: 12px; color: #4a5568;">Título</th>
+        <th style="padding: 12px; color: #4a5568;">Asociado a</th>
+        <th style="padding: 12px; color: #4a5568;">Categoría</th>
+        <th style="padding: 12px; color: #4a5568;">Estado</th>
+        <th style="padding: 12px; color: #4a5568; text-align: center;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @documents.each do |document| %>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 12px; font-weight: bold; color: #2d3748;">
+            <%= document.title %>
+          </td>
+          <td style="padding: 12px; color: #4a5568;">
+            <% if document.employee %>
+              <%= "#{document.employee.name} #{document.employee.surname}" %>
+            <% else %>
+                <span style="color: #2b6cb0; font-weight: bold; background-color: #ebf8ff; padding: 2px 6px; border-radius: 4px;">🏢 Compañía (General)</span>
+            <% end %>
+          </td>
+          <td style="padding: 12px;">
+            <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background-color: #edf2f7; color: #4a5568;">
+              <%= document.category.humanize %>
+            </span>
+          </td>
+          <td style="padding: 12px;">
+            <% color = case document.status.to_sym
+               when :active then "#c6f6d5; color: #22543d"
+               when :draft then "#feebc8; color: #744210"
+               else "#edf2f7; color: #4a5568"
+               end %>
+            <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background-color: <%= color %>">
+              <%= document.status.humanize %>
+            </span>
+          </td>
+          <td style="padding: 12px; text-align: center;">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+              <%= link_to "Ver Detalle", document_path(document), style: "color: #3182ce; text-decoration: none;" %>
+              
+              <% if document.file.attached? %>
+                |<%= link_to "Descargar", rails_blob_path(document.file, disposition: "attachment"), style: "color: #38a169; text-decoration: none; font-weight: bold;" %>
+              <% else %>
+                <span style="color: #e53e3e; font-size: 12px;">Sin archivo</span>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 20px;">
+    <%= link_to "← Volver al Inicio", root_path, style: "color: #718096; text-decoration: none;" %>
+  </div>
+</div>

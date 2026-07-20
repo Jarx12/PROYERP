@@ -1,0 +1,33 @@
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto;">
+  
+  <header style="margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
+    <h1 style="color: #1a202c; margin: 0;"><%= @document.title %></h1>
+    <p style="color: #718096; margin: 5px 0 0 0;">Detalles del archivo cargado.</p>
+  </header>
+
+  <div style="background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <p><strong>Asociado a:</strong><% if @document.employee %><%= "#{@document.employee.name} #{@document.employee.surname} (C.I. #{@document.employee.cedula})" %>  <% else %>    <span style="color: #2b6cb0; font-weight: bold; background-color: #ebf8ff; padding: 2px 6px; border-radius: 4px;">🏢 Empresa (General)</span>  <% end %></p>
+    <p><strong>Categoría:</strong> <%= @document.category.humanize %></p>
+    <p><strong>Estado del documento:</strong> <%= @document.status.humanize %></p>
+    <p><strong>Fecha de registro:</strong> <%= @document.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+    
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+      <% if @document.file.attached? %>
+        <p><strong>Archivo adjunto:</strong> <%= @document.file.filename %> (<%= number_to_human_size(@document.file.byte_size) %>)</p>
+        
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+          <%= link_to "👁️ Ver en el navegador", rails_blob_path(@document.file, disposition: "inline"), target: "_blank", style: "background-color: #3182ce; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: bold;" %>
+          
+          <%= link_to "📥 Descargar archivo", rails_blob_path(@document.file, disposition: "attachment"), style: "background-color: #38a169; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: bold;" %>
+        </div>
+      <% else %>
+        <p style="color: #e53e3e; font-weight: bold;">⚠️ Error: Este registro no tiene ningún archivo físico adjunto.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div>
+    <%= link_to "← Volver al listado", documents_path, style: "color: #718096; text-decoration: none; margin-right: 15px;" %>
+    <%= link_to "Editar registro", edit_document_path(@document), style: "color: #dd6b20; text-decoration: none;" %>
+  </div>
+</div>
