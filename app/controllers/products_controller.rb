@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show edit update destroy new_movement create_movement]
+  before_action :set_product, only: %i[ show edit update destroy new_movement create_movement ]
 
   # GET /products or /products.json
   def index
@@ -25,11 +25,11 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to @product, notice: "Product was successfully created." }
+        format.html { redirect_to @product, notice: "El producto fue creado con éxito." }
         format.json { render :show, status: :created, location: @product }
       else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @product.errors, status: :unprocessable_content }
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -38,11 +38,11 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to @product, notice: "Product was successfully updated.", status: :see_other }
+        format.html { redirect_to @product, notice: "El producto fue actualizado con éxito.", status: :see_other }
         format.json { render :show, status: :ok, location: @product }
       else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @product.errors, status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -52,40 +52,42 @@ class ProductsController < ApplicationController
     @product.destroy!
 
     respond_to do |format|
-      format.html { redirect_to products_path, notice: "Product was successfully destroyed.", status: :see_other }
+      format.html { redirect_to products_path, notice: "El producto fue eliminado con éxito.", status: :see_other }
       format.json { head :no_content }
     end
   end
 
-
   # GET /products/:id/new_movement
-    def new_movement
-      @stock_movement = @product.stock_movements.build
+  def new_movement
+    # AQUÍ ESTABA EL DETALLE: Primero creamos el objeto para el formulario
+    @stock_movement = @product.stock_movements.build
+    @stock_movement.movement_type = params[:type] if params[:type].present?
+  end
+
+  # POST /products/:id/create_movement
+  def create_movement
+    @stock_movement = @product.stock_movements.build(stock_movement_params)
+
+    if @stock_movement.save
+      redirect_to @product, notice: "El movimiento de stock fue registrado con éxito."
+    else
+      render :new_movement, status: :unprocessable_entity
     end
-
-    # POST /products/:id/create_movement
-    def create_movement
-      @stock_movement = @product.stock_movements.build(stock_movement_params)
-
-      if @stock_movement.save
-        redirect_to @product, notice: "El movimiento de stock fue registrado y aplicado con éxito."
-      else
-        render :new_movement, status: :unprocessable_entity
-      end
-    end
-
+  end
 
   private
-    def stock_movement_params
-        params.require(:stock_movement).permit(:quantity, :movement_type, :reason)
-      end  
-    # Use callbacks to share common setup or constraints between actions.
-      def set_product
-        @product = Product.find(params.expect(:id))
-      end
 
-    # Only allow a list of trusted parameters through.
-    def product_params
-      params.expect(product: [ :name, :sku, :stock_current, :stock_minimum ])
-    end
+  def stock_movement_params
+    params.require(:stock_movement).permit(:quantity, :movement_type, :reason)
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product
+    @product = Product.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def product_params
+    params.expect(product: [ :name, :sku, :stock_current, :stock_minimum, :description ])
+  end
 end

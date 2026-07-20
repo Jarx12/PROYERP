@@ -71,9 +71,9 @@
                 <% end %>
               </td>
               <td style="padding: 14px 20px; text-align: right;">
-                <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
-                  <%= link_to "+/- Movimiento", new_movement_product_path(product), style: "background-color: #edf2f7; color: #2d3748; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
-                  <%= link_to "👁️", product, title: "Ver Detalle", style: "color: #4a5568; text-decoration: none; font-size: 16px; padding: 0 4px;" %>
+                <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">                  
+                  <%= link_to "Ver Detalles", product, style: "background-color: #edf2f7; color: #2d3748; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
+                  <%= link_to "Mov. Stock", new_movement_product_path(product), style: "background-color: #edf2f7; color: #2d3748; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
                   <%= link_to "✏️", edit_product_path(product), title: "Editar", style: "color: #4a5568; text-decoration: none; font-size: 16px; padding: 0 4px;" %>
                 </div>
               </td>

@@ -40,6 +40,13 @@
   <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background-color: #f7fafc;">
     <h2 style="font-size: 18px; margin: 0; color: #2d3748; font-weight: bold;">📋 Historial de Movimientos</h2>
     <span style="font-size: 13px; color: #718096;"><%= @product.stock_movements.count %> registros</span>
+                <div style="display: flex; gap: 10px;">
+              <!-- Botón Verde: Subir Stock (Entrada) -->
+              <%= link_to "🟢 Subir Stock", new_movement_product_path(@product, type: "input"), style: "padding: 8px 14px; border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; background-color: #38a169;" %>
+              
+              <!-- Botón Rojo: Bajar Stock (Salida) -->
+              <%= link_to "🔴 Bajar Stock", new_movement_product_path(@product, type: "output"), style: "padding: 8px 14px; border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; background-color: #e53e3e;" %>
+            </div>
   </div>
 
   <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
@@ -61,13 +68,9 @@
             </td>
             <td style="padding: 12px 20px; text-align: center;">
               <% if is_input %>
-                <span style="background-color: #c6f6d5; color: #22543d; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">
-                  ⬆️ Entrada
-                </span>
+                <span style="color: #276749; font-weight: bold; background-color: #c6f6d5; padding: 3px 8px; border-radius: 4px; font-size: 12px;">Entrada</span>
               <% else %>
-                <span style="background-color: #fed7d7; color: #9b2c2c; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">
-                  ⬇️ Salida
-                </span>
+                  <span style="color: #c53030; font-weight: bold; background-color: #fed7d7; padding: 3px 8px; border-radius: 4px; font-size: 12px;">Salida</span>
               <% end %>
             </td>
             <td style="padding: 12px 20px; text-align: center; font-weight: bold; color: <%= is_input ? '#276749' : '#c53030' %>;">
