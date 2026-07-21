@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_20_151602) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_21_010639) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_151602) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "documents", force: :cascade do |t|
     t.string "title"
     t.integer "category"
@@ -62,7 +69,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_151602) do
     t.decimal "salary"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position_id", null: false
     t.index ["cedula"], name: "index_employees_on_cedula", unique: true
+    t.index ["position_id"], name: "index_employees_on_position_id"
+  end
+
+  create_table "positions", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "products", force: :cascade do |t|
@@ -73,6 +89,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_151602) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.integer "category_id"
+    t.integer "warehouse_id"
+    t.string "location_detail"
+    t.decimal "price_cost", precision: 10, scale: 2, default: "0.0"
+    t.decimal "price_sale", precision: 10, scale: 2, default: "0.0"
+    t.decimal "weight", precision: 8, scale: 3
+    t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["warehouse_id"], name: "index_products_on_warehouse_id"
   end
 
   create_table "stock_movements", force: :cascade do |t|
@@ -105,9 +129,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_20_151602) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "warehouses", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "employees"
+  add_foreign_key "employees", "positions"
+  add_foreign_key "products", "categories"
+  add_foreign_key "products", "warehouses"
   add_foreign_key "stock_movements", "products"
   add_foreign_key "vehicle_assignments", "employees"
   add_foreign_key "vehicle_assignments", "vehicles"

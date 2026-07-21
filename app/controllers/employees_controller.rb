@@ -1,70 +1,53 @@
 class EmployeesController < ApplicationController
   before_action :set_employee, only: %i[ show edit update destroy ]
 
-  # GET /employees or /employees.json
   def index
-    @employees = Employee.all
+    @employees = Employee.order(surname: :asc, name: :asc)
   end
 
-  # GET /employees/1 or /employees/1.json
   def show
   end
 
-  # GET /employees/new
   def new
     @employee = Employee.new
   end
 
-  # GET /employees/1/edit
   def edit
   end
 
-  # POST /employees or /employees.json
   def create
     @employee = Employee.new(employee_params)
 
-    respond_to do |format|
-      if @employee.save
-        format.html { redirect_to @employee, notice: "Employee was successfully created." }
-        format.json { render :show, status: :created, location: @employee }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @employee.errors, status: :unprocessable_content }
-      end
+    if @employee.save
+      redirect_to employees_path, notice: "Empleado creado exitosamente."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /employees/1 or /employees/1.json
   def update
-    respond_to do |format|
-      if @employee.update(employee_params)
-        format.html { redirect_to @employee, notice: "Employee was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @employee }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @employee.errors, status: :unprocessable_content }
-      end
+    if @employee.update(employee_params)
+      redirect_to employees_path, notice: "Empleado actualizado correctamente."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /employees/1 or /employees/1.json
   def destroy
     @employee.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to employees_path, notice: "Employee was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to employees_path, notice: "Empleado eliminado.", status: :see_other
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_employee
-      @employee = Employee.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def employee_params
-      params.expect(employee: [ :name, :surname, :name2, :surname2, :cedula, :direccion, :telefono, :birthday, :hire_date, :salary ])
-    end
+  def set_employee
+    @employee = Employee.find(params[:id])
+  end
+
+  def employee_params
+    params.require(:employee).permit(
+      :name, :name2, :surname, :surname2, :cedula,
+      :direccion, :telefono, :birthday, :hire_date, :salary, :position_id
+    )
+  end
 end

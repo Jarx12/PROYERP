@@ -1,9 +1,9 @@
-<%= form_with(model: employee) do |form| %>
-  <% if employee.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
+<%= form_with(model: employee, local: true) do |form| %>
 
-      <ul>
+  <% if employee.errors.any? %>
+    <div style="background-color: #fff5f5; border: 1px solid #fed7d7; color: #c53030; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+      <h2 style="font-size: 14px; margin: 0 0 5px 0; font-weight: bold;"><%= pluralize(employee.errors.count, "error") %> impiden guardar los cambios:</h2>
+      <ul style="margin: 0; padding-left: 20px; font-size: 13px;">
         <% employee.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,57 +11,80 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <h3 style="font-size: 12px; text-transform: uppercase; color: #a0aec0; margin: 0 0 12px 0; font-weight: bold;">Datos Personales</h3>
+
+  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+    <div style="flex: 1;">
+      <%= form.label :name, "Primer Nombre *", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.text_field :name, placeholder: "Ej. Juan", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
+    <div style="flex: 1;">
+      <%= form.label :name2, "Segundo Nombre", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.text_field :name2, placeholder: "Ej. Carlos", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :surname, style: "display: block" %>
-    <%= form.text_field :surname %>
+  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+    <div style="flex: 1;">
+      <%= form.label :surname, "Primer Apellido *", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.text_field :surname, placeholder: "Ej. Pérez", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
+    <div style="flex: 1;">
+      <%= form.label :surname2, "Segundo Apellido", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.text_field :surname2, placeholder: "Ej. Rodríguez", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :name2, style: "display: block" %>
-    <%= form.text_field :name2 %>
+  <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+    <div style="flex: 1;">
+      <%= form.label :cedula, "Cédula / Documento *", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.number_field :cedula, placeholder: "Ej. 12345678", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
+    <div style="flex: 1;">
+      <%= form.label :birthday, "Fecha de Nacimiento", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.date_field :birthday, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white;" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :surname2, style: "display: block" %>
-    <%= form.text_field :surname2 %>
+  <h3 style="font-size: 12px; text-transform: uppercase; color: #a0aec0; margin: 0 0 12px 0; font-weight: bold;">📞 Contacto y Dirección</h3>
+
+  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+    <div style="flex: 1;">
+      <%= form.label :telefono, "Teléfono", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.text_field :telefono, placeholder: "Ej. 04121234567", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
+    <div style="flex: 2;">
+      <%= form.label :direccion, "Dirección de Habitación", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+      <%= form.text_field :direccion, placeholder: "Ej. Av. Bolívar, Calle 4, Edif. Central", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :cedula, style: "display: block" %>
-    <%= form.number_field :cedula %>
+  <div style="margin-bottom: 25px;">
+    <h3 style="font-size: 12px; text-transform: uppercase; color: #a0aec0; margin: 0 0 15px 0; font-weight: bold;">💼 Datos Contratación y Nómina</h3>
+
+    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+      <div style="flex: 1;">
+        <%= form.label :position_id, "Cargo / Puesto", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+        <%= form.collection_select :position_id, Position.order(:title), :id, :title, { include_blank: "-- Seleccionar Cargo --" }, { style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white;" } %>
+        <span style="font-size: 11px; color: #a0aec0;">¿No ves el cargo? <%= link_to "Gestionar Cargos", positions_path, target: "_blank", style: "color: #3182ce;" %></span>
+      </div>
+
+      <div style="flex: 1;">
+        <%= form.label :hire_date, "Fecha de Ingreso", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
+        <%= form.date_field :hire_date, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: white;" %>
+      </div>
+
+      <div style="flex: 1;">
+        <%= form.label :salary, "Sueldo Base ($)", style: "display: block; font-weight: bold; color: #2b6cb0; margin-bottom: 5px; font-size: 13px;" %>
+        <%= form.number_field :salary, step: "0.01", min: 0, placeholder: "0.00", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :direccion, style: "display: block" %>
-    <%= form.text_field :direccion %>
+
+  <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+    <%= link_to "Cancelar", employees_path, style: "padding: 10px 18px; border: 1px solid #cbd5e0; border-radius: 6px; color: #4a5568; text-decoration: none; font-size: 14px; font-weight: bold; background-color: white;" %>
+    <%= form.submit "Guardar Empleado", style: "padding: 10px 20px; border: none; border-radius: 6px; color: white; background-color: #3182ce; font-size: 14px; font-weight: bold; cursor: pointer;" %>
   </div>
 
-  <div>
-    <%= form.label :telefono, style: "display: block" %>
-    <%= form.text_field :telefono %>
-  </div>
-
-  <div>
-    <%= form.label :birthday, style: "display: block" %>
-    <%= form.date_field :birthday %>
-  </div>
-
-  <div>
-    <%= form.label :hire_date, style: "display: block" %>
-    <%= form.date_field :hire_date %>
-  </div>
-
-  <div>
-    <%= form.label :salary, style: "display: block" %>
-    <%= form.text_field :salary %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
 <% end %>

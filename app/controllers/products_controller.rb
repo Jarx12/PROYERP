@@ -86,8 +86,11 @@ class ProductsController < ApplicationController
     @product = Product.find(params.expect(:id))
   end
 
-  # Only allow a list of trusted parameters through.
   def product_params
-    params.expect(product: [ :name, :sku, :stock_current, :stock_minimum, :description ])
-  end
+    params.require(:product).permit(
+      :name, :sku, :description, :stock_current, :stock_minimum,
+      :category_id, :warehouse_id, :location_detail,
+      :price_cost, :price_sale, :weight
+    )
+end
 end

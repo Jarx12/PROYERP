@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
+  resources :positions
   get "dashboard/index"
+  get "settings", to: "settings#index", as: :settings
+  get "up" => "rails/health#show", as: :rails_health_check
+  root "dashboard#index"
+  resources :warehouses
+  resources :categories
   resources :employees
   resources :vehicles
   resources :documents
@@ -10,8 +16,8 @@ Rails.application.routes.draw do
     end
   end
   
-  get "up" => "rails/health#show", as: :rails_health_check
+  
 
   
-  root "dashboard#index"
+  
 end
