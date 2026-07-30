@@ -1,0 +1,66 @@
+<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
+  
+  <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
+    <div>
+      <h1 style="color: #1a202c; font-size: 24px; margin: 0;">📊 Historial de Transacciones</h1>
+      <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Registro completo de ingresos y egresos bancarios.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <%= link_to "← Panel Principal", root_path, style: "padding: 8px 16px; background: #e5e7eb; color: #374151; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
+      <%= link_to "+ Nueva Transacción", new_financial_transaction_path, style: "padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
+    </div>
+  </header>
+
+  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+      <thead>
+        <tr style="background-color: #f8fafc; text-align: left; color: #718096; border-bottom: 1px solid #e2e8f0; font-size: 11px; text-transform: uppercase;">
+          <th style="padding: 12px 15px;">Fecha</th>
+          <th style="padding: 12px 15px;">Tipo</th>
+          <th style="padding: 12px 15px;">Cuenta Bancaria</th>
+          <th style="padding: 12px 15px;">Descripción</th>
+          <th style="padding: 12px 15px;">Responsable</th>
+          <th style="padding: 12px 15px; text-align: right;">Monto</th>
+          <th style="padding: 12px 15px; text-align: center;">Factura</th>
+          <th style="padding: 12px 15px; text-align: right;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @financial_transactions.each do |tx| %>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 12px 15px; color: #475569; white-space: nowrap;"><%= tx.transaction_date.strftime("%d/%m/%Y") %></td>
+            <td style="padding: 12px 15px;">
+              <span style="background-color: <%= tx.transaction_type == 'income' ? '#c6f6d5' : '#fed7d7' %>; color: <%= tx.transaction_type == 'income' ? '#22543d' : '#9b2c2c' %>; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+                <%= tx.transaction_type == 'income' ? '📥 Ingreso' : '📤 Egreso' %>
+              </span>
+            </td>
+            <td style="padding: 12px 15px; font-weight: bold; color: #1e293b;">
+              <%= tx.bank_account.institution %> 
+              <span style="font-size: 11px; color: #64748b; font-weight: normal;">(<%= tx.bank_account.currency %>)</span>
+            </td>
+            <td style="padding: 12px 15px; color: #334155; max-width: 250px;"><%= tx.description %></td>
+            <td style="padding: 12px 15px; color: #64748b;"><%= tx.responsible_name.presence || 'N/A' %></td>
+            <td style="padding: 12px 15px; text-align: right; font-weight: bold; color: <%= tx.transaction_type == 'income' ? '#16a34a' : '#dc2626' %>;">
+              <%= tx.bank_account.currency == 'USD' ? '$' : 'Bs.' %> <%= number_to_currency(tx.amount, unit: '', delimiter: '.', separator: ',') %>
+            </td>
+            <td style="padding: 12px 15px; text-align: center;">
+              <% if tx.invoice_file.attached? %>
+                <%= link_to "Ver Archivo", rails_blob_path(tx.invoice_file, disposition: "preview"), target: "_blank", style: "color: #2563eb; text-decoration: underline; font-size: 12px;" %>
+              <% else %>
+                <span style="color: #cbd5e1; font-size: 11px;">Sin adjunto</span>
+              <% end %>
+            </td>
+            <td style="padding: 12px 15px; text-align: right;">
+              <%= button_to "Eliminar", financial_transaction_path(tx), method: :delete, data: { turbo_confirm: "¿Estás seguro de eliminar esta transacción? Se revertirá el saldo de la cuenta." }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
+            </td>
+          </tr>
+        <% end %>
+        <% if @financial_transactions.none? %>
+          <tr>
+            <td colspan="8" style="padding: 30px; text-align: center; color: #94a3b8;">No hay transacciones registradas en el sistema.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

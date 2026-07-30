@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_21_010639) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_30_025428) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -37,6 +37,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_21_010639) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "bank_accounts", force: :cascade do |t|
+    t.string "institution"
+    t.string "currency"
+    t.string "account_number"
+    t.string "email"
+    t.decimal "balance", precision: 12, scale: 2, default: "0.0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "categories", force: :cascade do |t|
@@ -74,6 +84,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_21_010639) do
     t.index ["position_id"], name: "index_employees_on_position_id"
   end
 
+  create_table "financial_transactions", force: :cascade do |t|
+    t.integer "bank_account_id", null: false
+    t.integer "transaction_category_id"
+    t.integer "employee_id"
+    t.decimal "amount", precision: 12, scale: 2, default: "0.0"
+    t.string "transaction_type"
+    t.text "description"
+    t.string "responsible_name"
+    t.string "beneficiary"
+    t.date "transaction_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_account_id"], name: "index_financial_transactions_on_bank_account_id"
+    t.index ["employee_id"], name: "index_financial_transactions_on_employee_id"
+    t.index ["transaction_category_id"], name: "index_financial_transactions_on_transaction_category_id"
+  end
+
   create_table "positions", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -109,6 +136,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_21_010639) do
     t.index ["product_id"], name: "index_stock_movements_on_product_id"
   end
 
+  create_table "transaction_categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "vehicle_assignments", force: :cascade do |t|
     t.integer "vehicle_id", null: false
     t.integer "employee_id", null: false
@@ -141,6 +175,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_21_010639) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "employees"
   add_foreign_key "employees", "positions"
+  add_foreign_key "financial_transactions", "bank_accounts"
+  add_foreign_key "financial_transactions", "employees"
+  add_foreign_key "financial_transactions", "transaction_categories"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "warehouses"
   add_foreign_key "stock_movements", "products"

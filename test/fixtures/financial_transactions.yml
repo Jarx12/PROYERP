@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  bank_account: one
+  transaction_category: one
+  employee: one
+  amount: 9.99
+  transaction_type: MyString
+  description: MyText
+  responsible_name: MyString
+  beneficiary: MyString
+  transaction_date: 2026-07-29
+
+two:
+  bank_account: two
+  transaction_category: two
+  employee: two
+  amount: 9.99
+  transaction_type: MyString
+  description: MyText
+  responsible_name: MyString
+  beneficiary: MyString
+  transaction_date: 2026-07-29

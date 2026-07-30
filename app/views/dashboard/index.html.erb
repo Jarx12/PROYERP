@@ -14,6 +14,19 @@
       <%= link_to "Gestionar Empleados →", employees_path, style: "display: inline-block; margin-top: 15px; color: #3182ce; text-decoration: none; font-weight: bold;" %>
     </div>
 
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff; border-left: 5px solid #319795;">
+      <h2 style="color: #319795; margin-top: 0;">💰 Cuentas y Finanzas</h2>
+      <div style="margin: 10px 0; font-size: 14px; color: #2d3748;">
+        <p style="margin: 4px 0;"><strong>VES:</strong> Bs. <%= number_to_currency(@total_ves_balance, unit: '', delimiter: '.', separator: ',') %></p>
+        <p style="margin: 4px 0;"><strong>USD:</strong> $<%= number_to_currency(@total_usd_balance, unit: '', delimiter: ',', separator: '.') %></p>
+      </div>
+      <p style="color: #718096; font-size: 12px; margin-bottom: 10px;">Cuentas activas: <%= @bank_accounts.count %></p>
+      <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+        <%= link_to "Ver Cuentas", bank_accounts_path, style: "font-size: 13px; background: #319795; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
+        <%= link_to "Transacciones", financial_transactions_path, style: "font-size: 13px; background: #2b6cb0; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
+      </div>
+    </div>
+
     <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
       <h2 style="color: #dd6b20; margin-top: 0;">📄 Documentación</h2>
       <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_documents %></p>
@@ -22,10 +35,10 @@
     </div>
 
     <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
-    <h2 style="color: #38a169; margin-top: 0;">📦 Inventario</h2>
-    <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_products %></p>
-    <p style="color: #718096; font-size: 14px;">Control de existencias y catálogo de productos.</p>
-    <%= link_to "Gestionar Inventario →", products_path, style: "display: inline-block; margin-top: 15px; color: #38a169; text-decoration: none; font-weight: bold;" %>
+      <h2 style="color: #38a169; margin-top: 0;">📦 Inventario</h2>
+      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_products %></p>
+      <p style="color: #718096; font-size: 14px;">Control de existencias y catálogo de productos.</p>
+      <%= link_to "Gestionar Inventario →", products_path, style: "display: inline-block; margin-top: 15px; color: #38a169; text-decoration: none; font-weight: bold;" %>
     </div>
 
     <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff; opacity: 0.7;">

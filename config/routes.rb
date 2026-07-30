@@ -9,6 +9,9 @@ Rails.application.routes.draw do
   resources :employees
   resources :vehicles
   resources :documents
+  resources :transaction_categories
+  resources :bank_accounts
+  resources :financial_transactions, only: %w[index show new create destroy]
   resources :products do
     member do
       get :new_movement

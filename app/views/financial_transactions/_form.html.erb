@@ -1,0 +1,104 @@
+<%= form_with(model: financial_transaction, local: true) do |form| %>
+  <% if financial_transaction.errors.any? %>
+    <div style="background-color: #fee2e2; color: #991b1b; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;">
+      <p style="font-weight: bold; margin-bottom: 5px;">Por favor corrige los siguientes errores:</p>
+      <ul style="margin: 0; padding-left: 20px;">
+        <% financial_transaction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+    <div>
+      <%= form.label :transaction_type, "Tipo de Transacción*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.select :transaction_type, [["📥 Ingreso", "income"], ["📤 Egreso", "expense"]], { prompt: "Seleccione tipo" }, id: "transaction_type_select", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+    <div>
+      <%= form.label :bank_account_id, "Cuenta Bancaria*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.collection_select :bank_account_id, BankAccount.all, :id, :display_name, { prompt: "Seleccione cuenta" }, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+    <div>
+      <%= form.label :amount, "Monto*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.number_field :amount, step: "0.01", placeholder: "0.00", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+    
+    <div>
+      <%= form.label :transaction_date, "Fecha*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.date_field :transaction_date, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+  </div>
+
+  <!-- BLOQUE DE COMISIÓN AUTOMÁTICA INTELIGENTE -->
+  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+    <label style="display: block; font-weight: 500; margin-bottom: 8px; color: #374151;">🏦 ¿Aplicar comisión bancaria automática (0.3%)?</label>
+    <div style="display: flex; gap: 20px;">
+      <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <%= form.radio_button :apply_commission, 'yes', id: 'commission_yes', style: "accent-color: #2563eb;" %> Sí, descontar comisión del 0.3%
+      </label>
+      <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        <%= form.radio_button :apply_commission, 'no', id: 'commission_no', checked: true, style: "accent-color: #2563eb;" %> No aplicar comisión
+      </label>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+    <div>
+      <%= form.label :transaction_category_id, "Categoría de Gasto/Ingreso", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.collection_select :transaction_category_id, TransactionCategory.all, :id, :name, { prompt: "Ninguna / General" }, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+    <div>
+      <%= form.label :beneficiary, "Beneficiario (Opcional)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.text_field :beneficiary, placeholder: "Ej. Proveedor C.A.", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+    <div>
+      <%= form.label :employee_id, "Trabajador Responsable (Opcional)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.collection_select :employee_id, Employee.all, :id, ->(e) { "#{e.name} #{e.surname}" }, { prompt: "Seleccionar de la nómina..." }, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+    <div>
+      <%= form.label :responsible_name, "O Responsable Libre (Texto)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.text_field :responsible_name, placeholder: "Ej. Juan Pérez (Externo)", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :description, "Descripción detallada*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+    <%= form.text_area :description, rows: 3, placeholder: "Detalle del movimiento...", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+  </div>
+
+  <div style="margin-bottom: 25px;">
+    <%= form.label :invoice_file, "Documento Asociado / Factura (PDF o Imagen)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+    <%= form.file_field :invoice_file, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;" %>
+  </div>
+
+  <div style="display: flex; justify-content: flex-end; gap: 10px;">
+    <%= link_to "Cancelar", financial_transactions_path, style: "padding: 10px 20px; background: #e5e7eb; color: #374151; text-decoration: none; border-radius: 6px; font-weight: 500;" %>
+    <%= form.submit "Guardar Transacción", style: "padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer;" %>
+  </div>
+<% end %>
+
+<!-- SCRIPT INTELIGENTE PARA CAMBIAR LA COMISIÓN SEGÚN EL TIPO -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const typeSelect = document.getElementById("transaction_type_select");
+    const radioYes = document.getElementById("commission_yes");
+    const radioNo = document.getElementById("commission_no");
+
+    if (typeSelect && radioYes && radioNo) {
+      typeSelect.addEventListener("change", function() {
+        if (this.value === "expense") {
+          radioYes.checked = true; // Egreso por defecto marca Sí
+        } else if (this.value === "income") {
+          radioNo.checked = true;  // Ingreso por defecto marca No
+        }
+      });
+    }
+  });
+</script>
