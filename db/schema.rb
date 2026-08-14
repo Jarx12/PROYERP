@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_30_025428) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_14_225424) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -154,6 +154,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_30_025428) do
     t.index ["vehicle_id"], name: "index_vehicle_assignments_on_vehicle_id"
   end
 
+  create_table "vehicle_categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "vehicles", force: :cascade do |t|
     t.string "plate"
     t.string "brand"
@@ -161,6 +168,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_30_025428) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "engine_serial"
+    t.string "body_serial"
+    t.string "color"
+    t.integer "seats"
+    t.integer "year"
+    t.decimal "load_capacity", precision: 10, scale: 2
+    t.string "owner_dni"
+    t.integer "condition"
+    t.string "policy_number"
+    t.date "policy_expiration"
+    t.integer "vehicle_category_id", null: false
+    t.index ["vehicle_category_id"], name: "index_vehicles_on_vehicle_category_id"
   end
 
   create_table "warehouses", force: :cascade do |t|
@@ -183,4 +202,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_30_025428) do
   add_foreign_key "stock_movements", "products"
   add_foreign_key "vehicle_assignments", "employees"
   add_foreign_key "vehicle_assignments", "vehicles"
+  add_foreign_key "vehicles", "vehicle_categories"
 end

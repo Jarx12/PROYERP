@@ -1,10 +1,205 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Vehículo - #{@vehicle.plate}" %>
 
-<%= render @vehicle %>
+<div style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+  <!-- Botón Volver y Barra de Acciones Superior -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <%= link_to "← Volver a Flota Vehicular", vehicles_path, style: "color: #718096; text-decoration: none; font-size: 13px;" %>
+    
+    <div style="display: flex; gap: 10px;">
+      <%= link_to "✏️ Editar Vehículo", edit_vehicle_path(@vehicle), style: "padding: 8px 14px; background-color: white; border: 1px solid #cbd5e0; color: #2d3748; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;" %>
+      <%= link_to "Eliminar", vehicle_path(@vehicle), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este vehículo?" }, style: "padding: 8px 14px; background-color: #fff5f5; border: 1px solid #feb2b2; color: #c53030; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;" %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this vehicle", edit_vehicle_path(@vehicle) %> |
-  <%= link_to "Back to vehicles", vehicles_path %>
+  <!-- Tarjeta Principal de Información -->
+  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px;">
+    
+    <!-- Header Ficha Vehicular -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #edf2f7; padding-bottom: 15px; margin-bottom: 20px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h1 style="margin: 0; color: #2b6cb0; font-size: 26px; font-weight: bold;"><%= @vehicle.plate %></h1>
+          
+          <% if @vehicle.vehicle_category %>
+            <span style="background-color: #ebf8ff; color: #2b6cb0; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+              🏷️ <%= @vehicle.vehicle_category.name %>
+            </span>
+          <% end %>
+        </div>
+        <p style="margin: 5px 0 0 0; color: #4a5568; font-size: 16px;">
+          <%= @vehicle.brand %> <%= @vehicle.model %> <%= "(#{@vehicle.year})" if @vehicle.year.present? %>
+        </p>
+      </div>
 
-  <%= button_to "Destroy this vehicle", @vehicle, method: :delete %>
+      <div style="text-align: right;">
+        <!-- Badge Estado Operativo -->
+        <% case @vehicle.status %>
+        <% when "available" %>
+          <span style="color: #276749; background-color: #c6f6d5; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block;">
+            Disponible
+          </span>
+        <% when "in_use" %>
+          <span style="color: #c05621; background-color: #feebc8; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block;">
+            En Uso
+          </span>
+        <% when "maintenance" %>
+          <span style="color: #9b2c2c; background-color: #fed7d7; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block;">
+            En Mantenimiento
+          </span>
+        <% end %>
+
+        <div style="margin-top: 5px;">
+          <% if @vehicle.condition == "own" %>
+            <span style="color: #2b6cb0; font-size: 12px; font-weight: bold;">Propiedad: Propio</span>
+          <% else %>
+            <span style="color: #805ad5; font-size: 12px; font-weight: bold;">Propiedad: Alquilado</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rejilla de Datos Técnicos y Seguro -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px;">
+      
+      <!-- Bloque 1: Datos Técnicos -->
+      <div style="background-color: #f7fafc; padding: 15px; border-radius: 6px; border: 1px solid #edf2f7;">
+        <h3 style="margin: 0 0 10px 0; color: #2d3748; font-size: 14px; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">
+          ⚙️ Especificaciones Técnicas
+        </h3>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Color:</strong> <%= @vehicle.color.presence || "No especificado" %>
+        </p>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Cantidad de Puestos:</strong> <%= @vehicle.seats.presence || "-" %>
+        </p>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Capacidad Carga:</strong> <%= @vehicle.load_capacity.present? ? "#{@vehicle.load_capacity} Kg" : "N/A" %>
+        </p>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Serial de Motor:</strong> <%= @vehicle.engine_serial.presence || "No registrado" %>
+        </p>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Serial Carrocería / VIN:</strong> <%= @vehicle.body_serial.presence || "No registrado" %>
+        </p>
+      </div>
+
+      <!-- Bloque 2: Registro y Seguro -->
+      <div style="background-color: #f7fafc; padding: 15px; border-radius: 6px; border: 1px solid #edf2f7;">
+        <h3 style="margin: 0 0 10px 0; color: #2d3748; font-size: 14px; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">
+          🛡️ Propietario y Seguro
+        </h3>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>C.I. / RIF Propietario:</strong> <%= @vehicle.owner_dni.presence || "No especificado" %>
+        </p>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Número de Póliza:</strong> <%= @vehicle.policy_number.presence || "Sin póliza" %>
+        </p>
+        <p style="margin: 5px 0; font-size: 13px; color: #4a5568;">
+          <strong>Vencimiento del Seguro:</strong> 
+          <% if @vehicle.policy_expiration %>
+            <% is_expired = @vehicle.policy_expiration < Date.current %>
+            <span style="color: <%= is_expired ? '#c53030' : '#276749' %>; font-weight: bold;">
+              <%= @vehicle.policy_expiration.strftime("%d/%m/%Y") %> <%= "(VENCIDA)" if is_expired %>
+            </span>
+          <% else %>
+            <span style="color: #a0aec0;">No asignado</span>
+          <% end %>
+        </p>
+      </div>
+    </div>
+
+    <!-- Bloque 3: Documentos Digitales Adjuntos -->
+    <h3 style="margin: 0 0 15px 0; color: #2d3748; font-size: 15px; font-weight: bold; border-bottom: 1px solid #edf2f7; padding-bottom: 5px;">
+      📎 Documentos Digitales Anexados
+    </h3>
+
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+      <!-- Título de Registro -->
+      <div style="flex: 1; min-width: 200px; background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 5px;">📄</div>
+        <div style="font-weight: bold; font-size: 13px; color: #2d3748;">Título de Registro</div>
+        <% if @vehicle.registration_title.attached? %>
+          <div style="margin-top: 8px;">
+            <%= link_to "Ver / Descargar", rails_blob_path(@vehicle.registration_title, disposition: "inline"), target: "_blank", style: "color: #3182ce; font-size: 12px; font-weight: bold; text-decoration: none;" %>
+          </div>
+        <% else %>
+          <div style="color: #a0aec0; font-size: 12px; margin-top: 8px;">No adjuntado</div>
+        <% end %>
+      </div>
+
+      <!-- Seguro RCV -->
+      <div style="flex: 1; min-width: 200px; background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 5px;">🛡️</div>
+        <div style="font-weight: bold; font-size: 13px; color: #2d3748;">Seguro RCV</div>
+        <% if @vehicle.rcv_policy.attached? %>
+          <div style="margin-top: 8px;">
+            <%= link_to "Ver / Descargar", rails_blob_path(@vehicle.rcv_policy, disposition: "inline"), target: "_blank", style: "color: #3182ce; font-size: 12px; font-weight: bold; text-decoration: none;" %>
+          </div>
+        <% else %>
+          <div style="color: #a0aec0; font-size: 12px; margin-top: 8px;">No adjuntado</div>
+        <% end %>
+      </div>
+
+      <!-- C.I. / RIF Propietario -->
+      <div style="flex: 1; min-width: 200px; background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 5px;">🪪</div>
+        <div style="font-weight: bold; font-size: 13px; color: #2d3748;">C.I. / RIF Propietario</div>
+        <% if @vehicle.owner_dni_file.attached? %>
+          <div style="margin-top: 8px;">
+            <%= link_to "Ver / Descargar", rails_blob_path(@vehicle.owner_dni_file, disposition: "inline"), target: "_blank", style: "color: #3182ce; font-size: 12px; font-weight: bold; text-decoration: none;" %>
+          </div>
+        <% else %>
+          <div style="color: #a0aec0; font-size: 12px; margin-top: 8px;">No adjuntado</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Historial de Asignaciones a Personal -->
+  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px;">
+    <h3 style="margin: 0 0 15px 0; color: #2d3748; font-size: 16px; font-weight: bold; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
+      👥 Historial de Asignaciones a Empleados
+    </h3>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+      <thead>
+        <tr style="color: #718096; border-bottom: 2px solid #edf2f7; font-size: 11px; text-transform: uppercase;">
+          <th style="padding: 8px 12px;">Empleado</th>
+          <th style="padding: 8px 12px;">Fecha Inicio</th>
+          <th style="padding: 8px 12px;">Fecha Fin</th>
+          <th style="padding: 8px 12px; text-align: center;">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @vehicle.vehicle_assignments.any? %>
+          <% @vehicle.vehicle_assignments.order(created_at: :desc).each do |assignment| %>
+            <tr style="border-bottom: 1px solid #f7fafc;">
+              <td style="padding: 10px 12px; font-weight: bold; color: #2d3748;">
+                <%= link_to "#{assignment.employee.name} #{assignment.employee.surname}", employee_path(assignment.employee), style: "color: #3182ce; text-decoration: none;" %>
+              </td>
+              <td style="padding: 10px 12px; color: #4a5568;">
+                <%= assignment.start_date.present? ? assignment.start_date.strftime("%d/%m/%Y") : "-" %>
+              </td>
+              <td style="padding: 10px 12px; color: #4a5568;">
+                <%= assignment.end_date.present? ? assignment.end_date.strftime("%d/%m/%Y") : "Vigente" %>
+              </td>
+              <td style="padding: 10px 12px; text-align: center;">
+                <% if assignment.end_date.nil? || assignment.end_date >= Date.current %>
+                  <span style="background-color: #c6f6d5; color: #276749; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 11px;">Activa</span>
+                <% else %>
+                  <span style="background-color: #edf2f7; color: #718096; padding: 2px 8px; border-radius: 4px; font-size: 11px;">Finalizada</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" style="padding: 20px 0; color: #a0aec0; text-align: center;">
+              No hay registros de asignación para este vehículo.
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :categories
   resources :employees
   resources :vehicles
+  resources :vehicle_categories, except: [:index, :show]
   resources :documents
   resources :transaction_categories
   resources :bank_accounts
