@@ -1,0 +1,21 @@
+<div style="max-width: 800px; margin: 40px auto; font-family: Arial, sans-serif;">
+  <h2>🤖 Importación Masiva mediante IA</h2>
+  <p style="color: #64748b;">Pega aquí el JSON generado por la IA para crear los movimientos en lote.</p>
+
+  <%= form_with url: bulk_import_financial_transactions_path, method: :post, local: true do |f| %>
+    <div style="margin-bottom: 20px;">
+      <%= f.label :bank_account_id, "Cuenta Bancaria Destino*", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
+      <%= f.collection_select :bank_account_id, BankAccount.all, :id, :display_name, { prompt: "Selecciona una cuenta" }, required: true, style: "width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;" %>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <%= f.label :json_data, "Pega el código JSON aquí*", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
+      <%= f.text_area :json_data, rows: 12, placeholder: '[ { "transaction_date": "2026-03-15", ... } ]', required: true, style: "width: 100%; font-family: monospace; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;" %>
+    </div>
+
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <%= link_to "Cancelar", financial_transactions_path, style: "padding: 10px 20px; background: #e2e8f0; color: #334155; text-decoration: none; border-radius: 6px;" %>
+      <%= f.submit "Procesar e Importar", style: "padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;" %>
+    </div>
+  <% end %>
+</div>

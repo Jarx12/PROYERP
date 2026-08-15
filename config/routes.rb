@@ -12,7 +12,12 @@ Rails.application.routes.draw do
   resources :documents
   resources :transaction_categories
   resources :bank_accounts
-  resources :financial_transactions, only: %w[index show new create destroy]
+  resources :financial_transactions, only: %w[index show new create destroy] do
+  collection do
+    get :bulk_import
+    post :bulk_import
+  end
+end
   resources :products do
     member do
       get :new_movement

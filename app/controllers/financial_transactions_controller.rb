@@ -33,6 +33,42 @@ class FinancialTransactionsController < ApplicationController
     redirect_to financial_transactions_path, notice: "Transacción eliminada y saldo revertido.", status: :see_other
   end
 
+
+  def bulk_import
+    if request.post?
+      json_data = params[:json_data]
+      bank_account_id = params[:bank_account_id]
+
+      begin
+        records = JSON.parse(json_data)
+        created_count = 0
+
+        FinancialTransaction.transaction do
+          records.each do |item|
+            FinancialTransaction.create!(
+              bank_account_id: bank_account_id,
+              transaction_date: item["transaction_date"],
+              description: item["description"],
+              beneficiary: item["beneficiary"],
+              bank_reference: item["bank_reference"],
+              transaction_type: item["transaction_type"],
+              amount: item["amount"].to_f.abs
+            )
+            created_count += 1
+          end
+        end
+
+        redirect_to financial_transactions_path, notice: "¡Éxito! Se importaron #{created_count} transacciones correctamente."
+      rescue JSON::ParserError => e
+        flash.now[:alert] = "El formato JSON ingresado no es válido."
+        render :bulk_import, status: :unprocessable_entity
+      rescue StandardError => e
+        flash.now[:alert] = "Error durante la importación: #{e.message}"
+        render :bulk_import, status: :unprocessable_entity
+      end
+    end
+  end
+
   private
 
   def set_transaction
