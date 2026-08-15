@@ -4,13 +4,14 @@ class FinancialTransaction < ApplicationRecord
   belongs_to :employee, optional: true
 
   has_one_attached :invoice_file
+  has_one_attached :bank_receipt  # Comprobante / Voucher de transferencia bancaria
 
   # Atributo virtual para recibir la opción del radio button ('yes' o 'no')
   attr_accessor :apply_commission
 
   validates :description, :amount, :transaction_date, :transaction_type, presence: true
   validates :transaction_type, inclusion: { in: %w[income expense] }
-
+  validates :bank_reference, presence: true, allow_blank: true
   after_create :update_bank_account_balance_on_create
   after_create :generate_commission_transaction, if: -> { apply_commission == 'yes' && amount.to_f > 0 }
   

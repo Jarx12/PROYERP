@@ -18,46 +18,87 @@
           <th style="padding: 12px 15px;">Fecha</th>
           <th style="padding: 12px 15px;">Tipo</th>
           <th style="padding: 12px 15px;">Cuenta Bancaria</th>
+          <th style="padding: 12px 15px;">Ref. Bancaria</th>
           <th style="padding: 12px 15px;">Descripción</th>
+          <th style="padding: 12px 15px;">Beneficiario</th>
           <th style="padding: 12px 15px;">Responsable</th>
           <th style="padding: 12px 15px; text-align: right;">Monto</th>
-          <th style="padding: 12px 15px; text-align: center;">Factura</th>
+          <th style="padding: 12px 15px; text-align: center;">Adjuntos</th>
           <th style="padding: 12px 15px; text-align: right;">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <% @financial_transactions.each do |tx| %>
           <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 12px 15px; color: #475569; white-space: nowrap;"><%= tx.transaction_date.strftime("%d/%m/%Y") %></td>
+            <!-- 1. Fecha -->
+            <td style="padding: 12px 15px; color: #475569; white-space: nowrap;">
+              <%= tx.transaction_date.strftime("%d/%m/%Y") %>
+            </td>
+
+            <!-- 2. Tipo -->
             <td style="padding: 12px 15px;">
               <span style="background-color: <%= tx.transaction_type == 'income' ? '#c6f6d5' : '#fed7d7' %>; color: <%= tx.transaction_type == 'income' ? '#22543d' : '#9b2c2c' %>; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
                 <%= tx.transaction_type == 'income' ? '📥 Ingreso' : '📤 Egreso' %>
               </span>
             </td>
+
+            <!-- 3. Cuenta Bancaria -->
             <td style="padding: 12px 15px; font-weight: bold; color: #1e293b;">
               <%= tx.bank_account.institution %> 
               <span style="font-size: 11px; color: #64748b; font-weight: normal;">(<%= tx.bank_account.currency %>)</span>
             </td>
-            <td style="padding: 12px 15px; color: #334155; max-width: 250px;"><%= tx.description %></td>
+
+            <!-- 4. Referencia Bancaria -->
+            <td style="padding: 12px 15px; color: #475569; font-family: monospace; font-size: 12px;">
+              <%= tx.bank_reference.presence || "N/A" %>
+            </td>
+
+            <!-- 5. Descripción -->
+            <td style="padding: 12px 15px; color: #334155; max-width: 200px;"><%= tx.description %></td>
+
+            <!-- 6. Beneficiario (Nuevo) -->
+            <td style="padding: 12px 15px; color: #475569; font-weight: 500;"><%= tx.beneficiary.presence || 'N/A' %></td>
+
+            <!-- 7. Responsable -->
             <td style="padding: 12px 15px; color: #64748b;"><%= tx.responsible_name.presence || 'N/A' %></td>
+
+            <!-- 8. Monto -->
             <td style="padding: 12px 15px; text-align: right; font-weight: bold; color: <%= tx.transaction_type == 'income' ? '#16a34a' : '#dc2626' %>;">
               <%= tx.bank_account.currency == 'USD' ? '$' : 'Bs.' %> <%= number_to_currency(tx.amount, unit: '', delimiter: '.', separator: ',') %>
             </td>
+
+            <!-- 9. Adjuntos (Factura + Comprobante Bancario) -->
             <td style="padding: 12px 15px; text-align: center;">
-              <% if tx.invoice_file.attached? %>
-                <%= link_to "Ver Archivo", rails_blob_path(tx.invoice_file, disposition: "preview"), target: "_blank", style: "color: #2563eb; text-decoration: underline; font-size: 12px;" %>
-              <% else %>
-                <span style="color: #cbd5e1; font-size: 11px;">Sin adjunto</span>
-              <% end %>
+              <% has_invoice = respond_to?(:invoice_file) ? tx.invoice_file.attached? : (tx.respond_to?(:invoice) && tx.invoice.attached?) %>
+              <% invoice_blob = tx.try(:invoice_file) || tx.try(:invoice) %>
+              
+              <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+                <% if invoice_blob&.attached? %>
+                  <%= link_to "📄 Factura", rails_blob_path(invoice_blob, disposition: "inline"), target: "_blank", style: "color: #2563eb; text-decoration: underline; font-size: 11px;" %>
+                <% end %>
+
+                <% if tx.respond_to?(:bank_receipt) && tx.bank_receipt.attached? %>
+                  <%= link_to "🏦 Comprobante", rails_blob_path(tx.bank_receipt, disposition: "inline"), target: "_blank", style: "color: #059669; text-decoration: underline; font-size: 11px;" %>
+                <% end %>
+
+                <% unless (invoice_blob&.attached?) || (tx.respond_to?(:bank_receipt) && tx.bank_receipt.attached?) %>
+                  <span style="color: #cbd5e1; font-size: 11px;">Sin adjuntos</span>
+                <% end %>
+              </div>
             </td>
+
+            <!-- 10. Acciones -->
             <td style="padding: 12px 15px; text-align: right;">
               <%= button_to "Eliminar", financial_transaction_path(tx), method: :delete, data: { turbo_confirm: "¿Estás seguro de eliminar esta transacción? Se revertirá el saldo de la cuenta." }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
             </td>
           </tr>
         <% end %>
+
         <% if @financial_transactions.none? %>
           <tr>
-            <td colspan="8" style="padding: 30px; text-align: center; color: #94a3b8;">No hay transacciones registradas en el sistema.</td>
+            <td colspan="10" style="padding: 30px; text-align: center; color: #94a3b8;">
+              No hay transacciones registradas en el sistema.
+            </td>
           </tr>
         <% end %>
       </tbody>

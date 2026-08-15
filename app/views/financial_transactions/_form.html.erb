@@ -26,11 +26,17 @@
       <%= form.label :amount, "Monto*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
       <%= form.number_field :amount, step: "0.01", placeholder: "0.00", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
     </div>
-    
+
+    <!-- Campo: Referencia Bancaria (Corregido a 'form') -->
     <div>
-      <%= form.label :transaction_date, "Fecha*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
-      <%= form.date_field :transaction_date, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+      <%= form.label :bank_reference, "N° de Referencia Bancaria", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+      <%= form.text_field :bank_reference, placeholder: "Ej: 0000123489", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
     </div>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :transaction_date, "Fecha*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+    <%= form.date_field :transaction_date, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
   </div>
 
   <!-- BLOQUE DE COMISIÓN AUTOMÁTICA INTELIGENTE -->
@@ -73,9 +79,16 @@
     <%= form.text_area :description, rows: 3, placeholder: "Detalle del movimiento...", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
   </div>
 
+  <!-- Adjunto: Factura -->
+  <div style="margin-bottom: 15px;">
+    <%= form.label :invoice_file, "📄 Documento Asociado / Factura (PDF o Imagen)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+    <%= form.file_field :invoice_file, accept: "image/*,application/pdf", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;" %>
+  </div>
+  
+  <!-- Adjunto: Comprobante Bancario (Corregido a 'form') -->
   <div style="margin-bottom: 25px;">
-    <%= form.label :invoice_file, "Documento Asociado / Factura (PDF o Imagen)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
-    <%= form.file_field :invoice_file, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;" %>
+    <%= form.label :bank_receipt, "🏦 Comprobante de Transacción Bancaria", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+    <%= form.file_field :bank_receipt, accept: "image/*,application/pdf", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;" %>
   </div>
 
   <div style="display: flex; justify-content: flex-end; gap: 10px;">

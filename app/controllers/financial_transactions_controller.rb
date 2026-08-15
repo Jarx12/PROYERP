@@ -13,7 +13,7 @@ class FinancialTransactionsController < ApplicationController
   end
 
   def create
-    @financial_transaction = FinancialTransaction.new(transaction_transaction_params)
+    @financial_transaction = FinancialTransaction.new(financial_transaction_params)
     
     # Si seleccionaron un empleado pero escribieron un nombre libre, podemos priorizar el nombre del empleado o dejar el texto libre
     if @financial_transaction.employee_id.present?
@@ -39,11 +39,20 @@ class FinancialTransactionsController < ApplicationController
     @financial_transaction = FinancialTransaction.find(params[:id])
   end
 
-  def transaction_transaction_params
+  def financial_transaction_params
     params.require(:financial_transaction).permit(
-      :bank_account_id, :transaction_category_id, :employee_id, 
-      :amount, :transaction_type, :description, 
-      :responsible_name, :beneficiary, :transaction_date, :invoice_file, :apply_commission
+      :bank_account_id,
+      :transaction_category_id,
+      :employee_id,
+      :amount,
+      :transaction_type,
+      :description,
+      :responsible_name,
+      :beneficiary,
+      :transaction_date,
+      :bank_reference,  
+      :invoice_file,         
+      :bank_receipt
     )
   end
 end
