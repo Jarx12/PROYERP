@@ -116,7 +116,7 @@
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
       <!-- Título de Registro -->
       <div style="flex: 1; min-width: 200px; background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; text-align: center;">
-        <div style="font-size: 24px; margin-bottom: 5px;">📄</div>
+        <div style="font-size: 24px; margin-bottom: 5px;">📜</div>
         <div style="font-weight: bold; font-size: 13px; color: #2d3748;">Título de Registro</div>
         <% if @vehicle.registration_title.attached? %>
           <div style="margin-top: 8px;">
@@ -142,11 +142,12 @@
 
       <!-- C.I. / RIF Propietario -->
       <div style="flex: 1; min-width: 200px; background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; text-align: center;">
-        <div style="font-size: 24px; margin-bottom: 5px;">🪪</div>
+        <div style="font-size: 24px; margin-bottom: 5px;">🆔</div>
         <div style="font-weight: bold; font-size: 13px; color: #2d3748;">C.I. / RIF Propietario</div>
         <% if @vehicle.owner_dni_file.attached? %>
-          <div style="margin-top: 8px;">
+          <div style="margin-top: 8px;"> 
             <%= link_to "Ver / Descargar", rails_blob_path(@vehicle.owner_dni_file, disposition: "inline"), target: "_blank", style: "color: #3182ce; font-size: 12px; font-weight: bold; text-decoration: none;" %>
+            
           </div>
         <% else %>
           <div style="color: #a0aec0; font-size: 12px; margin-top: 8px;">No adjuntado</div>

@@ -1,5 +1,6 @@
 <div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
   
+  <!-- Encabezado Principal -->
   <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
     <div>
       <h1 style="color: #1a202c; font-size: 24px; margin: 0;">📊 Historial de Transacciones</h1>
@@ -7,10 +8,43 @@
     </div>
     <div style="display: flex; gap: 10px;">
       <%= link_to "← Panel Principal", root_path, style: "padding: 8px 16px; background: #e5e7eb; color: #374151; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
+      <%= link_to "Importar masivamente", bulk_import_financial_transactions_path, style: "padding: 8px 16px; background: #4b5563; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
       <%= link_to "+ Nueva Transacción", new_financial_transaction_path, style: "padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
     </div>
   </header>
 
+  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+    <%= form_with url: financial_transactions_path, method: :get, local: true, style: "display: flex; align-items: center; gap: 12px;" do |f| %>
+      <label for="bank_account_id" style="font-size: 13px; font-weight: bold; color: #475569;">
+        🏦 Filtrar por Cuenta:
+      </label>
+      
+      <%= f.select :bank_account_id, 
+          options_from_collection_for_select(@bank_accounts, :id, ->(acc) { "#{acc.institution} (#{acc.currency})" }, params[:bank_account_id]), 
+          { include_blank: "-- Todas las Cuentas --" }, 
+          { 
+            onchange: "this.form.submit();", 
+            style: "padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 13px; background-color: white; cursor: pointer;" 
+          } 
+      %>
+
+      <% if params[:bank_account_id].present? %>
+        <%= link_to "Limpiar filtro", financial_transactions_path, style: "font-size: 12px; color: #ef4444; text-decoration: none; font-weight: 500;" %>
+      <% end %>
+    <% end %>
+
+    <% if params[:bank_account_id].present? %>
+      <% selected_account = @bank_accounts.find_by(id: params[:bank_account_id]) %>
+      <% if selected_account %>
+        <div style="font-size: 13px; color: #334155;">
+          Saldo Actual: <strong><%= selected_account.currency == 'USD' ? '$' : 'Bs.' %> <%= number_to_currency(selected_account.balance, unit: '', delimiter: '.', separator: ',') %></strong>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+
+  <!-- Tabla de Resultados -->
   <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
       <thead>
@@ -56,7 +90,7 @@
             <!-- 5. Descripción -->
             <td style="padding: 12px 15px; color: #334155; max-width: 200px;"><%= tx.description %></td>
 
-            <!-- 6. Beneficiario (Nuevo) -->
+            <!-- 6. Beneficiario -->
             <td style="padding: 12px 15px; color: #475569; font-weight: 500;"><%= tx.beneficiary.presence || 'N/A' %></td>
 
             <!-- 7. Responsable -->
@@ -69,8 +103,7 @@
 
             <!-- 9. Adjuntos (Factura + Comprobante Bancario) -->
             <td style="padding: 12px 15px; text-align: center;">
-              <% has_invoice = respond_to?(:invoice_file) ? tx.invoice_file.attached? : (tx.respond_to?(:invoice) && tx.invoice.attached?) %>
-              <% invoice_blob = tx.try(:invoice_file) || tx.try(:invoice) %>
+              <% invoice_blob = tx.try(:invoice) || tx.try(:invoice_file) %>
               
               <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
                 <% if invoice_blob&.attached? %>
@@ -81,7 +114,7 @@
                   <%= link_to "🏦 Comprobante", rails_blob_path(tx.bank_receipt, disposition: "inline"), target: "_blank", style: "color: #059669; text-decoration: underline; font-size: 11px;" %>
                 <% end %>
 
-                <% unless (invoice_blob&.attached?) || (tx.respond_to?(:bank_receipt) && tx.bank_receipt.attached?) %>
+                <% unless invoice_blob&.attached? || (tx.respond_to?(:bank_receipt) && tx.bank_receipt.attached?) %>
                   <span style="color: #cbd5e1; font-size: 11px;">Sin adjuntos</span>
                 <% end %>
               </div>
@@ -103,5 +136,10 @@
         <% end %>
       </tbody>
     </table>
+  </div>
+
+  <!-- Controles de Paginación -->
+  <div style="margin-top: 20px; display: flex; justify-content: center;">
+    <%= paginate @financial_transactions %>
   </div>
 </div>

@@ -4,11 +4,22 @@
 
   <header style="margin-bottom: 30px;">
     <h1 style="color: #1a202c; font-size: 26px; margin: 0; font-weight: bold;">⚙️ Configuración General del ERP</h1>
-    <p style="color: #718096; margin: 6px 0 0 0; font-size: 14px;">Administre los parámetros globales del sistema: categorías, almacenes, cargos y cuentas financieras.</p>
+    <p style="color: #718096; margin: 6px 0 0 0; font-size: 14px;">Administre los parámetros globales del sistema segmentados por módulo.</p>
   </header>
 
-  <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <!-- Navegación de Pestañas -->
+  <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">
+    <button onclick="openTab(event, 'tab-inventario')" class="tab-link active" style="padding: 8px 16px; border: none; background: #3182ce; color: white; border-radius: 6px; cursor: pointer; font-weight: bold;">📦 Inventario</button>
+    <button onclick="openTab(event, 'tab-rrhh')" class="tab-link" style="padding: 8px 16px; border: none; background: #edf2f7; color: #4a5568; border-radius: 6px; cursor: pointer; font-weight: bold;">👨‍💼 RRHH</button>
+    <button onclick="openTab(event, 'tab-vehiculos')" class="tab-link" style="padding: 8px 16px; border: none; background: #edf2f7; color: #4a5568; border-radius: 6px; cursor: pointer; font-weight: bold;">🚗 Vehículos</button>
+    <button onclick="openTab(event, 'tab-finanzas')" class="tab-link" style="padding: 8px 16px; border: none; background: #edf2f7; color: #4a5568; border-radius: 6px; cursor: pointer; font-weight: bold;">📊 Finanzas</button>
+  </div>
 
+  <!-- CONTENIDO DE PESTAÑAS -->
+
+  <!-- Pestaña: Inventario -->
+  <div id="tab-inventario" class="tab-content" style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <!-- Tarjeta: Categorías -->
     <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
         <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">🏷️ Categorías de Productos</h2>
@@ -26,185 +37,173 @@
           <% Category.all.each do |cat| %>
             <tr style="border-bottom: 1px solid #f7fafc;">
               <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= cat.name %></td>
-              <td style="padding: 10px 0; text-align: right;">
-                <%= link_to "Editar", edit_category_path(cat), style: "color: #3182ce; font-size: 12px;" %>
+              <td style="padding: 10px 0; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                <%= link_to "Editar", edit_category_path(cat), style: "color: #3182ce; font-size: 12px; text-decoration: none;" %>
+                <%= button_to "Eliminar", category_path(cat), method: :delete, data: { turbo_confirm: "¿Eliminar categoría?" }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
               </td>
             </tr>
-          <% end %>
-          <% if Category.none? %>
-            <tr><td colspan="2" style="padding: 15px 0; color: #a0aec0; text-align: center;">No hay categorías registradas.</td></tr>
           <% end %>
         </tbody>
       </table>
     </div>
 
+    <!-- Tarjeta: Almacenes -->
     <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
         <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">🏭 Almacenes</h2>
         <%= link_to "+ Nuevo", new_warehouse_path, style: "padding: 5px 10px; background-color: #3182ce; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
       </div>
-
       <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-        <thead>
-          <tr style="text-align: left; color: #718096; border-bottom: 1px solid #edf2f7; font-size: 11px; text-transform: uppercase;">
-            <th style="padding: 8px 0;">Nombre</th>
-            <th style="padding: 8px 0;">Código</th>
-            <th style="padding: 8px 0; text-align: right;">Acciones</th>
-          </tr>
-        </thead>
+        <!-- ... (Encabezados similares a los tuyos) ... -->
         <tbody>
           <% Warehouse.all.each do |wh| %>
             <tr style="border-bottom: 1px solid #f7fafc;">
               <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= wh.name %></td>
               <td style="padding: 10px 0; color: #718096;"><%= wh.code %></td>
-              <td style="padding: 10px 0; text-align: right;">
-                <%= link_to "Editar", edit_warehouse_path(wh), style: "color: #3182ce; font-size: 12px;" %>
+              <td style="padding: 10px 0; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                <%= link_to "Editar", edit_warehouse_path(wh), style: "color: #3182ce; font-size: 12px; text-decoration: none;" %>
+                <%= button_to "Eliminar", warehouse_path(wh), method: :delete, data: { turbo_confirm: "¿Eliminar almacén?" }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
               </td>
             </tr>
-          <% end %>
-          <% if Warehouse.none? %>
-            <tr><td colspan="3" style="padding: 15px 0; color: #a0aec0; text-align: center;">No hay almacenes registrados.</td></tr>
           <% end %>
         </tbody>
       </table>
     </div>
+  </div>
 
+  <!-- Pestaña: RRHH -->
+  <div id="tab-rrhh" class="tab-content" style="display: none; gap: 20px; flex-wrap: wrap;">
+    <!-- Tarjeta: Cargos -->
     <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
+       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
         <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">💼 Cargos</h2>
         <%= link_to "+ Nuevo", new_position_path, style: "padding: 5px 10px; background-color: #3182ce; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
       </div>
-
       <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-        <thead>
-          <tr style="text-align: left; color: #718096; border-bottom: 1px solid #edf2f7; font-size: 11px; text-transform: uppercase;">
-            <th style="padding: 8px 0;">Título</th>
-            <th style="padding: 8px 0; text-align: center;">Personal</th>
-            <th style="padding: 8px 0; text-align: right;">Acciones</th>
-          </tr>
-        </thead>
         <tbody>
           <% Position.all.each do |pos| %>
             <tr style="border-bottom: 1px solid #f7fafc;">
               <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= pos.title %></td>
-              <td style="padding: 10px 0; text-align: center;">
-                <span style="background-color: #edf2f7; color: #4a5568; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold;">
-                  <%= pos.employees.count %>
-                </span>
-              </td>
-              <td style="padding: 10px 0; text-align: right;">
-                <%= link_to "Editar", edit_position_path(pos), style: "color: #3182ce; font-size: 12px;" %>
+              <td style="padding: 10px 0; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                <%= link_to "Editar", edit_position_path(pos), style: "color: #3182ce; font-size: 12px; text-decoration: none;" %>
+                <%= button_to "Eliminar", position_path(pos), method: :delete, data: { turbo_confirm: "¿Eliminar cargo?" }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
               </td>
             </tr>
-          <% end %>
-          <% if Position.none? %>
-            <tr><td colspan="3" style="padding: 15px 0; color: #a0aec0; text-align: center;">No hay cargos registrados.</td></tr>
           <% end %>
         </tbody>
       </table>
     </div>
-
   </div>
 
-  <!-- Tarjeta: Categorías de Vehículos -->
-  <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
-      <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">🚘 Tipos / Categorías de Vehículos</h2>
-      <%= link_to "+ Nueva", new_vehicle_category_path, style: "padding: 5px 10px; background-color: #3182ce; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
+  <!-- Pestaña: Vehículos -->
+  <div id="tab-vehiculos" class="tab-content" style="display: none; gap: 20px; flex-wrap: wrap;">
+    <!-- Tarjeta: Vehículos -->
+    <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px;">
+       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
+        <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">🚘 Tipos / Categorías de Vehículos</h2>
+        <%= link_to "+ Nueva", new_vehicle_category_path, style: "padding: 5px 10px; background-color: #3182ce; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <tbody>
+          <% VehicleCategory.all.each do |v_cat| %>
+            <tr style="border-bottom: 1px solid #f7fafc;">
+              <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= v_cat.name %></td>
+              <td style="padding: 10px 0; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                <%= link_to "Editar", edit_vehicle_category_path(v_cat), style: "color: #3182ce; font-size: 12px; text-decoration: none;" %>
+                <%= button_to "Eliminar", vehicle_category_path(v_cat), method: :delete, data: { turbo_confirm: "¿Eliminar tipo de vehículo?" }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
-    
-    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-      <thead>
-        <tr style="text-align: left; color: #718096; border-bottom: 1px solid #edf2f7; font-size: 11px; text-transform: uppercase;">
-          <th style="padding: 8px 0;">Nombre</th>
-          <th style="padding: 8px 0; text-align: right;">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% VehicleCategory.all.each do |v_cat| %>
-          <tr style="border-bottom: 1px solid #f7fafc;">
-            <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= v_cat.name %></td>
-            <td style="padding: 10px 0; text-align: right;">
-              <%= link_to "Editar", edit_vehicle_category_path(v_cat), style: "color: #3182ce; font-size: 12px;" %>
-            </td>
-          </tr>
-        <% end %>
-        <% if VehicleCategory.none? %>
-          <tr><td colspan="2" style="padding: 15px 0; color: #a0aec0; text-align: center;">No hay tipos de vehículos registrados.</td></tr>
-        <% end %>
-      </tbody>
-    </table>
   </div>
 
-  <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
-
-    <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px; border-top: 4px solid #319795;">
+  <!-- Pestaña: Finanzas -->
+  <div id="tab-finanzas" class="tab-content" style="display: none; gap: 20px; flex-wrap: wrap;">
+     <!-- Tarjeta: Cuentas -->
+    <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; border-top: 4px solid #319795;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
         <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">🏦 Cuentas Bancarias</h2>
         <%= link_to "+ Nueva Cuenta", new_bank_account_path, style: "padding: 5px 10px; background-color: #319795; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
       </div>
-
       <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-        <thead>
-          <tr style="text-align: left; color: #718096; border-bottom: 1px solid #edf2f7; font-size: 11px; text-transform: uppercase;">
-            <th style="padding: 8px 0;">Institución</th>
-            <th style="padding: 8px 0;">Moneda</th>
-            <th style="padding: 8px 0; text-align: right;">Saldo</th>
-          </tr>
-        </thead>
         <tbody>
           <% BankAccount.all.each do |acc| %>
             <tr style="border-bottom: 1px solid #f7fafc;">
-              <td style="padding: 10px 0; font-weight: bold; color: #2d3748;">
-                <%= acc.institution %>
-                <div style="font-size: 11px; color: #718096; font-weight: normal;"><%= acc.account_number.present? ? acc.account_number : 'Sin Nro.' %></div>
-              </td>
-              <td style="padding: 10px 0;">
-                <span style="background-color: <%= acc.currency == 'USD' ? '#c6f6d5' : '#feebc8' %>; color: <%= acc.currency == 'USD' ? '#22543d' : '#744210' %>; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">
-                  <%= acc.currency %>
-                </span>
-              </td>
-              <td style="padding: 10px 0; text-align: right; font-weight: bold; color: #2d3748;">
-                <%= acc.currency == 'USD' ? '$' : 'Bs.' %> <%= number_to_currency(acc.balance, unit: '', delimiter: '.', separator: ',') %>
+              <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= acc.display_name %></td>
+              <td style="padding: 10px 0; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                <%= link_to "Editar", edit_bank_account_path(acc), style: "color: #3182ce; font-size: 12px; text-decoration: none;" %>
+                <!-- <%= button_to "Eliminar", bank_account_path(acc), method: :delete, data: { turbo_confirm: "¿Eliminar cuenta?" }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %> -->
               </td>
             </tr>
-          <% end %>
-          <% if BankAccount.none? %>
-            <tr><td colspan="3" style="padding: 15px 0; color: #a0aec0; text-align: center;">No hay cuentas bancarias registradas.</td></tr>
           <% end %>
         </tbody>
       </table>
     </div>
-
-    <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 20px; border-top: 4px solid #dd6b20;">
+    
+    <!-- Tarjeta: Categorías Financieras -->
+    <div style="flex: 1; min-width: 320px; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; border-top: 4px solid #dd6b20;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">
         <h2 style="font-size: 16px; margin: 0; color: #2d3748; font-weight: bold;">🏷️ Categorías Financieras</h2>
-        <%= link_to "+ Nueva Categoría", new_transaction_category_path, style: "padding: 5px 10px; background-color: #dd6b20; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
+        <%= link_to "+ Nueva", new_transaction_category_path, style: "padding: 5px 10px; background-color: #dd6b20; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
       </div>
-
       <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-        <thead>
-          <tr style="text-align: left; color: #718096; border-bottom: 1px solid #edf2f7; font-size: 11px; text-transform: uppercase;">
-            <th style="padding: 8px 0;">Nombre</th>
-            <th style="padding: 8px 0; text-align: right;">Acciones</th>
-          </tr>
-        </thead>
         <tbody>
           <% TransactionCategory.all.each do |tcat| %>
             <tr style="border-bottom: 1px solid #f7fafc;">
               <td style="padding: 10px 0; font-weight: bold; color: #2d3748;"><%= tcat.name %></td>
-              <td style="padding: 10px 0; text-align: right;">
-                <%= link_to "Editar", edit_transaction_category_path(tcat), style: "color: #dd6b20; font-size: 12px;" %>
+              <td style="padding: 10px 0; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                <%= link_to "Editar", edit_transaction_category_path(tcat), style: "color: #3182ce; font-size: 12px; text-decoration: none;" %>
+                <%= button_to "Eliminar", transaction_category_path(tcat), method: :delete, data: { turbo_confirm: "¿Eliminar categoría?" }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
               </td>
             </tr>
-          <% end %>
-          <% if TransactionCategory.none? %>
-            <tr><td colspan="2" style="padding: 15px 0; color: #a0aec0; text-align: center;">No hay categorías financieras registradas.</td></tr>
           <% end %>
         </tbody>
       </table>
     </div>
-
   </div>
-
 </div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    tablinks = document.getElementsByClassName("tab-link");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].style.backgroundColor = "#edf2f7";
+      tablinks[i].style.color = "#4a5568";
+      tablinks[i].classList.remove("active");
+    }
+
+    var activeTab = document.getElementById(tabName);
+    if (activeTab) {
+      activeTab.style.display = "flex";
+    }
+
+    if (evt) {
+      evt.currentTarget.style.backgroundColor = "#3182ce";
+      evt.currentTarget.style.color = "white";
+      evt.currentTarget.classList.add("active");
+    }
+
+    localStorage.setItem("activeSettingsTab", tabName);
+  }
+
+  document.addEventListener("turbo:load", restoreActiveTab);
+  document.addEventListener("DOMContentLoaded", restoreActiveTab);
+
+  function restoreActiveTab() {
+    var savedTab = localStorage.getItem("activeSettingsTab") || "tab-inventario";
+    var targetButton = document.querySelector(`button[onclick*="'${savedTab}'"]`);
+    
+    if (targetButton) {
+      openTab({ currentTarget: targetButton }, savedTab);
+    }
+  }
+</script>

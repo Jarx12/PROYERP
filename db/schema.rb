@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_15_001449) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_09_123522) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -80,7 +80,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_15_001449) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position_id", null: false
+    t.datetime "discarded_at"
     t.index ["cedula"], name: "index_employees_on_cedula", unique: true
+    t.index ["discarded_at"], name: "index_employees_on_discarded_at"
     t.index ["position_id"], name: "index_employees_on_position_id"
   end
 
@@ -100,6 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_15_001449) do
     t.index ["bank_account_id"], name: "index_financial_transactions_on_bank_account_id"
     t.index ["employee_id"], name: "index_financial_transactions_on_employee_id"
     t.index ["transaction_category_id"], name: "index_financial_transactions_on_transaction_category_id"
+    t.index ["transaction_date"], name: "index_financial_transactions_on_transaction_date"
   end
 
   create_table "positions", force: :cascade do |t|
@@ -142,6 +145,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_15_001449) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "password_digest", null: false
+    t.integer "role", default: 0, null: false
+    t.integer "employee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["employee_id"], name: "index_users_on_employee_id"
   end
 
   create_table "vehicle_assignments", force: :cascade do |t|
@@ -201,6 +215,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_15_001449) do
   add_foreign_key "products", "categories"
   add_foreign_key "products", "warehouses"
   add_foreign_key "stock_movements", "products"
+  add_foreign_key "users", "employees"
   add_foreign_key "vehicle_assignments", "employees"
   add_foreign_key "vehicle_assignments", "vehicles"
   add_foreign_key "vehicles", "vehicle_categories"

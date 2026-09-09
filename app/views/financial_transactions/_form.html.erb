@@ -24,10 +24,8 @@
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
     <div>
       <%= form.label :amount, "Monto*", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
-      <%= form.number_field :amount, step: "0.01", placeholder: "0.00", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+      <%= form.number_field :amount, step: "0.01", placeholder: "0.00", id: "transaction_amount_input", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
     </div>
-
-    <!-- Campo: Referencia Bancaria (Corregido a 'form') -->
     <div>
       <%= form.label :bank_reference, "N° de Referencia Bancaria", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
       <%= form.text_field :bank_reference, placeholder: "Ej: 0000123489", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
@@ -39,16 +37,26 @@
     <%= form.date_field :transaction_date, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
   </div>
 
-  <!-- BLOQUE DE COMISIÓN AUTOMÁTICA INTELIGENTE -->
+  <!-- BLOQUE INTELIGENTE CON BOTONES Y CALCULADORA EN VIVO -->
   <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
-    <label style="display: block; font-weight: 500; margin-bottom: 8px; color: #374151;">🏦 ¿Aplicar comisión bancaria automática (0.3%)?</label>
-    <div style="display: flex; gap: 20px;">
-      <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-        <%= form.radio_button :apply_commission, 'yes', id: 'commission_yes', style: "accent-color: #2563eb;" %> Sí, descontar comisión del 0.3%
-      </label>
-      <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-        <%= form.radio_button :apply_commission, 'no', id: 'commission_no', checked: true, style: "accent-color: #2563eb;" %> No aplicar comisión
-      </label>
+    <%= form.label :commission_percentage, "🏦 Comisión Bancaria (%)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
+    
+    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+      <%= form.text_field :commission_percentage, placeholder: "Ej. 0.3%, 3% o 4.1%", id: "commission_percentage_input", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+    </div>
+
+    <!-- Botones de selección rápida -->
+    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+      <span style="font-size: 12px; color: #6b7280; font-weight: 500;">Sugerencias:</span>
+      <button type="button" class="quick-percent-btn" data-value="0%" style="padding: 3px 8px; font-size: 12px; background: #e2e8f0; border: none; border-radius: 4px; cursor: pointer;">0%</button>
+      <button type="button" class="quick-percent-btn" data-value="0.3%" style="padding: 3px 8px; font-size: 12px; background: #e2e8f0; border: none; border-radius: 4px; cursor: pointer;">0.3%</button>
+      <button type="button" class="quick-percent-btn" data-value="3%" style="padding: 3px 8px; font-size: 12px; background: #e2e8f0; border: none; border-radius: 4px; cursor: pointer;">3%</button>
+      <button type="button" class="quick-percent-btn" data-value="4.1%" style="padding: 3px 8px; font-size: 12px; background: #e2e8f0; border: none; border-radius: 4px; cursor: pointer;">4.1%</button>
+    </div>
+
+    <!-- Vista previa de la comisión en tiempo real -->
+    <div id="commission_preview" style="font-size: 13px; font-weight: 600; color: #2563eb; display: none;">
+      💡 Comisión a generar: <span id="commission_preview_amount">0.00</span> Bs.
     </div>
   </div>
 
@@ -79,13 +87,11 @@
     <%= form.text_area :description, rows: 3, placeholder: "Detalle del movimiento...", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
   </div>
 
-  <!-- Adjunto: Factura -->
   <div style="margin-bottom: 15px;">
     <%= form.label :invoice_file, "📄 Documento Asociado / Factura (PDF o Imagen)", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
     <%= form.file_field :invoice_file, accept: "image/*,application/pdf", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;" %>
   </div>
-  
-  <!-- Adjunto: Comprobante Bancario (Corregido a 'form') -->
+
   <div style="margin-bottom: 25px;">
     <%= form.label :bank_receipt, "🏦 Comprobante de Transacción Bancaria", style: "display: block; font-weight: 500; margin-bottom: 5px; color: #374151;" %>
     <%= form.file_field :bank_receipt, accept: "image/*,application/pdf", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;" %>
@@ -97,21 +103,76 @@
   </div>
 <% end %>
 
-<!-- SCRIPT INTELIGENTE PARA CAMBIAR LA COMISIÓN SEGÚN EL TIPO -->
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const typeSelect = document.getElementById("transaction_type_select");
-    const radioYes = document.getElementById("commission_yes");
-    const radioNo = document.getElementById("commission_no");
+  (function() {
+    function setupCommissionLogic() {
+      const typeSelect = document.getElementById("transaction_type_select");
+      const commissionInput = document.getElementById("commission_percentage_input");
+      const amountInput = document.getElementById("transaction_amount_input");
+      const previewDiv = document.getElementById("commission_preview");
+      const previewAmount = document.getElementById("commission_preview_amount");
+      const quickBtns = document.querySelectorAll(".quick-percent-btn");
 
-    if (typeSelect && radioYes && radioNo) {
-      typeSelect.addEventListener("change", function() {
-        if (this.value === "expense") {
-          radioYes.checked = true; // Egreso por defecto marca Sí
-        } else if (this.value === "income") {
-          radioNo.checked = true;  // Ingreso por defecto marca No
+      if (!typeSelect || !commissionInput) return;
+
+      // 1. Establece valor sugerido por defecto según el tipo de transacción
+      function applyDefaultPercentage() {
+        if (commissionInput.value.trim() !== "") return; // No sobrescribir si el usuario ya escribió algo
+
+        if (typeSelect.value === "expense") {
+          commissionInput.value = "0.3%";
+        } else if (typeSelect.value === "income") {
+          commissionInput.value = "0%";
         }
+        updatePreview();
+      }
+
+      // 2. Proyección visual del monto final de la comisión
+      function updatePreview() {
+        if (!amountInput || !previewDiv || !previewAmount) return;
+
+        const rawPercent = commissionInput.value.replace('%', '').replace(',', '.').trim();
+        const percent = parseFloat(rawPercent) || 0;
+        const amount = parseFloat(amountInput.value) || 0;
+
+        if (percent > 0 && amount > 0) {
+          const calculated = amount * (percent / 100.0);
+          const finalCommission = Math.max(calculated, 14.0).toFixed(2);
+          
+          previewAmount.textContent = finalCommission;
+          previewDiv.style.display = "block";
+        } else {
+          previewDiv.style.display = "none";
+        }
+      }
+
+      // Escuchadores de eventos
+      typeSelect.addEventListener("change", function() {
+        if (typeSelect.value === "expense") {
+          commissionInput.value = "0.3%";
+        } else if (typeSelect.value === "income") {
+          commissionInput.value = "0%";
+        }
+        updatePreview();
       });
+
+      commissionInput.addEventListener("input", updatePreview);
+      if (amountInput) amountInput.addEventListener("input", updatePreview);
+
+      quickBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+          commissionInput.value = this.dataset.value;
+          updatePreview();
+        });
+      });
+
+      // Ejecutar evaluación inicial al cargar
+      applyDefaultPercentage();
+      updatePreview();
     }
-  });
+
+    // Inicialización compatible con Turbo y carga standard
+    document.addEventListener("DOMContentLoaded", setupCommissionLogic);
+    document.addEventListener("turbo:load", setupCommissionLogic);
+  })();
 </script>

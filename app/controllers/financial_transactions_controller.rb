@@ -1,15 +1,30 @@
 class FinancialTransactionsController < ApplicationController
   before_action :set_transaction, only: %i[show destroy]
 
-  def index
-    @financial_transactions = FinancialTransaction.includes(:bank_account, :transaction_category, :employee).order(transaction_date: :desc).to_a
+def index
+  @bank_accounts = BankAccount.order(:institution)
+
+  @financial_transactions = FinancialTransaction
+    .includes(:bank_account, :transaction_category, :employee)
+    .with_attached_invoice_file   
+    .with_attached_bank_receipt  
+    .order(transaction_date: :desc, id: :desc)
+
+  if params[:bank_account_id].present?
+    @financial_transactions = @financial_transactions.where(bank_account_id: params[:bank_account_id])
   end
+
+  @financial_transactions = @financial_transactions.page(params[:page]).per(50)
+end
 
   def show
   end
 
   def new
-    @financial_transaction = FinancialTransaction.new(transaction_date: Date.today)
+    @financial_transaction = FinancialTransaction.new
+    @bank_accounts = BankAccount.all
+    @employees = Employee.all 
+    @transaction_categories = TransactionCategory.all
   end
 
   def create
@@ -88,7 +103,8 @@ class FinancialTransactionsController < ApplicationController
       :transaction_date,
       :bank_reference,  
       :invoice_file,         
-      :bank_receipt
+      :bank_receipt,
+      :commission_percentage
     )
   end
 end

@@ -105,24 +105,24 @@
                 <% end %>
               </td>
 
-              <!-- Anexos Cargar / Descargar -->
+              <!-- Anexos con Emojis Directos -->
               <td style="padding: 12px 15px; text-align: center;">
-                <div style="display: flex; justify-content: center; gap: 6px;">
+                <div style="display: flex; justify-content: center; gap: 8px;">
                   <% if vehicle.registration_title.attached? %>
-                    <%= link_to rails_blob_path(vehicle.registration_title, disposition: "inline"), target: "_blank", title: "Título de Registro", style: "text-decoration: none;" do %>
-                      <span style="font-size: 14px; cursor: pointer;">📄</span>
+                    <%= link_to rails_blob_path(vehicle.registration_title, disposition: "inline"), target: "_blank", title: "Título de Propiedad / Registro", style: "text-decoration: none;" do %>
+                      <span style="font-size: 16px; cursor: pointer;">📜</span>
                     <% end %>
                   <% end %>
 
                   <% if vehicle.rcv_policy.attached? %>
-                    <%= link_to rails_blob_path(vehicle.rcv_policy, disposition: "inline"), target: "_blank", title: "Seguro RCV", style: "text-decoration: none;" do %>
-                      <span style="font-size: 14px; cursor: pointer;">🛡️</span>
+                    <%= link_to rails_blob_path(vehicle.rcv_policy, disposition: "inline"), target: "_blank", title: "Póliza RCV", style: "text-decoration: none;" do %>
+                      <span style="font-size: 16px; cursor: pointer;">🛡️</span>
                     <% end %>
                   <% end %>
 
                   <% if vehicle.owner_dni_file.attached? %>
-                    <%= link_to rails_blob_path(vehicle.owner_dni_file, disposition: "inline"), target: "_blank", title: "Documento Propietario", style: "text-decoration: none;" do %>
-                      <span style="font-size: 14px; cursor: pointer;">🪪</span>
+                    <%= link_to rails_blob_path(vehicle.owner_dni_file, disposition: "inline"), target: "_blank", title: "Cédula / Documento Propietario", style: "text-decoration: none;" do %>
+                      <span style="font-size: 16px; cursor: pointer;">🆔</span>
                     <% end %>
                   <% end %>
 

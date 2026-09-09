@@ -1,52 +1,114 @@
-<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto;">
-  
-  <header style="margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
-    <h1 style="color: #1a202c; margin: 0;">📊 Panel de Control - ProyERP</h1>
-    <p style="color: #718096; margin: 5px 0 0 0;">Bienvenido al sistema de gestión centralizado.</p>
+<% content_for :title, "Dashboard - ProyERP" %>
+
+<div style="padding: 30px 20px; max-width: 1200px; margin: 0 auto;">
+
+  <!-- Encabezado del Dashboard -->
+  <header style="margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px;">
+    <div>
+      <h1 style="color: #1a202c; font-size: 26px; font-weight: 800; margin: 0;">📊 Panel de Control</h1>
+      <p style="color: #718096; margin: 6px 0 0 0; font-size: 14px;">Bienvenido al sistema de gestión ProyERP.</p>
+    </div>
+    <div style="background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+      <span style="height: 8px; width: 8px; background-color: #3182ce; border-radius: 50%; display: inline-block;"></span>
+      PROYERECA
+    </div>
   </header>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-    
-    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
-      <h2 style="color: #2b6cb0; margin-top: 0;">👥 Personal y Nómina</h2>
-      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_employees %></p>
-      <p style="color: #718096; font-size: 14px;">Empleados registrados en el sistema.</p>
-      <%= link_to "Gestionar Empleados →", employees_path, style: "display: inline-block; margin-top: 15px; color: #3182ce; text-decoration: none; font-weight: bold;" %>
-    </div>
+  <!-- Grilla Principal de Tarjetas -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
 
-    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff; border-left: 5px solid #319795;">
-      <h2 style="color: #319795; margin-top: 0;">💰 Cuentas y Finanzas</h2>
-      <div style="margin: 10px 0; font-size: 14px; color: #2d3748;">
-        <p style="margin: 4px 0;"><strong>VES:</strong> Bs. <%= number_to_currency(@total_ves_balance, unit: '', delimiter: '.', separator: ',') %></p>
-        <p style="margin: 4px 0;"><strong>USD:</strong> $<%= number_to_currency(@total_usd_balance, unit: '', delimiter: ',', separator: '.') %></p>
+    <!-- Card 1: Personal y Nómina -->
+    <div class="dashboard-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #3182ce; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <h2 style="font-size: 16px; font-weight: 700; color: #2d3748; margin: 0;">👨‍💼 Personal y Nómina</h2>
+          <span style="font-size: 11px; background: #ebf8ff; color: #2b6cb0; padding: 4px 8px; border-radius: 12px; font-weight: 600;">Recursos Humanos</span>
+        </div>
+        <p style="font-size: 32px; font-weight: 800; margin: 10px 0 4px 0; color: #1a202c;"><%= @total_employees %></p>
+        <p style="color: #718096; font-size: 13px; margin: 0;">Empleados registrados activos.</p>
       </div>
-      <p style="color: #718096; font-size: 12px; margin-bottom: 10px;">Cuentas activas: <%= @bank_accounts.count %></p>
-      <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-        <%= link_to "Ver Cuentas", bank_accounts_path, style: "font-size: 13px; background: #319795; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
-        <%= link_to "Transacciones", financial_transactions_path, style: "font-size: 13px; background: #2b6cb0; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
+      <%= link_to employees_path, style: "display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; color: #3182ce; text-decoration: none; font-weight: bold; font-size: 14px;" do %>
+        Gestionar Empleados <span>→</span>
+      <% end %>
+    </div>
+
+    <!-- Card 2: Cuentas y Finanzas -->
+    <div class="dashboard-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #319795; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <h2 style="font-size: 16px; font-weight: 700; color: #2d3748; margin: 0;">💰 Cuentas y Finanzas</h2>
+          <span style="font-size: 11px; background: #e6fffa; color: #234e52; padding: 4px 8px; border-radius: 12px; font-weight: 600;"><%= @bank_accounts.count %> Cuentas</span>
+        </div>
+        <div style="display: flex; gap: 10px; margin: 12px 0 8px 0;">
+          <div style="flex: 1; background: #f7fafc; padding: 10px; border-radius: 8px; border: 1px solid #edf2f7;">
+            <span style="font-size: 11px; color: #718096; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 2px;">VES</span>
+            <strong style="font-size: 15px; color: #2d3748;">Bs. <%= number_to_currency(@total_ves_balance, unit: '', delimiter: '.', separator: ',') %></strong>
+          </div>
+          <div style="flex: 1; background: #f7fafc; padding: 10px; border-radius: 8px; border: 1px solid #edf2f7;">
+            <span style="font-size: 11px; color: #718096; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 2px;">USD</span>
+            <strong style="font-size: 15px; color: #276749;">$<%= number_to_currency(@total_usd_balance, unit: '', delimiter: ',', separator: '.') %></strong>
+          </div>
+        </div>
       </div>
+      <%= link_to financial_transactions_path, style: "display: inline-flex; align-items: center; gap: 6px; margin-top: 15px; color: #319795; text-decoration: none; font-weight: bold; font-size: 14px;" do %>
+        Ver Transacciones <span>→</span>
+      <% end %>
     </div>
 
-    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
-      <h2 style="color: #dd6b20; margin-top: 0;">📄 Documentación</h2>
-      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_documents %></p>
-      <p style="color: #718096; font-size: 14px;">Archivos y anexos almacenados de forma segura.</p>
-      <%= link_to "Ver Documentos →", documents_path, style: "display: inline-block; margin-top: 15px; color: #dd6b20; text-decoration: none; font-weight: bold;" %>
+    <!-- Card 3: Inventario -->
+    <div class="dashboard-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #38a169; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <h2 style="font-size: 16px; font-weight: 700; color: #2d3748; margin: 0;">📦 Inventario</h2>
+          <span style="font-size: 11px; background: #f0fff4; color: #1c4532; padding: 4px 8px; border-radius: 12px; font-weight: 600;">Stock Central</span>
+        </div>
+        <p style="font-size: 32px; font-weight: 800; margin: 10px 0 4px 0; color: #1a202c;"><%= @total_products %></p>
+        <p style="color: #718096; font-size: 13px; margin: 0;">Productos y existencias registradas.</p>
+      </div>
+      <%= link_to products_path, style: "display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; color: #38a169; text-decoration: none; font-weight: bold; font-size: 14px;" do %>
+        Gestionar Inventario <span>→</span>
+      <% end %>
     </div>
 
-    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
-      <h2 style="color: #38a169; margin-top: 0;">📦 Inventario</h2>
-      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_products %></p>
-      <p style="color: #718096; font-size: 14px;">Control de existencias y catálogo de productos.</p>
-      <%= link_to "Gestionar Inventario →", products_path, style: "display: inline-block; margin-top: 15px; color: #38a169; text-decoration: none; font-weight: bold;" %>
+    <!-- Card 4: Flota Vehicular -->
+    <div class="dashboard-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #805ad5; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <h2 style="font-size: 16px; font-weight: 700; color: #2d3748; margin: 0;">🚗 Flota Vehicular</h2>
+          <span style="font-size: 11px; background: #faf5ff; color: #44337a; padding: 4px 8px; border-radius: 12px; font-weight: 600;">Transporte</span>
+        </div>
+        <p style="font-size: 32px; font-weight: 800; margin: 10px 0 4px 0; color: #1a202c;"><%= @total_vehicles %></p>
+        <p style="color: #718096; font-size: 13px; margin: 0;">Unidades activas, asignaciones y documentos.</p>
+      </div>
+      <%= link_to vehicles_path, style: "display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; color: #805ad5; text-decoration: none; font-weight: bold; font-size: 14px;" do %>
+        Gestionar Vehículos <span>→</span>
+      <% end %>
     </div>
 
-    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background-color: #fff;">
-      <h2 style="color: #2b6cb0; margin-top: 0;">🚗 Flota Vehicular</h2>
-      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #2d3748;"><%= @total_vehicles %></p>
-      <p style="color: #718096; font-size: 14px;">Control de unidades, seguros y asignaciones al personal.</p>
-      <%= link_to "Gestionar Vehículos →", vehicles_path, style: "display: inline-block; margin-top: 15px; color: #2b6cb0; text-decoration: none; font-weight: bold;" %>
+    <!-- Card 5: Documentación -->
+    <div class="dashboard-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #dd6b20; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <h2 style="font-size: 16px; font-weight: 700; color: #2d3748; margin: 0;">📄 Documentación</h2>
+          <span style="font-size: 11px; background: #fffaf0; color: #7b341e; padding: 4px 8px; border-radius: 12px; font-weight: 600;">Archivos</span>
+        </div>
+        <p style="font-size: 32px; font-weight: 800; margin: 10px 0 4px 0; color: #1a202c;"><%= @total_documents %></p>
+        <p style="color: #718096; font-size: 13px; margin: 0;">Archivos y anexos resguardados en el ERP.</p>
+      </div>
+      <%= link_to documents_path, style: "display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; color: #dd6b20; text-decoration: none; font-weight: bold; font-size: 14px;" do %>
+        Ver Documentos <span>→</span>
+      <% end %>
     </div>
 
   </div>
 </div>
+
+<style>
+  .dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
+  }
+</style>

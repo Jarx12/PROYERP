@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
   resources :positions
   get "dashboard/index"
   get "settings", to: "settings#index", as: :settings
@@ -6,7 +9,6 @@ Rails.application.routes.draw do
   root "dashboard#index"
   resources :warehouses
   resources :categories
-  resources :employees
   resources :vehicles
   resources :vehicle_categories, except: [:index, :show]
   resources :documents
@@ -18,6 +20,17 @@ Rails.application.routes.draw do
     post :bulk_import
   end
 end
+  resources :employees do
+  collection do
+    get :discarded
+    get :bulk_payroll
+    post :process_bulk_payroll
+  end
+  member do
+      patch :restore
+  end
+  end
+
   resources :products do
     member do
       get :new_movement

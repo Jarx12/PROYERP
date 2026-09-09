@@ -2,13 +2,19 @@
 
 <div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 1100px; margin: 0 auto; line-height: 1.25;">
 
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5;">
     <div>
-      <h1 style="color: #1a202c; font-size: 26px; margin: 0; font-weight: bold;">👥 Personal y Nómina</h1>
-      <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Directorio de colaboradores y salarios.</p>
+      <h1 style="color: #1a202c; font-size: 26px; margin: 0; font-weight: bold;">👨‍💼 Personal y Nómina</h1>
+      <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Directorio de trabajadores y salarios.</p>
     </div>
-    <%= link_to "+ Nuevo Empleado", new_employee_path, style: "padding: 10px 18px; border-radius: 6px; color: white; text-decoration: none; font-size: 14px; font-weight: bold; background-color: #3182ce;" %>
+    <%= link_to "+ Nuevo Empleado", new_employee_path, style: "padding: 10px 18px; border-radius: 6px; color: white; text-decoration: none; font-size: 14px; font-weight: bold; background-color: #3182ce;" %>    
   </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+    <div>
+    </div>
+    <%= link_to "💳 Pago de Nómina en Masa", bulk_payroll_employees_path, style: "padding: 10px 18px; border-radius: 6px; color: white; text-decoration: none; font-size: 14px; font-weight: bold; background-color: #2b6cb0;" %>
+  </div>
+  
 
   <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
@@ -43,6 +49,7 @@
             <td style="padding: 14px 20px; text-align: right;">
               <%= link_to "Ver", employee_path(emp), style: "color: #3182ce; text-decoration: none; font-weight: bold; margin-right: 10px;" %>
               <%= link_to "Editar", edit_employee_path(emp), style: "color: #4a5568; text-decoration: none; font-weight: bold;" %>
+              <%= link_to "Eliminar", employee_path(emp), data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de que deseas eliminar a #{emp.full_name_complete}?" }, style: "color: #e53e3e; text-decoration: none; font-weight: bold; margin-left: 10px;" %>
             </td>
           </tr>
         <% end %>
@@ -56,6 +63,9 @@
         <% end %>
       </tbody>
     </table>
+  </div>
+  <div style="text-align: center; margin: 20px 0;">
+  <%= link_to "Ver Inactivos", discarded_employees_path, class: "btn btn-primary" %>
   </div>
 
 </div>

@@ -1,6 +1,6 @@
 <div style="max-width: 800px; margin: 40px auto; font-family: Arial, sans-serif;">
-  <h2>🤖 Importación Masiva mediante IA</h2>
-  <p style="color: #64748b;">Pega aquí el JSON generado por la IA para crear los movimientos en lote.</p>
+  <h2>🤖 Importación Masiva mediante JSON</h2>
+  <p style="color: #64748b;">Pega aquí el JSON formateado para crear los movimientos en lote.</p>
 
   <%= form_with url: bulk_import_financial_transactions_path, method: :post, local: true do |f| %>
     <div style="margin-bottom: 20px;">
@@ -10,7 +10,15 @@
 
     <div style="margin-bottom: 20px;">
       <%= f.label :json_data, "Pega el código JSON aquí*", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-      <%= f.text_area :json_data, rows: 12, placeholder: '[ { "transaction_date": "2026-03-15", ... } ]', required: true, style: "width: 100%; font-family: monospace; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;" %>
+      <%= f.text_area :json_data, rows: 12, placeholder: '  {
+    "transaction_date": "2025-11-10",
+    "description": "Pago de servicios",
+    "beneficiary": "Aguas del Norte",
+    "bank_reference": "123456789",
+    "category": "Servicios",
+    "transaction_type": "expense",
+    "amount": 15000.12
+  }', required: true, style: "width: 100%; font-family: monospace; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;" %>
     </div>
 
     <div style="display: flex; gap: 10px; justify-content: flex-end;">

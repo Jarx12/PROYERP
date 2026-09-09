@@ -1,0 +1,285 @@
+<% content_for :title, "Pago de Nómina en Masa" %>
+
+<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 1250px; margin: 0 auto;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <div>
+      <h1 style="color: #1a202c; font-size: 24px; margin: 0; font-weight: bold;">💳 Procesar Pago de Nómina en Masa</h1>
+      <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Ingresa referencias, comprobantes y ajustes extraordinarios por trabajador.</p>
+    </div>
+    <%= link_to "Volver a Empleados", employees_path, style: "padding: 8px 16px; background: #e2e8f0; color: #4a5568; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px;" %>
+  </div>
+
+  <%= form_with(url: process_bulk_payroll_employees_path, method: :post, multipart: true, local: true) do |f| %>
+    <!-- CONFIGURACIÓN GENERAL -->
+    <div style="background: white; border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px;">
+        <div style="grid-column: span 2;">
+          <label style="display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px;">Cuenta Bancaria de Origen*</label>
+          <%= select_tag :bank_account_id, options_from_collection_for_select(@bank_accounts, :id, :display_name), prompt: "Seleccione cuenta debitadora...", required: true, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+        </div>
+
+        <div>
+          <label style="display: block; font-weight: bold; color: #2b6cb0; margin-bottom: 5px;">Tasa de Cambio (Bs / USD)*</label>
+          <%= number_field_tag :exchange_rate, nil, step: "0.01", placeholder: "Ej. 36.50", id: "exchange_rate_input", required: true, style: "width: 70%; padding: 10px; border: 2px solid #3182ce; border-radius: 6px; font-weight: bold;" %>
+        </div>
+        <div>
+          <label style="display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px;">Fecha Período*</label>
+          <div style="display: flex; gap: 10px;">
+            <%= date_field_tag :period_start_date, Date.today, required: true, style: "width: 50%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 12px;" %>
+            <%= date_field_tag :period_end_date, Date.today+6, required: true, style: "width: 50%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 12px;" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELECCIÓN Y DETALLES INDIVIDUALES -->
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px;">
+      <div style="padding: 15px 20px; background: #edf2f7; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <strong style="color: #2d3748;">Personal Seleccionado para Pago</strong>
+        
+        <div style="display: flex; gap: 10px; align-items: center; font-size: 13px;">
+          <span style="color: #718096; font-weight: bold;">Acciones Rápidas:</span>
+          <button type="button" id="set_all_commission_zero" style="background: #e2e8f0; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; color: #4a5568; font-weight: bold;">Todos 0%</button>
+          <button type="button" id="set_all_commission_default" style="background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 4px; padding: 4px 8px; cursor: pointer; color: #2b6cb0; font-weight: bold;">Todos 0.3%</button>
+          <span style="color: #cbd5e0;">|</span>
+          <button type="button" id="select_all_btn" style="background: none; border: none; color: #3182ce; font-weight: bold; cursor: pointer;">Marcar Todos</button>
+          <button type="button" id="deselect_all_btn" style="background: none; border: none; color: #e53e3e; font-weight: bold; cursor: pointer;">Desmarcar Todos</button>
+          <button type="button" id="add_occasional_btn" style="background: #c6f6d5; border: 1px solid #9ae6b4; border-radius: 4px; padding: 4px 8px; cursor: pointer; color: #22543d; font-weight: bold; margin-right: 15px;">➕ Añadir</button>
+        </div>
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+        <thead>
+          <tr style="border-bottom: 2px solid #e2e8f0; color: #718096; font-size: 11px; text-transform: uppercase; background-color: #f7fafc;">
+            <th style="padding: 12px 10px; width: 30px; text-align: center;">Incluir</th>
+            <th style="padding: 12px 10px; width: 160px;">Empleado</th>
+            <th style="padding: 12px 10px; width: 110px;">Comisión</th>
+            <th style="padding: 12px 10px; width: 110px;">N° Referencia</th>
+            <th style="padding: 12px 10px;">Comprobante</th>
+            <th style="padding: 12px 10px; text-align: right; width: 85px;">Sueldo Base</th>
+            <th style="padding: 12px 10px; text-align: center; width: 110px; color: #d69e2e;">Ajuste ($)</th>
+            <th style="padding: 12px 10px; text-align: right; width: 120px; color: #2b6cb0;">Total (Bs.)</th>
+          </tr>
+          <th style="padding: 12px 10px; width: 40px;"></th>
+        </thead>
+        <tbody>
+          <% @employees.each do |emp| %>
+            <tr style="border-bottom: 1px solid #edf2f7; color: #2d3748;">
+              <td style="padding: 12px 10px; text-align: center;">
+                <input type="checkbox" name="employee_ids[]" value="<%= emp.id %>" class="employee_checkbox" checked style="width: 16px; height: 16px; cursor: pointer; accent-color: #3182ce;">
+              </td>
+              <td style="padding: 12px 10px;">
+                <strong><%= emp.respond_to?(:full_name_complete) ? emp.full_name_complete : "#{emp.name} #{emp.surname}" %></strong>
+                <span style="display: block; font-size: 11px; color: #718096;">C.I: <%= emp.cedula %></span>
+              </td>
+              <td style="padding: 12px 10px;">
+                <%= select_tag "commissions[#{emp.id}]", 
+                      options_for_select([["0% (Interno)", "0%"], ["0.3% (Otro Banco)", "0.3%"]], "0.3%"), 
+                      class: "employee_commission_select",
+                      style: "width: 100%; padding: 5px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 12px;" %>
+              </td>
+              <td style="padding: 12px 10px;">
+                <%= text_field_tag "bank_references[#{emp.id}]", nil, placeholder: "Ej. 000123", style: "width: 100%; padding: 5px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 12px; font-family: monospace;" %>
+              </td>
+              <td style="padding: 12px 10px;">
+                <%= file_field_tag "bank_receipts[#{emp.id}]", accept: "image/*,application/pdf", style: "font-size: 11px; width: 100%;" %>
+              </td>
+              <td style="padding: 12px 10px; text-align: right; font-weight: bold;">
+                $<span class="usd_salary" data-salary="<%= emp.salary || 0 %>"><%= number_with_precision(emp.salary || 0, precision: 2) %></span>
+              </td>
+              <td style="padding: 12px 10px; text-align: center;">
+                <%= number_field_tag "adjustments[#{emp.id}]", nil, step: "0.01", placeholder: "0.00", class: "employee_adjustment_input", style: "width: 80px; padding: 5px; border: 1px solid #d69e2e; border-radius: 4px; text-align: right; font-weight: bold; color: #744210;" %>
+              </td>
+              <td style="padding: 12px 10px; text-align: right; font-weight: bold; color: #2b6cb0;">
+                <span class="bs_converted_amount">0.00</span> Bs.
+              </td>
+              <td style="padding: 12px 10px;"></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #ebf8ff; padding: 15px 20px; border-radius: 8px; border: 1px solid #bee3f8;">
+      <div>
+        <span style="font-size: 14px; color: #2b6cb0;">Total Estimado a Procesar:</span>
+        <strong id="grand_total_bs" style="font-size: 18px; color: #2c5282; margin-left: 8px;">0.00 Bs.</strong>
+      </div>
+      <%= f.submit "🚀 Procesar Pago en Masa", style: "padding: 12px 24px; background: #2b6cb0; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer;" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  (function() {
+    let initialized = false;
+
+    function initBulkPayroll() {
+      // Prevenir inicialización múltiple
+      if (initialized) return;
+      initialized = true;
+
+      const exchangeInput = document.getElementById("exchange_rate_input");
+      const checkboxes = document.querySelectorAll(".employee_checkbox");
+      const adjustmentInputs = document.querySelectorAll(".employee_adjustment_input");
+      const selectAllBtn = document.getElementById("select_all_btn");
+      const deselectAllBtn = document.getElementById("deselect_all_btn");
+      const setAllZeroBtn = document.getElementById("set_all_commission_zero");
+      const setAllDefaultBtn = document.getElementById("set_all_commission_default");
+      const grandTotalEl = document.getElementById("grand_total_bs");
+      const addOccasionalBtn = document.getElementById("add_occasional_btn");
+
+      function recalculate() {
+        const rate = parseFloat(exchangeInput.value) || 0;
+        let totalBs = 0;
+
+        document.querySelectorAll("tbody tr").forEach(row => {
+          const chk = row.querySelector(".employee_checkbox");
+          const bsSpan = row.querySelector(".bs_converted_amount");
+          const adjInput = row.querySelector(".employee_adjustment_input");
+          
+          const usdSpan = row.querySelector(".usd_salary");
+          const extraUsdInput = row.querySelector(".extra_usd_salary");
+
+          if (bsSpan) {
+            let baseUsd = 0;
+            if (usdSpan) baseUsd = parseFloat(usdSpan.dataset.salary) || 0;
+            if (extraUsdInput) baseUsd = parseFloat(extraUsdInput.value) || 0;
+
+            const extraAdj = parseFloat(adjInput ? adjInput.value : 0) || 0;
+            const finalUsd = baseUsd + extraAdj;
+            const bs = finalUsd * rate;
+
+            bsSpan.textContent = bs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (chk && chk.checked) totalBs += bs;
+          }
+        });
+        if (grandTotalEl) grandTotalEl.textContent = totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " Bs.";
+      }
+
+      // Attach event listeners
+      if (exchangeInput) exchangeInput.addEventListener("input", recalculate);
+      checkboxes.forEach(chk => chk.addEventListener("change", recalculate));
+      adjustmentInputs.forEach(adj => adj.addEventListener("input", recalculate));
+
+      if (selectAllBtn) {
+        selectAllBtn.addEventListener("click", function() {
+          document.querySelectorAll(".employee_checkbox").forEach(c => c.checked = true);
+          recalculate();
+        });
+      }
+
+      if (deselectAllBtn) {
+        deselectAllBtn.addEventListener("click", function() {
+          document.querySelectorAll(".employee_checkbox").forEach(c => c.checked = false);
+          recalculate();
+        });
+      }
+
+      if (setAllZeroBtn) {
+        setAllZeroBtn.addEventListener("click", function() {
+          document.querySelectorAll(".employee_commission_select").forEach(s => s.value = "0%");
+        });
+      }
+
+      if (setAllDefaultBtn) {
+        setAllDefaultBtn.addEventListener("click", function() {
+          document.querySelectorAll(".employee_commission_select").forEach(s => s.value = "0.3%");
+        });
+      }
+
+      // --- Función para añadir trabajador ocasional ---
+      function addOccasionalWorker() {
+        const tbody = document.querySelector("tbody");
+        if (!tbody) return;
+        
+        const uid = Date.now() + Math.random();
+        const tr = document.createElement("tr");
+        tr.style.cssText = "border-bottom: 1px solid #edf2f7; background-color: #fffaf0; color: #2d3748;";
+        
+        tr.innerHTML = `
+          <td style="padding: 12px 10px; text-align: center;">
+            <input type="checkbox" checked class="employee_checkbox" style="width: 16px; height: 16px; cursor: pointer; accent-color: #3182ce;">
+          </td>
+          <td style="padding: 12px 10px;">
+            <input type="text" name="extra_workers[${uid}][name]" placeholder="Nombre completo" required style="width: 100%; margin-bottom: 4px; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 11px;">
+            <input type="text" name="extra_workers[${uid}][cedula]" placeholder="C.I." required style="width: 100%; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 11px;">
+          </td>
+          <td style="padding: 12px 10px;">
+            <select name="extra_workers[${uid}][commission]" class="employee_commission_select" style="width: 100%; padding: 5px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 12px;">
+              <option value="0%">0% (Interno)</option>
+              <option value="0.3%" selected>0.3% (Otro Banco)</option>
+            </select>
+          </td>
+          <td style="padding: 12px 10px;">
+            <input type="text" name="extra_workers[${uid}][bank_reference]" placeholder="Ej. 000123" style="width: 100%; padding: 5px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 12px; font-family: monospace;">
+          </td>
+          <td style="padding: 12px 10px;">
+            <input type="file" name="extra_workers[${uid}][bank_receipt]" accept="image/*,application/pdf" style="font-size: 11px; width: 100%;">
+          </td>
+          <td style="padding: 12px 10px; text-align: right;">
+            $<input type="number" name="extra_workers[${uid}][base_salary]" step="0.01" placeholder="0.00" class="extra_usd_salary" style="width: 60px; padding: 5px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: right; font-weight: bold;">
+          </td>
+          <td style="padding: 12px 10px; text-align: center;">
+            <input type="number" name="extra_workers[${uid}][adjustment]" step="0.01" placeholder="0.00" class="employee_adjustment_input" style="width: 80px; padding: 5px; border: 1px solid #d69e2e; border-radius: 4px; text-align: right; font-weight: bold; color: #744210;">
+          </td>
+          <td style="padding: 12px 10px; text-align: right; font-weight: bold; color: #2b6cb0;">
+            <span class="bs_converted_amount">0.00</span> Bs.
+          </td>
+          <td style="padding: 12px 5px; text-align: center;">
+            <button type="button" class="remove_extra_btn" style="color: #e53e3e; background: none; border: none; font-size: 16px; cursor: pointer;">✖</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+
+        // Attach event listeners to the new row elements
+        const extraUsdInput = tr.querySelector(".extra_usd_salary");
+        const adjInput = tr.querySelector(".employee_adjustment_input");
+        const checkbox = tr.querySelector(".employee_checkbox");
+        const removeBtn = tr.querySelector(".remove_extra_btn");
+
+        if (extraUsdInput) extraUsdInput.addEventListener("input", recalculate);
+        if (adjInput) adjInput.addEventListener("input", recalculate);
+        if (checkbox) checkbox.addEventListener("change", recalculate);
+        if (removeBtn) {
+          removeBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            tr.remove();
+            recalculate();
+          });
+        }
+
+        // Forzar recalculo
+        recalculate();
+      }
+
+      if (addOccasionalBtn) {
+        // Remover event listeners previos clonando el elemento
+        const newBtn = addOccasionalBtn.cloneNode(true);
+        addOccasionalBtn.parentNode.replaceChild(newBtn, addOccasionalBtn);
+        
+        newBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          addOccasionalWorker();
+        });
+      }
+
+      // Initial calculation
+      recalculate();
+    }
+
+    // Inicializar solo una vez
+    if (document.readyState === 'loading') {
+      document.addEventListener("DOMContentLoaded", initBulkPayroll);
+    } else {
+      initBulkPayroll();
+    }
+    
+    // Para Turbo: re-inicializar solo si no está inicializado
+    document.addEventListener("turbo:load", function() {
+      if (!initialized) {
+        initBulkPayroll();
+      }
+    });
+  })();
+</script>
