@@ -1,19 +1,10 @@
 <% content_for :title, "Nuevo Producto" %>
 
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 650px; margin: 0 auto; line-height: 1.25;">
-  
-  <div style="margin-bottom: 15px;">
-    <%= link_to "← Volver al inventario", products_path, style: "color: #718096; text-decoration: none; font-size: 14px;" %>
-  </div>
+<%= render "layouts/form_page",
+      title: "📦 Registrar Nuevo Producto",
+      subtitle: "Ingrese las especificaciones y niveles iniciales de stock para el catálogo.",
+      back: { label: "← Volver al inventario", path: products_path } do %>
 
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 30px;">
-    
-    <header style="margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">
-      <h1 style="color: #1a202c; font-size: 24px; margin: 0; font-weight: bold;">📦 Registrar Nuevo Producto</h1>
-      <p style="color: #718096; margin: 6px 0 0 0; font-size: 14px;">Ingrese las especificaciones y niveles iniciales de stock para el catálogo.</p>
-    </header>
+  <%= render "form", product: @product %>
 
-    <%= render "form", product: @product %>
-
-  </div>
-</div>
+<% end %>

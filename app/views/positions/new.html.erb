@@ -1,20 +1,10 @@
 <% content_for :title, "Nuevo Cargo" %>
 
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 600px; margin: 0 auto; line-height: 1.25;">
+<%= render "layouts/form_page",
+      title: "➕ Nuevo Cargo",
+      subtitle: "Registre un nuevo puesto de trabajo para el personal.",
+      back: { label: "← Volver a Configuracion", path: settings_path } do %>
 
-  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-    <%= link_to "← Volver a Cargos", positions_path, style: "color: #718096; text-decoration: none; font-size: 14px; font-weight: bold;" %>
-  </div>
+  <%= render "form", position: @position %>
 
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 30px;">
-    
-    <div style="border-bottom: 1px solid #edf2f7; padding-bottom: 15px; margin-bottom: 25px;">
-      <h1 style="color: #1a202c; font-size: 22px; margin: 0; font-weight: bold;">💼 Registrar Nuevo Cargo</h1>
-      <p style="color: #718096; font-size: 14px; margin: 5px 0 0 0;">Crea un nuevo puesto laboral para asignar a los empleados.</p>
-    </div>
-
-    <%= render "form", position: @position %>
-
-  </div>
-
-</div>
+<% end %>

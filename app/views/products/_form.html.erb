@@ -1,9 +1,11 @@
-<%= form_with(model: product, local: true) do |form| %>
+<%= form_with(model: product) do |form| %>
 
   <% if product.errors.any? %>
-    <div style="background-color: #fff5f5; border: 1px solid #fed7d7; color: #c53030; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-      <h2 style="font-size: 14px; margin: 0 0 5px 0; font-weight: bold;"><%= pluralize(product.errors.count, "error") %> impiden guardar este producto:</h2>
-      <ul style="margin: 0; padding-left: 20px; font-size: 13px;">
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(product.errors.count, "error") %> impiden guardar este producto:
+      </h2>
+      <ul class="form-alert__list">
         <% product.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,68 +13,97 @@
     </div>
   <% end %>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 18px;">
-    <div style="flex: 2;">
-      <%= form.label :name, "Nombre del Producto *", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.text_field :name, placeholder: "Ej. Tornillo de Acero Inoxidable 1/2", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+  <!-- Fila: Nombre + SKU -->
+  <div class="form-row">
+    <div class="form-col form-col--2">
+      <%= form.label :name, "Nombre del Producto", class: "form-label form-label--required" %>
+      <%= form.text_field :name,
+            placeholder: "Ej. Tornillo de Acero Inoxidable 1/2",
+            class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :sku, "Código / SKU *", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.text_field :sku, placeholder: "Ej. TOR-001", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
-    </div>
-  </div>
-
-  <div style="display: flex; gap: 15px; margin-bottom: 18px;">
-    <div style="flex: 1;">
-      <%= form.label :category_id, "Categoría", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.collection_select :category_id, Category.order(:name), :id, :name, { prompt: "— Seleccionar Categoría —" }, { style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; background-color: white; font-size: 14px;" } %>
-    </div>
-    <div style="flex: 1;">
-      <%= form.label :warehouse_id, "Almacén / Depósito", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.collection_select :warehouse_id, Warehouse.order(:name), :id, :name, { prompt: "— Seleccionar Almacén —" }, { style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; background-color: white; font-size: 14px;" } %>
+    <div class="form-col form-col--1">
+      <%= form.label :sku, "Código / SKU", class: "form-label form-label--required" %>
+      <%= form.text_field :sku,
+            placeholder: "Ej. TOR-001",
+            class: "form-input" %>
     </div>
   </div>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 18px;">
-    <div style="flex: 2;">
-      <%= form.label :location_detail, "Detalle de Ubicación Física", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.text_field :location_detail, placeholder: "Ej. Gabinete 15, Estante B, Repisa 3", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+  <!-- Fila: Categoría + Almacén -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :category_id, "Categoría", class: "form-label" %>
+      <%= form.collection_select :category_id,
+            Category.order(:name), :id, :name,
+            { prompt: "— Seleccionar Categoría —" },
+            class: "form-select" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :weight, "Peso (Kg) (Opcional)", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.number_field :weight, step: "0.001", placeholder: "Ej. 0.250", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
-    </div>
-  </div>
-
-  <div style="display: flex; gap: 15px; margin-bottom: 18px; background-color: #f7fafc; padding: 15px; border-radius: 6px; border: 1px solid #edf2f7;">
-    <div style="flex: 1;">
-      <%= form.label :price_cost, "Precio de Costo ($)", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.number_field :price_cost, step: "0.01", min: 0, placeholder: "0.00", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
-    </div>
-    <div style="flex: 1;">
-      <%= form.label :price_sale, "Precio de Venta ($)", style: "display: block; font-weight: bold; color: #2b6cb0; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.number_field :price_sale, step: "0.01", min: 0, placeholder: "0.00", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    <div class="form-col">
+      <%= form.label :warehouse_id, "Almacén / Depósito", class: "form-label" %>
+      <%= form.collection_select :warehouse_id,
+            Warehouse.order(:name), :id, :name,
+            { prompt: "— Seleccionar Almacén —" },
+            class: "form-select" %>
     </div>
   </div>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-    <div style="flex: 1;">
-      <%= form.label :stock_current, "Stock Inicial", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.number_field :stock_current, disabled: product.persisted?, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #{product.persisted? ? '#edf2f7' : 'white'};" %>
+  <!-- Fila: Ubicación + Peso -->
+  <div class="form-row">
+    <div class="form-col form-col--2">
+      <%= form.label :location_detail, "Detalle de Ubicación Física", class: "form-label" %>
+      <%= form.text_field :location_detail,
+            placeholder: "Ej. Gabinete 15, Estante B, Repisa 3",
+            class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :stock_minimum, "Stock Mínimo (Alerta)", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-      <%= form.number_field :stock_minimum, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+    <div class="form-col form-col--1">
+      <%= form.label :weight, "Peso (Kg) (Opcional)", class: "form-label" %>
+      <%= form.number_field :weight, step: "0.001",
+            placeholder: "Ej. 0.250", class: "form-input" %>
     </div>
   </div>
 
-  <div style="margin-bottom: 25px;">
-    <%= form.label :description, "Descripción o Notas", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 13px;" %>
-    <%= form.text_area :description, rows: 3, placeholder: "Detalles técnicos, especificaciones, uso principal...", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+  <!-- Bloque: Precios -->
+  <div class="form-row form-section">
+    <div class="form-col">
+      <%= form.label :price_cost, "Precio de Costo ($)", class: "form-label" %>
+      <%= form.number_field :price_cost, step: "0.01", min: 0,
+            placeholder: "0.00", class: "form-input" %>
+    </div>
+    <div class="form-col">
+      <%= form.label :price_sale, "Precio de Venta ($)",
+            class: "form-label form-label--accent" %>
+      <%= form.number_field :price_sale, step: "0.01", min: 0,
+            placeholder: "0.00", class: "form-input" %>
+    </div>
   </div>
 
-  <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-    <%= form.submit "Guardar Producto", style: "padding: 10px 20px; border: none; border-radius: 6px; color: white; background-color: #38a169; font-size: 14px; font-weight: bold; cursor: pointer;" %>
+  <!-- Fila: Stock actual + Stock mínimo -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :stock_current, "Stock Inicial", class: "form-label" %>
+      <%= form.number_field :stock_current,
+            disabled: product.persisted?,
+            class: "form-input" %>
+    </div>
+    <div class="form-col">
+      <%= form.label :stock_minimum, "Stock Mínimo (Alerta)", class: "form-label" %>
+      <%= form.number_field :stock_minimum, class: "form-input" %>
+    </div>
+  </div>
+
+  <!-- Descripción -->
+  <div class="form-row form-row--last">
+    <div class="form-col">
+      <%= form.label :description, "Descripción o Notas", class: "form-label" %>
+      <%= form.text_area :description, rows: 3,
+            placeholder: "Detalles técnicos, especificaciones, uso principal...",
+            class: "form-input form-textarea" %>
+    </div>
+  </div>
+
+  <!-- Acciones -->
+  <div class="form-actions">
+    <%= form.submit "Guardar Producto", class: "btn btn--success" %>
   </div>
 
 <% end %>

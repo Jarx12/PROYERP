@@ -1,0 +1,74 @@
+<%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+<% content_for :title, "Proyectos - ProyERP" %>
+
+<!-- Hero público -->
+<section class="pub-hero">
+  <div class="pub-hero__inner">
+    <span class="hero__badge">Portafolio</span>
+    <h1 class="pub-hero__title">Nuestros Proyectos</h1>
+    <p class="pub-hero__text">
+      Una selección de implementaciones de infraestructura de
+      telecomunicaciones realizadas para empresas líderes del oriente del país.
+    </p>
+  </div>
+</section>
+
+<!-- Grid de proyectos (dinámico) -->
+<section class="pub-section">
+  <div class="pub-section__inner">
+
+    <% if Array(@proyectos).any? %>
+      <div class="projects-grid">
+        <% Array(@proyectos).each do |proyecto| %>
+          <article class="project-card">
+            <% if proyecto.respond_to?(:cover_image) && proyecto.cover_image.attached? %>
+              <div class="project-card__media">
+                <%= image_tag rails_blob_path(proyecto.cover_image),
+                      alt: proyecto.title %>
+              </div>
+            <% end %>
+
+            <div class="project-card__body">
+              <% if proyecto.respond_to?(:category) && proyecto.category.present? %>
+                <div class="project-card__meta"><%= proyecto.category %></div>
+              <% end %>
+
+              <h3 class="project-card__title">
+                <%= proyecto.respond_to?(:title) ? proyecto.title : "Proyecto" %>
+              </h3>
+
+              <p class="project-card__desc">
+                <%= truncate(proyecto.respond_to?(:description) ? proyecto.description.to_s : "", length: 140) %>
+              </p>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Estado vacío: cuando aún no hay proyectos o el modelo no existe -->
+      <div class="data-table__empty" style="padding: 60px 20px;">
+        <p style="font-size: 18px; margin-bottom: 10px;">
+          🚧 Pronto estaremos publicando nuestros proyectos destacados.
+        </p>
+        <p style="font-size: 14px; color: var(--color-text-muted);">
+          Mientras tanto, puedes
+          <%= link_to "contactarnos", contactanos_path, class: "link-inline" %>
+          para conocer más sobre nuestro trabajo.
+        </p>
+      </div>
+    <% end %>
+
+  </div>
+</section>
+
+<!-- CTA final -->
+<section class="pub-section pub-section--alt">
+  <div class="pub-section__inner" style="text-align: center;">
+    <h2 class="pub-section__title">¿Tienes un proyecto en mente?</h2>
+    <p class="pub-section__text" style="max-width: 600px; margin: 0 auto 25px;">
+      Conversemos sobre cómo podemos ayudarte a garantizar la continuidad
+      operativa de tu empresa.
+    </p>
+    <%= link_to "Contáctanos", contactanos_path, class: "btn btn--primary btn--lg" %>
+  </div>
+</section>

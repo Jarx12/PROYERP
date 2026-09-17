@@ -1,26 +1,65 @@
-<%= form_with(model: bank_account, local: true) do |form| %>
-  <div style="margin-bottom: 15px;">
-    <%= form.label :institution, "Institución Bancaria*", style: "display: block; font-weight: 500; margin-bottom: 5px;" %>
-    <%= form.text_field :institution, placeholder: "Ej. Banco Banesco / Zelle / Cash", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+<%= form_with(model: bank_account) do |form| %>
+
+  <% if bank_account.errors.any? %>
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(bank_account.errors.count, "error") %> impiden guardar esta cuenta:
+      </h2>
+      <ul class="form-alert__list">
+        <% bank_account.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Institución -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :institution, "Institución Bancaria",
+            class: "form-label form-label--required" %>
+      <%= form.text_field :institution,
+            placeholder: "Ej. Banco Banesco / Zelle / Cash",
+            class: "form-input" %>
+    </div>
   </div>
 
-  <div style="margin-bottom: 15px;">
-    <%= form.label :currency, "Moneda*", style: "display: block; font-weight: 500; margin-bottom: 5px;" %>
-    <%= form.select :currency, [["Bolívares (VES)", "VES"], ["Dólares (USD)", "USD"]], { prompt: "Seleccione moneda" }, style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+  <!-- Moneda -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :currency, "Moneda",
+            class: "form-label form-label--required" %>
+      <%= form.select :currency,
+            [["Bolívares (VES)", "VES"], ["Dólares (USD)", "USD"]],
+            { prompt: "Seleccione moneda" },
+            class: "form-select" %>
+    </div>
   </div>
 
-  <div style="margin-bottom: 15px;">
-    <%= form.label :account_number, "Nro. de Cuenta (Opcional)", style: "display: block; font-weight: 500; margin-bottom: 5px;" %>
-    <%= form.text_field :account_number, placeholder: "0102-...", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+  <!-- Nro. Cuenta -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :account_number, "Nro. de Cuenta (Opcional)", class: "form-label" %>
+      <%= form.text_field :account_number,
+            placeholder: "0102-...",
+            class: "form-input" %>
+    </div>
   </div>
 
-  <div style="margin-bottom: 25px;">
-    <%= form.label :email, "Correo asociado (Opcional)", style: "display: block; font-weight: 500; margin-bottom: 5px;" %>
-    <%= form.email_field :email, placeholder: "correo@banco.com", style: "width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+  <!-- Email -->
+  <div class="form-row form-row--last">
+    <div class="form-col">
+      <%= form.label :email, "Correo asociado (Opcional)", class: "form-label" %>
+      <%= form.email_field :email,
+            placeholder: "correo@banco.com",
+            class: "form-input" %>
+    </div>
   </div>
 
-  <div style="display: flex; justify-content: flex-end; gap: 10px;">
-    <%= link_to "Cancelar", settings_path, style: "padding: 10px 20px; background: #e5e7eb; color: #374151; text-decoration: none; border-radius: 6px;" %>
-    <%= form.submit "Guardar Cuenta", style: "padding: 10px 20px; background: #319795; color: white; border: none; border-radius: 6px; cursor: pointer;" %>
+  <!-- Acciones -->
+  <div class="form-actions">
+    <%= link_to "Cancelar", settings_path, class: "btn btn--ghost" %>
+    <%= form.submit "Guardar Cuenta", class: "btn btn--teal" %>
   </div>
+
 <% end %>

@@ -1,97 +1,103 @@
 <% content_for :title, "Inventario de Productos" %>
 
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 1100px; margin: 0 auto; line-height: 1.25;">
+<div class="page">
 
-  <!-- Encabezado y Botón de Acción -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+  <header class="page__header">
     <div>
-      <h1 style="color: #1a202c; font-size: 28px; margin: 0; font-weight: bold;">📦 Inventario de Productos</h1>
-      <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Control de existencias, catálogo y trazabilidad de movimientos.</p>
+      <h1 class="page__title">📦 Inventario de Productos</h1>
+      <p class="page__subtitle">Control de existencias, catálogo y trazabilidad de movimientos.</p>
     </div>
-    <%= link_to "+ Nuevo Producto", new_product_path, style: "background-color: #38a169; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px;" %>
+    <div class="page__actions">
+      <%= link_to "+ Nuevo Producto", new_product_path, class: "btn btn--success" %>
+    </div>
+  </header>
+
+  <!-- Métricas rápidas -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat__label">Total Ítems</span>
+      <p class="stat__value"><%= @products.count %></p>
+    </div>
+    <div class="stat stat--warning">
+      <span class="stat__label">Stock Bajo / Mínimo</span>
+      <p class="stat__value"><%= @low_stock_count %></p>
+    </div>
+    <div class="stat stat--danger">
+      <span class="stat__label">Agotados (Sin Stock)</span>
+      <p class="stat__value"><%= @out_of_stock_count %></p>
+    </div>
   </div>
 
-  <!-- Métricas Rápidas -->
-  <div style="display: flex; gap: 20px; margin-bottom: 25px;">
-    <div style="flex: 1; background-color: white; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-      <span style="font-size: 12px; font-weight: bold; color: #718096; text-transform: uppercase;">Total Ítems</span>
-      <p style="font-size: 24px; font-weight: bold; color: #2d3748; margin: 5px 0 0 0;"><%= @products.count %></p>
-    </div>
-    <div style="flex: 1; background-color: white; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-      <span style="font-size: 12px; font-weight: bold; color: #dd6b20; text-transform: uppercase;">Stock Bajo / Mínimo</span>
-      <p style="font-size: 24px; font-weight: bold; color: #dd6b20; margin: 5px 0 0 0;">
-        <%= @products.select { |p| p.stock_current <= p.stock_minimum && p.stock_current > 0 }.count %>
-      </p>
-    </div>
-    <div style="flex: 1; background-color: white; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-      <span style="font-size: 12px; font-weight: bold; color: #e53e3e; text-transform: uppercase;">Agotados (Sin Stock)</span>
-      <p style="font-size: 24px; font-weight: bold; color: #e53e3e; margin: 5px 0 0 0;">
-        <%= @products.select { |p| p.stock_current == 0 }.count %>
-      </p>
-    </div>
-  </div>
+  <!-- Tabla -->
+  <div class="table-card">
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Producto</th>
+            <th class="data-table__th--center">Stock Mín.</th>
+            <th class="data-table__th--center">Stock Actual</th>
+            <th class="data-table__th--center">Estado</th>
+            <th class="data-table__th--right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @products.any? %>
+            <% @products.each do |product| %>
+              <tr>
+                <td class="data-table__td--code"><%= product.sku %></td>
 
-  <!-- Tabla del Catálogo -->
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-      <thead>
-        <tr style="background-color: #f7fafc; border-bottom: 2px solid #e2e8f0; color: #4a5568;">
-          <th style="padding: 14px 20px; font-weight: bold;">SKU</th>
-          <th style="padding: 14px 20px; font-weight: bold;">Producto</th>
-          <th style="padding: 14px 20px; font-weight: bold; text-align: center;">Stock Mín.</th>
-          <th style="padding: 14px 20px; font-weight: bold; text-align: center;">Stock Actual</th>
-          <th style="padding: 14px 20px; font-weight: bold; text-align: center;">Estado</th>
-          <th style="padding: 14px 20px; font-weight: bold; text-align: right;">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if @products.any? %>
-          <% @products.each do |product| %>
-            <tr style="border-bottom: 1px solid #edf2f7; color: #2d3748;">
-              <td style="padding: 14px 20px; font-weight: bold; font-family: monospace; color: #4a5568;">
-                <%= product.sku %>
-              </td>
-              <td style="padding: 14px 20px;">
-                <div style="font-weight: bold; color: #2d3748;"><%= link_to product.name, product, style: "color: #2b6cb0; text-decoration: none;" %></div>
-                <div style="font-size: 12px; color: #718096;"><%= truncate(product.description, length: 50) %></div>
-              </td>
-              <td style="padding: 14px 20px; text-align: center; color: #718096;">
-                <%= product.stock_minimum %>
-              </td>
-              <td style="padding: 14px 20px; text-align: center; font-weight: bold; font-size: 16px;">
-                <%= product.stock_current %>
-              </td>
-              <td style="padding: 14px 20px; text-align: center;">
-                <% if product.stock_current == 0 %>
-                  <span style="background-color: #fed7d7; color: #9b2c2c; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">Sin Stock</span>
-                <% elsif product.stock_current <= product.stock_minimum %>
-                  <span style="background-color: #feebc8; color: #9c4221; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">Bajo Stock</span>
-                <% else %>
-                  <span style="background-color: #c6f6d5; color: #22543d; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">Normal</span>
-                <% end %>
-              </td>
-              <td style="padding: 14px 20px; text-align: right;">
-                <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">                  
-                  <%= link_to "Ver Detalles", product, style: "background-color: #edf2f7; color: #2d3748; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
-                  <%= link_to "Mov. Stock", new_movement_product_path(product), style: "background-color: #edf2f7; color: #2d3748; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;" %>
-                  <%= link_to "✏️", edit_product_path(product), title: "Editar", style: "color: #4a5568; text-decoration: none; font-size: 16px; padding: 0 4px;" %>
-                </div>
+                <td>
+                  <%= link_to product.name, product, class: "data-table__product-link" %>
+                  <span class="data-table__meta">
+                    <%= truncate(product.description, length: 50) %>
+                  </span>
+                </td>
+
+                <td class="data-table__td--center data-table__td--muted">
+                  <%= product.stock_minimum %>
+                </td>
+
+                <td class="data-table__td--center data-table__td--strong">
+                  <%= product.stock_current %>
+                </td>
+
+                <td class="data-table__td--center">
+                  <% if product.stock_current == 0 %>
+                    <span class="badge badge--danger">Sin Stock</span>
+                  <% elsif product.stock_current <= product.stock_minimum %>
+                    <span class="badge badge--warning">Bajo Stock</span>
+                  <% else %>
+                    <span class="badge badge--success">Normal</span>
+                  <% end %>
+                </td>
+
+                <td class="data-table__td--right">
+                  <div class="data-table__actions">
+                    <%= link_to "Ver Detalles", product,
+                          class: "btn btn--subtle btn--sm" %>
+                    <%= link_to "Mov. Stock", new_movement_product_path(product),
+                          class: "btn btn--subtle btn--sm" %>
+                    <%= link_to "✏️", edit_product_path(product),
+                          title: "Editar",
+                          class: "action-link action-link--edit" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="data-table__empty">
+                No hay productos registrados en el inventario.
+                <%= link_to "Registrar el primero", new_product_path, class: "link-inline" %>
               </td>
             </tr>
           <% end %>
-        <% else %>
-          <tr>
-            <td colspan="6" style="padding: 40px; text-align: center; color: #a0aec0;">
-              No hay productos registrados en el inventario. <%= link_to "Registrar el primero", new_product_path, style: "color: #38a169; font-weight: bold;" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div style="margin-top: 20px;">
-    <%= link_to "← Volver al Dashboard", root_path, style: "color: #718096; text-decoration: none; font-size: 14px;" %>
-  </div>
-
+  <%= link_to "← Volver al Dashboard", root_path, class: "page__back" %>
 </div>

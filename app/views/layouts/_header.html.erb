@@ -1,17 +1,17 @@
 <header style="background-color: #1a202c; color: white; padding: 0 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: Arial, sans-serif;">
   <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 64px;">
     
-    <!-- LOGO PRINCIPAL -->
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <%= link_to root_path, style: "text-decoration: none; color: white; display: flex; align-items: center; gap: 8px;" do %>
-        <span style="font-size: 22px;">🏢</span>
-        <span style="font-weight: bold; font-size: 18px; letter-spacing: 0.5px;">PROY<span style="color: #4299e1;">ERP</span></span>
-      <% end %>
-    </div>
+  <!-- LOGO PRINCIPAL -->
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <%= link_to (logged_in? ? dashboard_root_path : root_path), style: "text-decoration: none; color: white; display: flex; align-items: center; gap: 8px;" do %>
+      <span style="font-size: 22px;">🏢</span>
+      <span style="font-weight: bold; font-size: 18px; letter-spacing: 0.5px;">PROY<span style="color: #4299e1;">ERP</span></span>
+    <% end %>
+  </div>
 
     <% if logged_in? %>
       <nav style="display: flex; align-items: center; gap: 6px;">
-        <%= link_to root_path, style: "color: #{current_page?(root_path) ? '#ffffff' : '#cbd5e0'}; background-color: #{current_page?(root_path) ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s;" do %>
+        <%= link_to dashboard_root_path, style: "color: #{current_page?(dashboard_root_path) ? '#ffffff' : '#cbd5e0'}; background-color: #{current_page?(dashboard_root_path) ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s;" do %>
           🏠 Inicio
         <% end %>
 

@@ -1,15 +1,11 @@
 <% content_for :title, "Nuevo Vehículo" %>
 
-<div style="max-width: 850px; margin: 0 auto; padding: 20px;">
-  <div style="margin-bottom: 15px;">
-    <%= link_to "← Volver a Flota Vehicular", vehicles_path, style: "color: #718096; text-decoration: none; font-size: 13px;" %>
-  </div>
+<%= render "layouts/form_page",
+      title: "➕ Registrar Nuevo Vehículo",
+      subtitle: "Complete los datos del vehículo para agregarlo a la flota.",
+      back: { label: "← Volver a Flota Vehicular", path: vehicles_path },
+      width: :medium do %>
 
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-    <h2 style="margin-top: 0; color: #2d3748; font-size: 20px; border-bottom: 1px solid #edf2f7; padding-bottom: 12px;">
-      🚗 Registrar Nuevo Vehículo
-    </h2>
+  <%= render "form", vehicle: @vehicle %>
 
-    <%= render "form", vehicle: @vehicle %>
-  </div>
-</div>
+<% end %>

@@ -1,38 +1,29 @@
 <% content_for :title, "Ajuste de Inventario" %>
 
-  <% 
-    # Detecta si el usuario vino desde la ficha del producto (show) o desde el listado (index)
-    back_path = if request.referrer&.include?(product_path(@product))
-                  product_path(@product)
-                else
-                  products_path
-                end
+<% back = back_link_for(@product) %>
 
-    back_label = back_path == product_path(@product) ? "← Volver a la ficha del producto" : "← Volver al inventario"
-  %>
+<div class="page page--narrow">
 
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 600px; margin: 0 auto; line-height: 1.25;">
+  <%= link_to back[:label], back[:path], class: "page__back" %>
 
-  <!-- Enlace dinámico según la procedencia del usuario -->
-  <div style="margin-bottom: 15px;">
-    <%= link_to back_label, back_path, style: "color: #718096; text-decoration: none; font-size: 14px; font-weight: bold;" %>
-  </div>
+  <div class="table-card" style="padding: 30px;">
 
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 30px;">
-    
-    <header style="margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">
-      <h1 style="color: #1a202c; font-size: 22px; margin: 0; font-weight: bold;">📊 Registrar Movimiento de Stock</h1>
-      <p style="color: #718096; margin: 6px 0 0 0; font-size: 14px;">
-        Producto: <strong><%= @product.name %></strong> (Stock Actual: <strong style="color: #2b6cb0;"><%= @product.stock_current %></strong>)
+    <header class="form-header">
+      <h1 class="form-header__title">📊 Registrar Movimiento de Stock</h1>
+      <p class="form-header__subtitle">
+        Producto: <strong><%= @product.name %></strong>
+        (Stock Actual: <strong class="text-primary"><%= @product.stock_current %></strong>)
       </p>
     </header>
 
-    <%= form_with(model: @stock_movement, url: create_movement_product_path(@product), method: :post, local: true) do |form| %>
+    <%= form_with(model: @stock_movement, url: create_movement_product_path(@product), method: :post) do |form| %>
 
       <% if @stock_movement.errors.any? %>
-        <div style="background-color: #fff5f5; border: 1px solid #fed7d7; color: #c53030; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-          <h2 style="font-size: 14px; margin: 0 0 5px 0; font-weight: bold;"><%= pluralize(@stock_movement.errors.count, "error") %> impiden procesar este movimiento:</h2>
-          <ul style="margin: 0; padding-left: 20px; font-size: 13px;">
+        <div class="form-alert form-alert--danger">
+          <h2 class="form-alert__title">
+            <%= pluralize(@stock_movement.errors.count, "error") %> impiden procesar este movimiento:
+          </h2>
+          <ul class="form-alert__list">
             <% @stock_movement.errors.each do |error| %>
               <li><%= error.full_message %></li>
             <% end %>
@@ -40,28 +31,34 @@
         </div>
       <% end %>
 
-      <!-- Tipo de Operación (Subir o Bajar) -->
-      <div style="margin-bottom: 20px;">
-        <%= form.label :movement_type, "Acción a realizar", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 14px;" %>
-        <%= form.select :movement_type, [["🟢 Subir Stock (Entrada / Compra)", "input"], ["🔴 Bajar Stock (Salida / Entrega / Retiro)", "output"]], {}, { style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; background-color: white; font-size: 14px; color: #2d3748;" } %>
+      <!-- Tipo de Operación -->
+      <div class="form-group">
+        <%= form.label :movement_type, "Acción a realizar", class: "form-label" %>
+        <%= form.select :movement_type,
+              [["🟢 Subir Stock (Entrada / Compra)", "input"],
+               ["🔴 Bajar Stock (Salida / Entrega / Retiro)", "output"]],
+              {},
+              class: "form-select" %>
       </div>
 
       <!-- Cantidad -->
-      <div style="margin-bottom: 20px;">
-        <%= form.label :quantity, "Cantidad de unidades", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 14px;" %>
-        <%= form.number_field :quantity, min: 1, placeholder: "Ej. 5", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; color: #2d3748;" %>
+      <div class="form-group">
+        <%= form.label :quantity, "Cantidad de unidades", class: "form-label" %>
+        <%= form.number_field :quantity, min: 1, placeholder: "Ej. 5", class: "form-input" %>
       </div>
 
       <!-- Motivo -->
-      <div style="margin-bottom: 30px;">
-        <%= form.label :reason, "Motivo o Observación", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 5px; font-size: 14px;" %>
-        <%= form.text_field :reason, placeholder: "Ej. Recepción de lote, Asignación a proyecto, Merma, etc.", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; color: #2d3748;" %>
+      <div class="form-group form-group--lg">
+        <%= form.label :reason, "Motivo o Observación", class: "form-label" %>
+        <%= form.text_field :reason,
+              placeholder: "Ej. Recepción de lote, Asignación a proyecto, Merma, etc.",
+              class: "form-input" %>
       </div>
 
       <!-- Botones -->
-      <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-        <%= link_to "Cancelar", product_path(@product), style: "padding: 10px 18px; border: 1px solid #cbd5e0; border-radius: 6px; color: #4a5568; text-decoration: none; font-size: 14px; font-weight: bold; background-color: white;" %>
-        <%= form.submit "Aplicar Cambios", style: "padding: 10px 18px; border: none; border-radius: 6px; color: white; background-color: #38a169; font-size: 14px; font-weight: bold; cursor: pointer;" %>
+      <div class="form-actions">
+        <%= link_to "Cancelar", product_path(@product), class: "btn btn--ghost" %>
+        <%= form.submit "Aplicar Cambios", class: "btn btn--success" %>
       </div>
 
     <% end %>

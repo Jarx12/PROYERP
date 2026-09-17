@@ -1,0 +1,108 @@
+<%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+<% content_for :title, "Contáctanos - ProyERP" %>
+
+<!-- Hero público -->
+<section class="pub-hero">
+  <div class="pub-hero__inner">
+    <span class="hero__badge">Contacto</span>
+    <h1 class="pub-hero__title">Contáctanos</h1>
+    <p class="pub-hero__text">
+      Cuéntanos sobre tu proyecto y un especialista se pondrá en contacto
+      contigo en menos de 24 horas.
+    </p>
+  </div>
+</section>
+
+<!-- Grid de contacto -->
+<section class="pub-section">
+  <div class="pub-section__inner">
+    <div class="contact-grid">
+
+      <!-- Información de contacto -->
+      <div>
+        <h2 class="pub-section__title">Información de Contacto</h2>
+
+        <div class="contact-info__item">
+          <div class="contact-info__label">Correo Electrónico</div>
+          <div class="contact-info__value">
+            <a href="mailto:gerencia@proyerp.com">gerencia@proyerp.com</a>
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__label">Teléfono</div>
+          <div class="contact-info__value">
+            <a href="tel:+584120000000">+58 412-000-0000</a>
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__label">Dirección</div>
+          <div class="contact-info__value">
+            Maturín, Estado Monagas, Venezuela
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__label">Horario de Atención</div>
+          <div class="contact-info__value">
+            Lunes a Viernes · 8:00 AM – 5:00 PM
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="form-card">
+        <h2 class="pub-section__title" style="font-size: 22px;">Envíanos un mensaje</h2>
+
+        <%# Formulario de contacto (por ahora no procesa) %>
+        <%= form_with(url: "#", local: false) do |f| %>
+          <div class="form-row">
+            <div class="form-col">
+              <%= f.label :name, "Nombre completo", class: "form-label form-label--required" %>
+              <%= f.text_field :name, class: "form-input",
+                    placeholder: "Ej. Juan Pérez" %>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <%= f.label :email, "Correo electrónico", class: "form-label form-label--required" %>
+              <%= f.email_field :email, class: "form-input",
+                    placeholder: "correo@empresa.com" %>
+            </div>
+            <div class="form-col">
+              <%= f.label :phone, "Teléfono", class: "form-label" %>
+              <%= f.text_field :phone, class: "form-input",
+                    placeholder: "Ej. 0412-000-0000" %>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <%= f.label :subject, "Asunto", class: "form-label" %>
+              <%= f.select :subject,
+                    ["Consulta general", "Solicitud de cotización",
+                     "Soporte técnico", "Alianzas comerciales", "Otro"],
+                    { prompt: "Seleccione un asunto" },
+                    class: "form-select" %>
+            </div>
+          </div>
+
+          <div class="form-row form-row--last">
+            <div class="form-col">
+              <%= f.label :message, "Mensaje", class: "form-label form-label--required" %>
+              <%= f.text_area :message, rows: 5, class: "form-input form-textarea",
+                    placeholder: "Cuéntanos sobre tu proyecto, requerimientos o dudas..." %>
+            </div>
+          </div>
+
+          <div class="form-actions" style="justify-content: flex-start;">
+            <%= f.submit "Enviar Mensaje", class: "btn btn--primary btn--lg" %>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,139 +1,161 @@
-<%= form_with(model: vehicle, local: true, html: { multipart: true }) do |form| %>
+<%= form_with(model: vehicle, html: { multipart: true }) do |form| %>
+
   <% if vehicle.errors.any? %>
-    <div style="background-color: #fff5f5; border: 1px solid #feb2b2; color: #c53030; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-      <h4 style="margin: 0 0 5px 0; font-size: 14px;"><%= pluralize(vehicle.errors.count, "error") %> impidieron guardar el vehículo:</h4>
-      <ul style="margin: 0; padding-left: 20px; font-size: 13px;">
-        <% vehicle.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(vehicle.errors.count, "error") %> impidieron guardar el vehículo:
+      </h2>
+      <ul class="form-alert__list">
+        <% vehicle.errors.each do |error| %>
+          <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <!-- Sección 1: Datos Básicos (Obligatorios) -->
-  <h3 style="font-size: 14px; color: #2b6cb0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 0; margin-bottom: 15px;">
-    📋 Información Básica
-  </h3>
+  <!-- ==================== Información Básica ==================== -->
+  <h2 class="form-section-heading">📋 Información Básica</h2>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-    <div style="flex: 1;">
-      <%= form.label :plate, "Placa / Patente *", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :plate, required: true, placeholder: "Ej. ABC-123", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :plate, "Placa / Patente", class: "form-label form-label--required" %>
+      <%= form.text_field :plate, required: true,
+            placeholder: "Ej. ABC-123", class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :brand, "Marca *", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :brand, required: true, placeholder: "Ej. Toyota, Chevrolet", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+    <div class="form-col">
+      <%= form.label :brand, "Marca", class: "form-label form-label--required" %>
+      <%= form.text_field :brand, required: true,
+            placeholder: "Ej. Toyota, Chevrolet", class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :model, "Modelo *", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :model, required: true, placeholder: "Ej. Hilux, Spark", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+    <div class="form-col">
+      <%= form.label :model, "Modelo", class: "form-label form-label--required" %>
+      <%= form.text_field :model, required: true,
+            placeholder: "Ej. Hilux, Spark", class: "form-input" %>
     </div>
   </div>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-    <div style="flex: 1;">
-      <%= form.label :vehicle_category_id, "Categoría / Tipo de Vehículo", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.collection_select :vehicle_category_id, VehicleCategory.all, :id, :name, { include_blank: "Seleccionar categoría..." }, { style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; background-color: white; box-sizing: border-box;" } %>
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :vehicle_category_id, "Categoría / Tipo de Vehículo", class: "form-label" %>
+      <%= form.collection_select :vehicle_category_id,
+            VehicleCategory.order(:name), :id, :name,
+            { include_blank: "Seleccionar categoría..." },
+            class: "form-select" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :condition, "Condición", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.select :condition, [["Propio", "own"], ["Alquilado", "rented"]], {}, { style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; background-color: white; box-sizing: border-box;" } %>
+    <div class="form-col">
+      <%= form.label :condition, "Condición", class: "form-label" %>
+      <%= form.select :condition,
+            [["Propio", "own"], ["Alquilado", "rented"]],
+            {}, class: "form-select" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :status, "Estado Operativo", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.select :status, [["Disponible", "available"], ["En Uso", "in_use"], ["Mantenimiento", "maintenance"]], {}, { style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; background-color: white; box-sizing: border-box;" } %>
-    </div>
-  </div>
-
-  <!-- Sección 2: Especificaciones Técnicas (Opcionales) -->
-  <h3 style="font-size: 14px; color: #2b6cb0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px;">
-    ⚙️ Especificaciones Técnicas
-  </h3>
-
-  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-    <div style="flex: 1;">
-      <%= form.label :engine_serial, "Serial del Motor", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :engine_serial, placeholder: "Número de motor", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
-    </div>
-    <div style="flex: 1;">
-      <%= form.label :body_serial, "Serial de Carrocería (NIV/VIN)", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :body_serial, placeholder: "Número de carrocería / chasis", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+    <div class="form-col">
+      <%= form.label :status, "Estado Operativo", class: "form-label" %>
+      <%= form.select :status,
+            [["Disponible", "available"], ["En uso", "in_use"], ["Mantenimiento", "maintenance"]],
+            {}, class: "form-select" %>
     </div>
   </div>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-    <div style="flex: 1;">
-      <%= form.label :color, "Color", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :color, placeholder: "Ej. Blanco, Negro", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+  <!-- ==================== Especificaciones Técnicas ==================== -->
+  <h2 class="form-section-heading form-section-heading--spaced">⚙️ Especificaciones Técnicas</h2>
+
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :engine_serial, "Serial del Motor", class: "form-label" %>
+      <%= form.text_field :engine_serial,
+            placeholder: "Número de motor", class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :year, "Año", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.number_field :year, placeholder: "Ej. 2022", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
-    </div>
-    <div style="flex: 1;">
-      <%= form.label :seats, "Cantidad de Puestos", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.number_field :seats, placeholder: "Ej. 5", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
-    </div>
-    <div style="flex: 1;">
-      <%= form.label :load_capacity, "Capacidad Carga (Kg / Ton)", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.number_field :load_capacity, step: 0.01, placeholder: "Ej. 1200.00", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+    <div class="form-col">
+      <%= form.label :body_serial, "Serial de Carrocería (NIV/VIN)", class: "form-label" %>
+      <%= form.text_field :body_serial,
+            placeholder: "Número de carrocería / chasis", class: "form-input" %>
     </div>
   </div>
 
-  <!-- Sección 3: Propietario y Póliza de Seguro -->
-  <h3 style="font-size: 14px; color: #2b6cb0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px;">
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :color, "Color", class: "form-label" %>
+      <%= form.text_field :color, placeholder: "Ej. Blanco, Negro", class: "form-input" %>
+    </div>
+    <div class="form-col">
+      <%= form.label :year, "Año", class: "form-label" %>
+      <%= form.number_field :year, placeholder: "Ej. 2022", class: "form-input" %>
+    </div>
+    <div class="form-col">
+      <%= form.label :seats, "Cantidad de Puestos", class: "form-label" %>
+      <%= form.number_field :seats, placeholder: "Ej. 5", class: "form-input" %>
+    </div>
+    <div class="form-col">
+      <%= form.label :load_capacity, "Capacidad Carga (Kg / Ton)", class: "form-label" %>
+      <%= form.number_field :load_capacity, step: 0.01,
+            placeholder: "Ej. 1200.00", class: "form-input" %>
+    </div>
+  </div>
+
+  <!-- ==================== Seguro y Registro ==================== -->
+  <h2 class="form-section-heading form-section-heading--spaced">
     🛡️ Seguro y Registro del Propietario
-  </h3>
+  </h2>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-    <div style="flex: 1;">
-      <%= form.label :owner_dni, "Cédula o RIF del Propietario", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :owner_dni, placeholder: "Ej. V-12345678 / J-12345678-0", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :owner_dni, "Cédula o RIF del Propietario", class: "form-label" %>
+      <%= form.text_field :owner_dni,
+            placeholder: "Ej. V-12345678 / J-12345678-0", class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :policy_number, "Número de Póliza de Seguro", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.text_field :policy_number, placeholder: "Número de póliza RCV/Todo Riesgo", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+    <div class="form-col">
+      <%= form.label :policy_number, "Número de Póliza de Seguro", class: "form-label" %>
+      <%= form.text_field :policy_number,
+            placeholder: "Número de póliza RCV/Todo Riesgo", class: "form-input" %>
     </div>
-    <div style="flex: 1;">
-      <%= form.label :policy_expiration, "Vencimiento del Seguro", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-      <%= form.date_field :policy_expiration, style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+    <div class="form-col">
+      <%= form.label :policy_expiration, "Vencimiento del Seguro", class: "form-label" %>
+      <%= form.date_field :policy_expiration, class: "form-input" %>
     </div>
   </div>
 
-  <!-- Sección 4: Adjuntos (Active Storage) -->
-  <h3 style="font-size: 14px; color: #2b6cb0; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px;">
+  <!-- ==================== Anexos ==================== -->
+  <h2 class="form-section-heading form-section-heading--spaced">
     📎 Anexos y Documentos Digitales (PDF o Imagen)
-  </h3>
+  </h2>
 
-  <div style="display: flex; gap: 15px; margin-bottom: 25px;">
-    <div style="flex: 1; background-color: #f7fafc; padding: 12px; border: 1px dashed #cbd5e0; border-radius: 6px;">
-      <%= form.label :registration_title, "📄 Título de Registro", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 12px;" %>
-      <%= form.file_field :registration_title, accept: "application/pdf,image/*", style: "font-size: 12px; width: 100%;" %>
+  <div class="form-row form-row--last">
+    <div class="form-dropzone form-dropzone--compact">
+      <%= form.label :registration_title, "📄 Título de Registro",
+            class: "form-label" %>
+      <%= form.file_field :registration_title,
+            accept: "application/pdf,image/*",
+            class: "form-dropzone__input" %>
       <% if vehicle.registration_title.attached? %>
-        <p style="font-size: 11px; color: #38a169; margin: 5px 0 0 0;">✓ Archivo cargado</p>
+        <p class="form-dropzone__status">✓ Archivo cargado</p>
       <% end %>
     </div>
 
-    <div style="flex: 1; background-color: #f7fafc; padding: 12px; border: 1px dashed #cbd5e0; border-radius: 6px;">
-      <%= form.label :rcv_policy, "🛡️ Seguro RCV", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 12px;" %>
-      <%= form.file_field :rcv_policy, accept: "application/pdf,image/*", style: "font-size: 12px; width: 100%;" %>
+    <div class="form-dropzone form-dropzone--compact">
+      <%= form.label :rcv_policy, "🛡️ Seguro RCV", class: "form-label" %>
+      <%= form.file_field :rcv_policy,
+            accept: "application/pdf,image/*",
+            class: "form-dropzone__input" %>
       <% if vehicle.rcv_policy.attached? %>
-        <p style="font-size: 11px; color: #38a169; margin: 5px 0 0 0;">✓ Archivo cargado</p>
+        <p class="form-dropzone__status">✓ Archivo cargado</p>
       <% end %>
     </div>
 
-    <div style="flex: 1; background-color: #f7fafc; padding: 12px; border: 1px dashed #cbd5e0; border-radius: 6px;">
-      <%= form.label :owner_dni_file, "🪪 C.I. / RIF Propietario", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 12px;" %>
-      <%= form.file_field :owner_dni_file, accept: "application/pdf,image/*", style: "font-size: 12px; width: 100%;" %>
+    <div class="form-dropzone form-dropzone--compact">
+      <%= form.label :owner_dni_file, "🪪 C.I. / RIF Propietario", class: "form-label" %>
+      <%= form.file_field :owner_dni_file,
+            accept: "application/pdf,image/*",
+            class: "form-dropzone__input" %>
       <% if vehicle.owner_dni_file.attached? %>
-        <p style="font-size: 11px; color: #38a169; margin: 5px 0 0 0;">✓ Archivo cargado</p>
+        <p class="form-dropzone__status">✓ Archivo cargado</p>
       <% end %>
     </div>
   </div>
 
-  <!-- Acciones -->
-  <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #edf2f7; padding-top: 15px;">
-    <%= link_to "Cancelar", vehicles_path, style: "padding: 9px 16px; border: 1px solid #cbd5e0; border-radius: 6px; color: #4a5568; text-decoration: none; font-size: 13px; font-weight: bold; background-color: white;" %>
-    <%= form.submit "Guardar Vehículo", style: "padding: 9px 16px; background-color: #2b6cb0; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;" %>
+  <!-- ==================== Acciones ==================== -->
+  <div class="form-actions">
+    <%= link_to "Cancelar", vehicles_path, class: "btn btn--ghost" %>
+    <%= form.submit "Guardar Vehículo", class: "btn btn--dark" %>
   </div>
+
 <% end %>

@@ -44,6 +44,7 @@ class EmployeesController < ApplicationController
 
   def discarded
     @discarded_employees = Employee.discarded.includes(:position).order(discarded_at: :desc)
+    @active_employees_count = Employee.kept.count
   end
 
   def restore

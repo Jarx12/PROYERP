@@ -1,0 +1,17 @@
+<%# app/views/shared/_form_page.html.erb %>
+<%# locals: (title:, subtitle: nil, back:, card: true, width: :narrow) %>
+
+<div class="page page--<%= width %>">
+  <%= link_to back[:label], back[:path], class: "page__back" %>
+
+  <div class="<%= card ? 'form-card' : '' %>">
+    <header class="form-header">
+      <h1 class="form-header__title"><%= title %></h1>
+      <% if subtitle.present? %>
+        <p class="form-header__subtitle"><%= subtitle %></p>
+      <% end %>
+    </header>
+
+    <%= yield %>
+  </div>
+</div>

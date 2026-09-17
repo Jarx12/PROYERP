@@ -1,19 +1,25 @@
 Rails.application.routes.draw do
+  get "pages/home"
+  get "about",      to: "pages#about",      as: :about
+  get "contactanos", to: "pages#contactanos", as: :contactanos
+  get "proyectos",  to: "pages#proyectos",  as: :proyectos
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
   resources :positions
-  get "dashboard/index"
+  get "dashboard", to: "dashboard#index", as: :dashboard_root
   get "settings", to: "settings#index", as: :settings
   get "up" => "rails/health#show", as: :rails_health_check
-  root "dashboard#index"
-  resources :warehouses
-  resources :categories
+  
+  root "pages#home"
+
+  resources :warehouses, except: [:index, :show]
+  resources :categories, except: [:index, :show]
   resources :vehicles
   resources :vehicle_categories, except: [:index, :show]
   resources :documents
-  resources :transaction_categories
-  resources :bank_accounts
+  resources :transaction_categories, except: [:index, :show]
+  resources :bank_accounts, except: [:index, :show]
   resources :financial_transactions, only: %w[index show new create destroy] do
   collection do
     get :bulk_import

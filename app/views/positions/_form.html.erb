@@ -1,32 +1,44 @@
-<%= form_with(model: position, local: true) do |form| %>
+<%= form_with(model: position) do |form| %>
 
   <% if position.errors.any? %>
-    <div style="background-color: #fff5f5; border: 1px solid #fed7d7; color: #c53030; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-      <h3 style="font-size: 14px; margin: 0 0 5px 0; font-weight: bold;"><%= pluralize(position.errors.count, "error") %> impiden guardar el cargo:</h3>
-      <ul style="margin: 0; padding-left: 20px; font-size: 13px;">
-        <% position.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(position.errors.count, "error") %> impiden guardar el cargo:
+      </h2>
+      <ul class="form-alert__list">
+        <% position.errors.each do |error| %>
+          <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <!-- Título del Cargo -->
-  <div style="margin-bottom: 20px;">
-    <%= form.label :title, "Nombre del Cargo / Puesto *", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 6px; font-size: 13px;" %>
-    <%= form.text_field :title, placeholder: "Ej. Operador de Almacén, Chofer, Analista de Sistemas...", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+  <!-- Título -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :title, "Nombre del Cargo / Puesto",
+            class: "form-label form-label--required" %>
+      <%= form.text_field :title,
+            placeholder: "Ej. Operador de Almacén, Chofer, Analista de Sistemas...",
+            class: "form-input" %>
+    </div>
   </div>
 
-  <!-- Descripción del Puesto -->
-  <div style="margin-bottom: 25px;">
-    <%= form.label :description, "Descripción o Responsabilidades (Opcional)", style: "display: block; font-weight: bold; color: #4a5568; margin-bottom: 6px; font-size: 13px;" %>
-    <%= form.text_area :description, rows: 4, placeholder: "Resumen opcional de las funciones asociadas a este cargo...", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px;" %>
+  <!-- Descripción -->
+  <div class="form-row form-row--last">
+    <div class="form-col">
+      <%= form.label :description, "Descripción o Responsabilidades (Opcional)",
+            class: "form-label" %>
+      <%= form.text_area :description, rows: 4,
+            placeholder: "Resumen opcional de las funciones asociadas a este cargo...",
+            class: "form-input form-textarea" %>
+    </div>
   </div>
 
-  <!-- Botones de Acción -->
-  <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #edf2f7; padding-top: 20px;">
-    <%= link_to "Cancelar", settings_path, style: "padding: 10px 18px; border: 1px solid #cbd5e0; border-radius: 6px; color: #4a5568; text-decoration: none; font-size: 14px; font-weight: bold; background-color: white;" %>
-    <%= form.submit "Guardar Cargo", style: "padding: 10px 22px; border: none; border-radius: 6px; color: white; background-color: #3182ce; font-size: 14px; font-weight: bold; cursor: pointer;" %>
+  <!-- Acciones -->
+  <div class="form-actions">
+    <%= link_to "Cancelar", settings_path, class: "btn btn--ghost" %>
+    <%= form.submit "Guardar Cargo", class: "btn btn--primary" %>
   </div>
 
 <% end %>

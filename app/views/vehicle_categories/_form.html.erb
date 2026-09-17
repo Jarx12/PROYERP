@@ -1,27 +1,43 @@
-<%= form_with(model: vehicle_category, local: true) do |form| %>
+<%= form_with(model: vehicle_category) do |form| %>
+
   <% if vehicle_category.errors.any? %>
-    <div style="background-color: #fff5f5; border: 1px solid #feb2b2; color: #c53030; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-      <h4 style="margin: 0 0 5px 0; font-size: 14px;"><%= pluralize(vehicle_category.errors.count, "error") %> impidieron guardar la categoría:</h4>
-      <ul style="margin: 0; padding-left: 20px; font-size: 13px;">
-        <% vehicle_category.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(vehicle_category.errors.count, "error") %> impidieron guardar la categoría:
+      </h2>
+      <ul class="form-alert__list">
+        <% vehicle_category.errors.each do |error| %>
+          <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div style="margin-bottom: 15px;">
-    <%= form.label :name, "Nombre de la Categoría *", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-    <%= form.text_field :name, required: true, placeholder: "Ej. Sedán, PickUp, Panel", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+  <!-- Nombre -->
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :name, "Nombre de la Categoría",
+            class: "form-label form-label--required" %>
+      <%= form.text_field :name, required: true,
+            placeholder: "Ej. Sedán, PickUp, Panel",
+            class: "form-input" %>
+    </div>
   </div>
 
-  <div style="margin-bottom: 20px;">
-    <%= form.label :description, "Descripción", style: "display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748; font-size: 13px;" %>
-    <%= form.text_area :description, rows: 3, placeholder: "Detalles o uso del tipo de vehículo...", style: "width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;" %>
+  <!-- Descripción -->
+  <div class="form-row form-row--last">
+    <div class="form-col">
+      <%= form.label :description, "Descripción", class: "form-label" %>
+      <%= form.text_area :description, rows: 3,
+            placeholder: "Detalles o uso del tipo de vehículo...",
+            class: "form-input form-textarea" %>
+    </div>
   </div>
 
-  <div style="display: flex; gap: 10px; justify-content: flex-end;">
-    <%= link_to "Cancelar", settings_path, style: "padding: 8px 14px; border: 1px solid #cbd5e0; border-radius: 6px; color: #4a5568; text-decoration: none; font-size: 13px; font-weight: bold; background-color: white;" %>
-    <%= form.submit "Guardar Categoría", style: "padding: 8px 14px; background-color: #3182ce; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;" %>
+  <!-- Acciones -->
+  <div class="form-actions">
+    <%= link_to "Cancelar", settings_path, class: "btn btn--ghost" %>
+    <%= form.submit "Guardar Categoría", class: "btn btn--primary" %>
   </div>
+
 <% end %>

@@ -1,92 +1,90 @@
 <% content_for :title, "Empleados Desactivados" %>
 
-<div style="padding: 20px; max-width: 1200px; margin: 0 auto;">
-  <!-- Encabezado y Navegación -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div class="page page--wide">
+
+  <header class="page__header">
     <div>
-      <h1 style="margin: 0; color: #2d3748; font-size: 24px; font-weight: bold;">🗑️ Empleados Inactivos / Desactivados</h1>
-      <p style="margin: 4px 0 0 0; color: #718096; font-size: 14px;">Histórico de personal retirado o dado de baja de la organización.</p>
+      <h1 class="page__title">🗑️ Empleados Inactivos / Desactivados</h1>
+      <p class="page__subtitle">
+        Histórico de personal retirado o dado de baja de la organización.
+      </p>
     </div>
-    <%= link_to "← Volver a Empleados Activos", employees_path, style: "padding: 10px 18px; background-color: #718096; color: white; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" %>
+    <div class="page__actions">
+      <%= link_to "← Volver a Empleados Activos", employees_path, class: "btn btn--ghost" %>
+    </div>
+  </header>
+
+  <!-- Métricas -->
+  <div class="stats-bar">
+    <div class="stat stat--danger">
+      <span class="stat__label">Total Desactivados</span>
+      <p class="stat__value"><%= @discarded_employees.count %></p>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Total Activos</span>
+      <p class="stat__value"><%= @active_employees_count %></p>
+    </div>
   </div>
 
-  <!-- Tarjeta de Resumen Resumido -->
-  <div style="display: flex; gap: 15px; margin-bottom: 25px;">
-    <div style="flex: 1; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-      <span style="color: #e53e3e; font-size: 12px; font-weight: bold; text-transform: uppercase;">Total Desactivados</span>
-      <p style="margin: 5px 0 0 0; font-size: 22px; font-weight: bold; color: #9b2c2c;"><%= @discarded_employees.count %></p>
-    </div>
-    <div style="flex: 1; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-      <span style="color: #2b6cb0; font-size: 12px; font-weight: bold; text-transform: uppercase;">Total Activos</span>
-      <p style="margin: 5px 0 0 0; font-size: 22px; font-weight: bold; color: #2b6cb0;"><%= Employee.kept.count %></p>
-    </div>
-  </div>
-
-  <!-- Tabla de Empleados Desactivados -->
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-      <thead>
-        <tr style="background-color: #fff5f5; border-bottom: 2px solid #fed7d7; color: #9b2c2c; font-size: 12px; text-transform: uppercase;">
-          <th style="padding: 12px 15px;">Empleado / Cédula</th>
-          <th style="padding: 12px 15px;">Cargo</th>
-          <th style="padding: 12px 15px;">Contacto</th>
-          <th style="padding: 12px 15px; text-align: center;">Fecha Desactivación</th>
-          <th style="padding: 12px 15px; text-align: right;">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if @discarded_employees.any? %>
-          <% @discarded_employees.each do |employee| %>
-            <tr style="border-bottom: 1px solid #edf2f7; color: #4a5568;">
-              <!-- Nombre y Cédula -->
-              <td style="padding: 12px 15px;">
-                <div style="font-weight: bold; color: #2d3748; font-size: 15px;">
-                  <%= "#{employee.surname} #{employee.surname2}, #{employee.name} #{employee.name2}" %>
-                </div>
-                <div style="font-size: 12px; color: #718096;">
-                  🪪 V-<%= employee.cedula %>
-                </div>
-              </td>
-
-              <!-- Cargo -->
-              <td style="padding: 12px 15px; color: #4a5568;">
-                <% if employee.position %>
-                  <span style="background-color: #edf2f7; color: #4a5568; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">
-                    💼 <%= employee.position.title %>
+  <!-- Tabla -->
+  <div class="table-card">
+    <div class="table-scroll">
+      <table class="data-table data-table--danger">
+        <thead>
+          <tr>
+            <th>Empleado / Cédula</th>
+            <th>Cargo</th>
+            <th>Contacto</th>
+            <th class="data-table__th--center">Fecha Desactivación</th>
+            <th class="data-table__th--right">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @discarded_employees.any? %>
+            <% @discarded_employees.each do |employee| %>
+              <tr>
+                <td>
+                  <span class="data-table__name">
+                    <%= "#{employee.surname} #{employee.surname2}, #{employee.name} #{employee.name2}" %>
                   </span>
-                <% else %>
-                  <span style="color: #a0aec0; font-size: 12px;">Sin Cargo</span>
-                <% end %>
-              </td>
+                  <span class="data-table__meta">🪪 V-<%= employee.cedula %></span>
+                </td>
 
-              <!-- Contacto -->
-              <td style="padding: 12px 15px; font-size: 13px;">
-                <div>📞 <%= employee.telefono.presence || "N/A" %></div>
-              </td>
+                <td>
+                  <% if employee.position %>
+                    <span class="badge badge--muted">💼 <%= employee.position.title %></span>
+                  <% else %>
+                    <span class="attachments__empty">Sin Cargo</span>
+                  <% end %>
+                </td>
 
-              <!-- Fecha Desactivado -->
-              <td style="padding: 12px 15px; text-align: center; color: #c53030; font-size: 13px;">
-                <%= employee.discarded_at&.strftime("%d/%m/%Y %H:%M") || "N/A" %>
-              </td>
+                <td class="data-table__td--muted">
+                  📞 <%= employee.telefono.presence || "N/A" %>
+                </td>
 
-              <!-- Restaurar -->
-              <td style="padding: 12px 15px; text-align: right;">
-                <%= link_to restore_employee_path(employee), 
-                            data: { turbo_method: :patch, turbo_confirm: "¿Deseas reactivar al empleado #{employee.name} #{employee.surname}?" }, 
-                            style: "padding: 6px 12px; background-color: #38a169; color: white; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px;" do %>
-                  🔄 Reactivar
-                <% end %>
+                <td class="data-table__td--center data-table__td--muted">
+                  <%= employee.discarded_at&.strftime("%d/%m/%Y %H:%M") || "N/A" %>
+                </td>
+
+                <td class="data-table__td--right">
+                  <%= link_to restore_employee_path(employee),
+                        data: { turbo_method: :patch,
+                                turbo_confirm: "¿Deseas reactivar al empleado #{employee.name} #{employee.surname}?" },
+                        class: "btn btn--success btn--sm" do %>
+                    🔄 Reactivar
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5" class="data-table__empty">
+                🎉 No hay ningún empleado inactivo.
               </td>
             </tr>
           <% end %>
-        <% else %>
-          <tr>
-            <td colspan="5" style="padding: 40px; text-align: center; color: #a0aec0;">
-              🎉 No hay ningún empleado inactivo.
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

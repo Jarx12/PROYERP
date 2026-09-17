@@ -1,4 +1,10 @@
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 600px; margin: 0 auto;">
-  <h1 style="color: #1a202c; font-size: 24px; margin-bottom: 20px;">🏦 Nueva Cuenta Bancaria</h1>
+<% content_for :title, "Nueva Cuenta Bancaria" %>
+
+<%= render "layouts/form_page",
+      title: "➕ Nueva Cuenta Bancaria",
+      subtitle: "Registre una cuenta para operaciones financieras.",
+      back: { label: "← Volver a Configuración", path: settings_path } do %>
+
   <%= render "form", bank_account: @bank_account %>
-</div>
+
+<% end %>

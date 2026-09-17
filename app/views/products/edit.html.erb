@@ -1,29 +1,14 @@
 <% content_for :title, "Editar Producto" %>
 
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 650px; margin: 0 auto; line-height: 1.25;">
-  
-  <% 
-    # Detecta de dónde viene el usuario
-    back_path = if request.referrer&.include?(product_path(@product))
-                  product_path(@product)
-                else
-                  products_path
-                end
+<%= render "layouts/form_page",
+      title: "📝 Editar Producto",
+      subtitle: "Actualice la información general o los parámetros de alerta de stock.",
+      back: back_link_for(@product,
+              labels: {
+                record: "← Volver a la ficha del producto",
+                index:  "← Volver al inventario"
+              }) do %>
 
-    back_label = back_path == product_path(@product) ? "← Volver a la ficha del producto" : "← Volver al inventario"
-  %>
-  <div style="margin-bottom: 15px;">
-      <%= link_to back_label, back_path, style: "color: #718096; text-decoration: none; font-size: 14px; font-weight: bold;" %>
-  </div>
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); padding: 30px;">
-    
-    <header style="margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">
-      <h1 style="color: #1a202c; font-size: 24px; margin: 0; font-weight: bold;">📝 Editar Producto</h1>
-      <p style="color: #718096; margin: 6px 0 0 0; font-size: 14px;">Actualice la información general o los parámetros de alerta de stock.</p>
-    </header>
+  <%= render "form", product: @product %>
 
-    <%= render "form", product: @product %>
-
-  </div>
-
-</div>
+<% end %>

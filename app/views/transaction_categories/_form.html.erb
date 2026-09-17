@@ -1,12 +1,12 @@
-<%= form_with(model: category) do |form| %>
+<%= form_with(model: transaction_category) do |form| %>
 
-  <% if category.errors.any? %>
+  <% if transaction_category.errors.any? %>
     <div class="form-alert form-alert--danger">
       <h2 class="form-alert__title">
-        <%= pluralize(category.errors.count, "error") %> impiden guardar esta categoría:
+        <%= pluralize(transaction_category.errors.count, "error") %> impiden guardar esta categoría:
       </h2>
       <ul class="form-alert__list">
-        <% category.errors.each do |error| %>
+        <% transaction_category.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
@@ -19,18 +19,16 @@
       <%= form.label :name, "Nombre de la Categoría",
             class: "form-label form-label--required" %>
       <%= form.text_field :name,
-            placeholder: "Ej. Herramientas, Tornillos, Electrónicos...",
+            placeholder: "Ej. Pago de Nómina, Venta de Productos, Servicios",
             class: "form-input" %>
     </div>
   </div>
 
   <!-- Descripción -->
-  <div class="form-row">
+  <div class="form-row form-row--last">
     <div class="form-col">
-      <%= form.label :description, "Descripción u Observaciones (Opcional)",
-            class: "form-label" %>
+      <%= form.label :description, "Descripción (Opcional)", class: "form-label" %>
       <%= form.text_area :description, rows: 3,
-            placeholder: "Breve descripción sobre el tipo de insumos o productos que abarca...",
             class: "form-input form-textarea" %>
     </div>
   </div>
@@ -38,7 +36,7 @@
   <!-- Acciones -->
   <div class="form-actions">
     <%= link_to "Cancelar", settings_path, class: "btn btn--ghost" %>
-    <%= form.submit "Guardar Categoría", class: "btn btn--primary" %>
+    <%= form.submit "Guardar Categoría", class: "btn btn--warning" %>
   </div>
 
 <% end %>

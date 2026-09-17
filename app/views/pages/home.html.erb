@@ -1,0 +1,177 @@
+<%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+<div class="landing">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <div class="navbar__logo">
+        <%= image_tag "LOGOP.png", alt: "Logo Corporativo" %>
+      </div>
+      <nav class="navbar__menu">
+        <a href="#nosotros" class="navbar__link">Quiénes Somos</a>
+        <a href="#modulos"  class="navbar__link">Soluciones</a>
+        <%= link_to "Contacto",  contactanos_path, class: "navbar__link" %>
+        <%= link_to login_path, class: "navbar__cta" do %>
+          Intranet &rarr;
+        <% end %>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__content">
+        <span class="hero__badge">Nuestra Empresa</span>
+        <h1 class="hero__title">Servicios Civiles y de Telecomunicaciones</h1>
+        <p class="hero__text">
+          Enlaces dedicados, telefonía IP, ciberseguridad y cloud. Garantizando que las actividades de negocio siempre estén operativas.
+        </p>
+        <div class="hero__actions">
+          <%= link_to "Contáctanos", contactanos_path, class: "btn-primary" %>
+          <a href="#nosotros" class="btn-secondary">Conoce más</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <%= image_tag "labor.jpg", alt: "Dashboard Corporativo", class: "hero__img" %>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS -->
+  <section id="nosotros" class="about">
+    <div class="about__inner">
+      <div class="about__media">
+        <%= image_tag "carrete.jpg", alt: "Equipo de Trabajo", class: "about__img" %>
+      </div>
+      <div class="about__content">
+        <h2 class="about__title">Quiénes Somos</h2>
+        <p class="about__text">
+          Somos una organización orientada a garantizar la continuidad operativa de empresas mediante infraestructura de telecomunicaciones confiable. Nuestras soluciones de conectividad —fibra óptica, radioenlaces y telefonía corporativa— optimizan la transmisión de datos entre sedes, eliminando interrupciones y cuellos de botella en la comunicación.
+        </p>
+        <p class="about__text">
+          Nuestros servicios B2B se ven respaldados por 7 años de experiencia en el sector, con un equipo de ingenieros y técnicos especializados en redes y telecomunicaciones. Nos comprometemos a ofrecer soporte técnico proactivo, monitoreo constante y soluciones personalizadas que se adaptan a las necesidades específicas de cada cliente.
+        </p>
+
+        <div class="about__stats">
+          <div class="about__stat">
+            <p class="about__stat-value">+7</p>
+            <p class="about__stat-label">Años de Experiencia en el Oriente de Venezuela</p>
+          </div>
+          <div class="about__stat">
+            <p class="about__stat-value">Garantía Técnica</p>
+            <p class="about__stat-label">Servicios respaldados por nuestra experiencia probada</p>
+          </div>
+        </div>
+
+        <div class="about__actions">
+          <%= link_to "Ver algunos de nuestros Proyectos", proyectos_path, class: "btn-primary" %>
+          <%= link_to "Conoce más de Nosotros", about_path, class: "btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUCIONES -->
+  <section id="modulos" class="modules">
+    <div class="modules__inner">
+      <div class="modules__header">
+        <h2 class="modules__title">Nuestros Servicios</h2>
+        <p class="modules__subtitle">
+          Telecomunicaciones y Redes con respaldo de expertos. Conectividad confiable y segura para tu empresa.
+        </p>
+      </div>
+
+      <div class="modules__grid">
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Fibra Óptica</h3>
+          <p class="module-card__text">
+            Conectividad dedicada de alta capacidad para transmisión de datos crítica entre sedes interurbanas, directamente enterrada, zanjado y obras civiles o ADSS.
+          </p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Radioenlaces</h3>
+          <p class="module-card__text">
+            Conectividad inalámbrica de alta velocidad para zonas remotas. Soluciones punto a punto y multipunto para zonas de difícil acceso o respaldo de última milla.
+          </p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--teal">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Telefonía Corporativa</h3>
+          <p class="module-card__text">
+            Sistemas de voz IP y troncales SIP que integran la comunicación dentro de organizaciones.
+          </p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--gray">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Redes Empresariales</h3>
+          <p class="module-card__text">
+            Diseño, implementación y monitoreo de infraestructura de telecomunicaciones B2B: cableado estructurado, sistema de anuncios públicos, puntos de acceso, etc.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <span class="footer__brand">PROY<span>ERP</span></span>
+        <p class="footer__tagline">
+          Tu solución integral en telecomunicaciones y redes empresariales.
+        </p>
+      </div>
+      <div>
+        <p class="footer__heading">Acceso Rápido</p>
+        <ul class="footer__list">
+          <li><a href="#nosotros">Quiénes Somos</a></li>
+          <li><a href="#modulos">Soluciones</a></li>
+          <li><%= link_to "Contacto", contactanos_path %></li>
+          <li><%= link_to "Intranet", login_path %></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__heading">Contacto</p>
+        <p class="footer__contact">gerencia@proyerp.com</p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      &copy; <%= Time.current.year %> ProyERP. Todos los derechos reservados.
+    </div>
+  </footer>
+
+</div>

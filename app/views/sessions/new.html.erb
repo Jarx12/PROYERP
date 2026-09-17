@@ -1,17 +1,28 @@
-<div style="max-width: 400px; margin: 80px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-  <h2 style="margin-top: 0; color: #2d3748; text-align: center;">Acceso a ProyERP</h2>
+<% content_for :title, "Acceso - ProyERP" %>
 
-  <%= form_with url: login_path, local: true do |f| %>
-    <div style="margin-bottom: 15px;">
-      <%= f.label :email, "Correo Electrónico", style: "display: block; margin-bottom: 5px; font-weight: bold; color: #4a5568;" %>
-      <%= f.email_field :email, required: true, style: "width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;" %>
-    </div>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h1 class="auth-card__title">Acceso a ProyERP</h1>
 
-    <div style="margin-bottom: 20px;">
-      <%= f.label :password, "Contraseña", style: "display: block; margin-bottom: 5px; font-weight: bold; color: #4a5568;" %>
-      <%= f.password_field :password, required: true, style: "width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;" %>
-    </div>
+    <%# Errores globales (opcional) %>
+    <% if flash[:alert] %>
+      <div class="form-alert form-alert--danger">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
 
-    <%= f.submit "Iniciar Sesión", style: "width: 100%; background: #3182ce; color: white; padding: 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;" %>
-  <% end %>
+    <%= form_with url: login_path do |f| %>
+      <div class="form-group">
+        <%= f.label :email, "Correo Electrónico", class: "form-label" %>
+        <%= f.email_field :email, required: true, class: "form-input" %>
+      </div>
+
+      <div class="form-group form-group--last">
+        <%= f.label :password, "Contraseña", class: "form-label" %>
+        <%= f.password_field :password, required: true, class: "form-input" %>
+      </div>
+
+      <%= f.submit "Iniciar Sesión", class: "form-submit" %>
+    <% end %>
+  </div>
 </div>

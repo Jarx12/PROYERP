@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email].downcase.strip)
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect_to root_path, notice: "Sesión iniciada correctamente."
+      redirect_to dashboard_root_path, notice: "Sesión iniciada correctamente."
     else
       flash.now[:alert] = "Correo o contraseña no válidos."
       render :new, status: :unprocessable_entity

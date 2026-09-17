@@ -3,9 +3,18 @@ class VehiclesController < ApplicationController
 
   def index
     @vehicles = Vehicle.includes(:vehicle_category, :registration_title_attachment, :rcv_policy_attachment, :owner_dni_file_attachment).order(created_at: :desc)
+    # Métricas para el stats-bar
+    @total_vehicles       = Vehicle.count
+    @available_vehicles   = Vehicle.available.count
+    @in_use_vehicles      = Vehicle.in_use.count
+    @maintenance_vehicles = Vehicle.maintenance.count
   end
 
   def show
+    @vehicle = Vehicle.find(params[:id])
+    @assignments = @vehicle.vehicle_assignments
+                         .includes(:employee)
+                         .order(created_at: :desc)
   end
 
   def new
