@@ -1,0 +1,10 @@
+<% content_for :title, "Editar Proyecto" %>
+
+<%= render "layouts/form_page",
+      title: "✏️ Editar Proyecto",
+      subtitle: "Actualice la información de #{@project.name}.",
+      back: { label: "← Volver a Configuración", path: settings_path } do %>
+
+  <%= render "form", project: @project %>
+
+<% end %>

@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    attributes:
+      project:
+        name: "Nombre"
+    errors:
+      messages:
+        blank: "no puede estar en blanco"
+  errors:
+    messages:
+      blank: "no puede estar en blanco"

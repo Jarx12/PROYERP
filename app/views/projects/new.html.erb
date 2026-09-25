@@ -1,0 +1,10 @@
+<% content_for :title, "Nuevo Proyecto" %>
+
+<%= render "layouts/form_page",
+      title: "➕ Nuevo Proyecto",
+      subtitle: "Registre un proyecto para publicarlo en el portafolio de la empresa.",
+      back: { label: "← Volver a Configuración", path: settings_path } do %>
+
+  <%= render "form", project: @project %>
+
+<% end %>

@@ -12,6 +12,7 @@
   <!-- Navegación de pestañas -->
   <div class="tabs" role="tablist">
     <button type="button" class="tab-link is-active" data-tab-target="tab-inventario">📦 Inventario</button>
+    <button type="button" class="tab-link"           data-tab-target="tab-proyectos">📁 Proyectos</button>
     <button type="button" class="tab-link"           data-tab-target="tab-rrhh">👨‍💼 RRHH</button>
     <button type="button" class="tab-link"           data-tab-target="tab-vehiculos">🚗 Vehículos</button>
     <button type="button" class="tab-link"           data-tab-target="tab-finanzas">📊 Finanzas</button>
@@ -80,6 +81,67 @@
       </table>
     </div>
 
+  </div>
+  <!-- ===================== Proyectos ===================== -->
+  <div id="tab-proyectos" class="tab-content">
+    <div class="settings-card settings-card--projects">
+      <div class="settings-card__header">
+        <div>
+          <h2 class="settings-card__title">📁 Proyectos</h2>
+          <p class="settings-card__subtitle">
+            Administre los proyectos publicados en el portafolio de la empresa.
+          </p>
+        </div>
+        <div class="settings-card__header-actions">
+          <span class="settings-card__count"><%= @projects.size %> registrados</span>
+          <%= link_to "+ Crear Proyecto", new_project_path,
+                class: "settings-card__cta" %>
+        </div>
+      </div>
+
+      <% if @projects.any? %>
+        <div class="settings-projects__list">
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Cliente</th>
+                <th>Ubicación</th>
+                <th>Período</th>
+                <th class="is-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @projects.each do |project| %>
+                <tr>
+                  <td class="settings-table__name"><%= project.name %></td>
+                  <td class="settings-table__meta"><%= project.customer.presence || "No especificado" %></td>
+                  <td class="settings-table__meta"><%= project.location.presence || "No especificada" %></td>
+                  <td class="settings-table__meta">
+                    <%= project.start_date&.strftime("%d/%m/%Y") || "Sin fecha" %>
+                    <% if project.end_date %>
+                      – <%= project.end_date.strftime("%d/%m/%Y") %>
+                    <% end %>
+                  </td>
+                  <td class="settings-table__actions">
+                    <%= link_to "Editar", edit_project_path(project), class: "link-inline" %>
+                    <%= button_to "Eliminar", project_path(project),
+                          method: :delete,
+                          data: { turbo_confirm: "¿Eliminar el proyecto #{project.name}?" },
+                          class: "btn-inline-danger" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="data-table__empty">
+          Todavía no hay proyectos registrados.
+          <%= link_to "Crear el primer proyecto", new_project_path, class: "link-inline" %>.
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <!-- ===================== RRHH ===================== -->

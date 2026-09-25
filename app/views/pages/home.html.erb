@@ -1,22 +1,4 @@
-<%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-<div class="landing">
-
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="navbar__inner">
-      <div class="navbar__logo">
-        <%= image_tag "LOGOP.png", alt: "Logo Corporativo" %>
-      </div>
-      <nav class="navbar__menu">
-        <a href="#nosotros" class="navbar__link">Quiénes Somos</a>
-        <a href="#modulos"  class="navbar__link">Soluciones</a>
-        <%= link_to "Contacto",  contactanos_path, class: "navbar__link" %>
-        <%= link_to login_path, class: "navbar__cta" do %>
-          Intranet &rarr;
-        <% end %>
-      </nav>
-    </div>
-  </header>
+<% content_for :title, "ProyERP" %>
 
   <!-- HERO -->
   <section class="hero">
@@ -29,7 +11,6 @@
         </p>
         <div class="hero__actions">
           <%= link_to "Contáctanos", contactanos_path, class: "btn-primary" %>
-          <a href="#nosotros" class="btn-secondary">Conoce más</a>
         </div>
       </div>
       <div class="hero__media">
@@ -143,35 +124,10 @@
         </div>
 
       </div>
+
+      <div class="modules__actions">
+        <%= link_to "Conoce más sobre nuestros servicios", soluciones_path,
+              class: "btn btn--primary" %>
+      </div>
     </div>
   </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer__inner">
-      <div>
-        <span class="footer__brand">PROY<span>ERP</span></span>
-        <p class="footer__tagline">
-          Tu solución integral en telecomunicaciones y redes empresariales.
-        </p>
-      </div>
-      <div>
-        <p class="footer__heading">Acceso Rápido</p>
-        <ul class="footer__list">
-          <li><a href="#nosotros">Quiénes Somos</a></li>
-          <li><a href="#modulos">Soluciones</a></li>
-          <li><%= link_to "Contacto", contactanos_path %></li>
-          <li><%= link_to "Intranet", login_path %></li>
-        </ul>
-      </div>
-      <div>
-        <p class="footer__heading">Contacto</p>
-        <p class="footer__contact">gerencia@proyerp.com</p>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      &copy; <%= Time.current.year %> ProyERP. Todos los derechos reservados.
-    </div>
-  </footer>
-
-</div>

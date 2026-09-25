@@ -1,0 +1,22 @@
+<header class="navbar public-navbar">
+  <div class="navbar__inner">
+    <div class="navbar__logo public-navbar__logo">
+      <%= link_to root_path, class: "public-navbar__brand", aria: { label: "Ir al inicio" } do %>
+        <%= image_tag "LOGOP.png", alt: "ProyERP" %>
+      <% end %>
+    </div>
+
+    <nav class="navbar__menu" aria-label="Navegación pública">
+      <%= link_to "Quiénes Somos", about_path,
+            class: "navbar__link public-navbar__link#{" public-navbar__link--active" if current_page?(about_path)}" %>
+      <%= link_to "Soluciones", soluciones_path,
+            class: "navbar__link public-navbar__link#{" public-navbar__link--active" if current_page?(soluciones_path)}" %>
+      <%= link_to "Proyectos", proyectos_path,
+            class: "navbar__link public-navbar__link#{" public-navbar__link--active" if current_page?(proyectos_path)}" %>
+      <%= link_to "Contacto", contactanos_path,
+            class: "navbar__link public-navbar__link#{" public-navbar__link--active" if current_page?(contactanos_path)}" %>
+      <%= link_to "Intranet →", logged_in? ? dashboard_root_path : login_path,
+            class: "navbar__cta public-navbar__cta" %>
+    </nav>
+  </div>
+</header>

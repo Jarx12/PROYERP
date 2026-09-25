@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <title><%= content_for?(:title) ? yield(:title) : "ERP System" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -11,9 +11,12 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body style="margin: 0; padding: 0; background-color: #f7fafc;">
-    
-    <%= render "layouts/header" %>
+  <body class="<%= public_layout? ? "public-body" : "erp-body" %>" style="margin: 0; padding: 0; background-color: #f7fafc;">
+    <% if public_layout? %>
+      <%= render "layouts/public_header" %>
+    <% else %>
+      <%= render "layouts/header" %>
+    <% end %>
 
     <% if notice.present? %>
       <div style="max-width: 1200px; margin: 15px auto 0 auto; padding: 12px 20px; background-color: #c6f6d5; border-left: 4px solid #38a169; color: #22543d; border-radius: 4px; font-family: Arial, sans-serif; font-size: 14px;">
@@ -27,9 +30,12 @@
       </div>
     <% end %>
 
-    <main style="min-height: calc(100vh - 120px);">
+    <main class="<%= public_layout? ? "public-main" : "erp-main" %>" style="min-height: calc(100vh - 120px);">
       <%= yield %>
     </main>
 
+    <% if public_layout? %>
+      <%= render "layouts/public_footer" %>
+    <% end %>
   </body>
 </html>

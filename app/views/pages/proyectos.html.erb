@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
 <% content_for :title, "Proyectos - ProyERP" %>
 
 <!-- Hero público -->
@@ -17,35 +16,66 @@
 <section class="pub-section">
   <div class="pub-section__inner">
 
-    <% if Array(@proyectos).any? %>
+    <% if @proyectos.any? %>
       <div class="projects-grid">
-        <% Array(@proyectos).each do |proyecto| %>
+        <% @proyectos.each do |proyecto| %>
           <article class="project-card">
-            <% if proyecto.respond_to?(:cover_image) && proyecto.cover_image.attached? %>
+            <% if proyecto.cover_image.attached? %>
               <div class="project-card__media">
                 <%= image_tag rails_blob_path(proyecto.cover_image),
-                      alt: proyecto.title %>
+                      alt: proyecto.name %>
               </div>
             <% end %>
 
             <div class="project-card__body">
-              <% if proyecto.respond_to?(:category) && proyecto.category.present? %>
-                <div class="project-card__meta"><%= proyecto.category %></div>
-              <% end %>
-
               <h3 class="project-card__title">
-                <%= proyecto.respond_to?(:title) ? proyecto.title : "Proyecto" %>
+                <%= proyecto.name.presence || "Proyecto" %>
               </h3>
 
+              <dl class="project-card__details">
+                <div class="project-card__detail">
+                  <dt>Cliente</dt>
+                  <dd><%= proyecto.customer.presence || "No especificado" %></dd>
+                </div>
+                <div class="project-card__detail">
+                  <dt>Ubicación</dt>
+                  <dd><%= proyecto.location.presence || "No especificada" %></dd>
+                </div>
+                <div class="project-card__detail">
+                  <dt>Inicio</dt>
+                  <dd>
+                    <% if proyecto.start_date %>
+                      <time datetime="<%= proyecto.start_date.iso8601 %>">
+                        <%= proyecto.start_date.strftime("%d/%m/%Y") %>
+                      </time>
+                    <% else %>
+                      No especificada
+                    <% end %>
+                  </dd>
+                </div>
+                <div class="project-card__detail">
+                  <dt>Fin</dt>
+                  <dd>
+                    <% if proyecto.end_date %>
+                      <time datetime="<%= proyecto.end_date.iso8601 %>">
+                        <%= proyecto.end_date.strftime("%d/%m/%Y") %>
+                      </time>
+                    <% else %>
+                      No especificada
+                    <% end %>
+                  </dd>
+                </div>
+              </dl>
+
               <p class="project-card__desc">
-                <%= truncate(proyecto.respond_to?(:description) ? proyecto.description.to_s : "", length: 140) %>
+                <%= truncate(proyecto.description.presence || "Sin descripción disponible.", length: 140) %>
               </p>
             </div>
           </article>
         <% end %>
       </div>
     <% else %>
-      <!-- Estado vacío: cuando aún no hay proyectos o el modelo no existe -->
+      <!-- Estado vacío: cuando aún no hay proyectos registrados -->
       <div class="data-table__empty" style="padding: 60px 20px;">
         <p style="font-size: 18px; margin-bottom: 10px;">
           🚧 Pronto estaremos publicando nuestros proyectos destacados.

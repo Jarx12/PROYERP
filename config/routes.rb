@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get "pages/home"
   get "about",      to: "pages#about",      as: :about
+  get "soluciones", to: "pages#soluciones", as: :soluciones
   get "contactanos", to: "pages#contactanos", as: :contactanos
   get "proyectos",  to: "pages#proyectos",  as: :proyectos
   get "login", to: "sessions#new"
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
 
   resources :warehouses, except: [:index, :show]
   resources :categories, except: [:index, :show]
+  resources :projects, except: [:index, :show]
   resources :vehicles
   resources :vehicle_categories, except: [:index, :show]
   resources :documents

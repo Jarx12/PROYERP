@@ -1,8 +1,12 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
-  helper_method :current_user, :logged_in?
+  helper_method :current_user, :logged_in?, :public_layout?
 
   private
+
+  def public_layout?
+    controller_name == "pages" && %w[home about soluciones contactanos proyectos].include?(action_name)
+  end
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]

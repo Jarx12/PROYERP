@@ -1,0 +1,73 @@
+<%= form_with(model: project) do |form| %>
+  <% if project.errors.any? %>
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(project.errors.count, "error") %> impiden guardar este proyecto:
+      </h2>
+      <ul class="form-alert__list">
+        <% project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-row">
+    <div class="form-col form-col--2">
+      <%= form.label :name, "Nombre del Proyecto", class: "form-label form-label--required" %>
+      <%= form.text_field :name,
+            placeholder: "Ej. Instalación de fibra óptica",
+            class: "form-input",
+            required: true %>
+    </div>
+    <div class="form-col">
+      <%= form.label :customer, "Cliente", class: "form-label" %>
+      <%= form.text_field :customer,
+            placeholder: "Ej. Empresa Cliente",
+            class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :start_date, "Fecha de Inicio", class: "form-label" %>
+      <%= form.date_field :start_date, class: "form-input" %>
+    </div>
+    <div class="form-col">
+      <%= form.label :end_date, "Fecha de Fin", class: "form-label" %>
+      <%= form.date_field :end_date, class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :location, "Ubicación", class: "form-label" %>
+      <%= form.text_field :location,
+            placeholder: "Ej. Maturín, Monagas",
+            class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-col">
+      <%= form.label :description, "Descripción", class: "form-label" %>
+      <%= form.text_area :description, rows: 4,
+            placeholder: "Describa el alcance y los resultados del proyecto...",
+            class: "form-input form-textarea" %>
+    </div>
+  </div>
+
+  <div class="form-row form-row--last">
+    <div class="form-col">
+      <%= form.label :cover_image, "Imagen de Portada (Opcional)", class: "form-label" %>
+      <%= form.file_field :cover_image, accept: "image/*", class: "form-input" %>
+      <span class="form-hint">Se mostrará en la página pública de proyectos.</span>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= link_to "Cancelar", settings_path, class: "btn btn--ghost" %>
+    <%= form.submit(project.persisted? ? "Actualizar Proyecto" : "Guardar Proyecto",
+          class: "btn btn--primary") %>
+  </div>
+<% end %>

@@ -1,0 +1,27 @@
+<footer class="footer public-footer">
+  <div class="footer__inner">
+    <div>
+      <span class="footer__brand">PROY<span>ERP</span></span>
+      <p class="footer__tagline">
+        Tu solución integral en telecomunicaciones y redes empresariales.
+      </p>
+    </div>
+    <div>
+      <p class="footer__heading">Acceso Rápido</p>
+      <ul class="footer__list">
+        <li><%= link_to "Quiénes Somos", about_path %></li>
+        <li><%= link_to "Soluciones", soluciones_path %></li>
+        <li><%= link_to "Proyectos", proyectos_path %></li>
+        <li><%= link_to "Contacto", contactanos_path %></li>
+        <li><%= link_to "Intranet", logged_in? ? dashboard_root_path : login_path %></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer__heading">Contacto</p>
+      <p class="footer__contact">gerencia@proyerp.com</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    &copy; <%= Time.current.year %> ProyERP. Todos los derechos reservados.
+  </div>
+</footer>
