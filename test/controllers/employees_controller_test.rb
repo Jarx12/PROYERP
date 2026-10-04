@@ -2,6 +2,7 @@ require "test_helper"
 
 class EmployeesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as users(:superuser)
     @employee = employees(:one)
   end
 

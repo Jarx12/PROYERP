@@ -16,6 +16,9 @@
     <button type="button" class="tab-link"           data-tab-target="tab-rrhh">👨‍💼 RRHH</button>
     <button type="button" class="tab-link"           data-tab-target="tab-vehiculos">🚗 Vehículos</button>
     <button type="button" class="tab-link"           data-tab-target="tab-finanzas">📊 Finanzas</button>
+    <% if can?("users") %>
+      <button type="button" class="tab-link"         data-tab-target="tab-usuarios">🔐 Usuarios</button>
+    <% end %>
   </div>
 
   <!-- ===================== Inventario ===================== -->
@@ -245,6 +248,28 @@
     </div>
 
   </div>
+  <!-- ===================== Usuarios ===================== -->
+  <% if can?("users") %>
+    <div id="tab-usuarios" class="tab-content">
+      <div class="settings-card">
+        <div class="settings-card__header">
+          <div>
+            <h2 class="settings-card__title">🔐 Usuarios y Permisos</h2>
+            <p class="settings-card__subtitle">
+              Cree usuarios con acceso restringido y asigne lectura o escritura por módulo.
+            </p>
+          </div>
+          <div class="settings-card__header-actions">
+            <%= link_to "Gestionar", users_path, class: "settings-card__cta settings-card__cta--teal" %>
+          </div>
+        </div>
+        <p class="settings-card__subtitle">
+          El superusuario tiene acceso total a todos los módulos. Los usuarios sin
+          permiso de lectura no ven el módulo en el menú ni pueden acceder a él.
+        </p>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <script>

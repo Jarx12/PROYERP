@@ -8,101 +8,120 @@
       <p class="page__subtitle">Bienvenido al sistema de gestión ProyERP.</p>
     </div>
     <div class="dashboard__env-badge">
-      <span class="dashboard__env-dot"></span>
-      PROYERECA
-    </div>
   </header>
 
   <div class="dashboard__grid">
 
     <!-- Personal y Nómina -->
-    <div class="dashboard-card dashboard-card--blue">
-      <div>
-        <div class="dashboard-card__header">
-          <h2 class="dashboard-card__title">👨‍💼 Personal y Nómina</h2>
-          <span class="dashboard-card__badge dashboard-card__badge--blue">Recursos Humanos</span>
+    <% if can?("hr") %>
+      <div class="dashboard-card dashboard-card--blue">
+        <div>
+          <div class="dashboard-card__header">
+            <h2 class="dashboard-card__title">👨‍💼 Personal y Nómina</h2>
+            <span class="dashboard-card__badge dashboard-card__badge--blue">Recursos Humanos</span>
+          </div>
+          <p class="dashboard-card__value"><%= @total_employees %></p>
+          <p class="dashboard-card__caption">Empleados registrados activos.</p>
         </div>
-        <p class="dashboard-card__value"><%= @total_employees %></p>
-        <p class="dashboard-card__caption">Empleados registrados activos.</p>
+        <%= link_to employees_path, class: "dashboard-card__link dashboard-card__link--blue" do %>
+          Gestionar Empleados <span>→</span>
+        <% end %>
       </div>
-      <%= link_to employees_path, class: "dashboard-card__link dashboard-card__link--blue" do %>
-        Gestionar Empleados <span>→</span>
-      <% end %>
-    </div>
+    <% end %>
 
     <!-- Cuentas y Finanzas -->
-    <div class="dashboard-card dashboard-card--teal">
-      <div>
-        <div class="dashboard-card__header">
-          <h2 class="dashboard-card__title">💰 Cuentas y Finanzas</h2>
-          <span class="dashboard-card__badge dashboard-card__badge--teal">
-            <%= @bank_accounts.count %> Cuentas
-          </span>
-        </div>
-        <div class="dashboard-card__balances">
-          <div class="dashboard-card__balance">
-            <span class="dashboard-card__balance-label">VES</span>
-            <strong class="dashboard-card__balance-value">
-              Bs. <%= number_to_currency(@total_ves_balance, unit: '', delimiter: '.', separator: ',') %>
-            </strong>
+    <% if can?("finance") %>
+      <div class="dashboard-card dashboard-card--teal">
+        <div>
+          <div class="dashboard-card__header">
+            <h2 class="dashboard-card__title">💰 Cuentas y Finanzas</h2>
+            <span class="dashboard-card__badge dashboard-card__badge--teal">
+              <%= @bank_accounts.count %> Cuentas
+            </span>
           </div>
-          <div class="dashboard-card__balance">
-            <span class="dashboard-card__balance-label">USD</span>
-            <strong class="dashboard-card__balance-value dashboard-card__balance-value--usd">
-              $<%= number_to_currency(@total_usd_balance, unit: '', delimiter: ',', separator: '.') %>
-            </strong>
+          <div class="dashboard-card__balances">
+            <div class="dashboard-card__balance">
+              <span class="dashboard-card__balance-label">VES</span>
+              <strong class="dashboard-card__balance-value">
+                Bs. <%= number_to_currency(@total_ves_balance, unit: '', delimiter: '.', separator: ',') %>
+              </strong>
+            </div>
+            <div class="dashboard-card__balance">
+              <span class="dashboard-card__balance-label">USD</span>
+              <strong class="dashboard-card__balance-value dashboard-card__balance-value--usd">
+                $<%= number_to_currency(@total_usd_balance, unit: '', delimiter: ',', separator: '.') %>
+              </strong>
+            </div>
           </div>
         </div>
+        <%= link_to financial_transactions_path, class: "dashboard-card__link dashboard-card__link--teal" do %>
+          Ver Transacciones <span>→</span>
+        <% end %>
       </div>
-      <%= link_to financial_transactions_path, class: "dashboard-card__link dashboard-card__link--teal" do %>
-        Ver Transacciones <span>→</span>
-      <% end %>
-    </div>
+    <% end %>
 
     <!-- Inventario -->
-    <div class="dashboard-card dashboard-card--green">
-      <div>
-        <div class="dashboard-card__header">
-          <h2 class="dashboard-card__title">📦 Inventario</h2>
-          <span class="dashboard-card__badge dashboard-card__badge--green">Stock Central</span>
+    <% if can?("inventory") %>
+      <div class="dashboard-card dashboard-card--green">
+        <div>
+          <div class="dashboard-card__header">
+            <h2 class="dashboard-card__title">📦 Inventario</h2>
+            <span class="dashboard-card__badge dashboard-card__badge--green">Stock Central</span>
+          </div>
+          <p class="dashboard-card__value"><%= @total_products %></p>
+          <p class="dashboard-card__caption">Productos y existencias registradas.</p>
         </div>
-        <p class="dashboard-card__value"><%= @total_products %></p>
-        <p class="dashboard-card__caption">Productos y existencias registradas.</p>
+        <%= link_to products_path, class: "dashboard-card__link dashboard-card__link--green" do %>
+          Gestionar Inventario <span>→</span>
+        <% end %>
       </div>
-      <%= link_to products_path, class: "dashboard-card__link dashboard-card__link--green" do %>
-        Gestionar Inventario <span>→</span>
-      <% end %>
-    </div>
+    <% end %>
 
     <!-- Flota Vehicular -->
-    <div class="dashboard-card dashboard-card--purple">
-      <div>
-        <div class="dashboard-card__header">
-          <h2 class="dashboard-card__title">🚗 Flota Vehicular</h2>
-          <span class="dashboard-card__badge dashboard-card__badge--purple">Transporte</span>
+    <% if can?("fleet") %>
+      <div class="dashboard-card dashboard-card--purple">
+        <div>
+          <div class="dashboard-card__header">
+            <h2 class="dashboard-card__title">🚗 Flota Vehicular</h2>
+            <span class="dashboard-card__badge dashboard-card__badge--purple">Transporte</span>
+          </div>
+          <p class="dashboard-card__value"><%= @total_vehicles %></p>
+          <p class="dashboard-card__caption">Unidades activas, asignaciones y documentos.</p>
         </div>
-        <p class="dashboard-card__value"><%= @total_vehicles %></p>
-        <p class="dashboard-card__caption">Unidades activas, asignaciones y documentos.</p>
+        <%= link_to vehicles_path, class: "dashboard-card__link dashboard-card__link--purple" do %>
+          Gestionar Vehículos <span>→</span>
+        <% end %>
       </div>
-      <%= link_to vehicles_path, class: "dashboard-card__link dashboard-card__link--purple" do %>
-        Gestionar Vehículos <span>→</span>
-      <% end %>
-    </div>
+    <% end %>
 
     <!-- Documentación -->
-    <div class="dashboard-card dashboard-card--orange">
-      <div>
-        <div class="dashboard-card__header">
-          <h2 class="dashboard-card__title">📄 Documentación</h2>
-          <span class="dashboard-card__badge dashboard-card__badge--orange">Archivos</span>
+    <% if can?("documents") %>
+      <div class="dashboard-card dashboard-card--orange">
+        <div>
+          <div class="dashboard-card__header">
+            <h2 class="dashboard-card__title">📄 Documentación</h2>
+            <span class="dashboard-card__badge dashboard-card__badge--orange">Archivos</span>
+          </div>
+          <p class="dashboard-card__value"><%= @total_documents %></p>
+          <p class="dashboard-card__caption">Archivos y anexos resguardados en el ERP.</p>
         </div>
-        <p class="dashboard-card__value"><%= @total_documents %></p>
-        <p class="dashboard-card__caption">Archivos y anexos resguardados en el ERP.</p>
+        <%= link_to documents_path, class: "dashboard-card__link dashboard-card__link--orange" do %>
+          Ver Documentos <span>→</span>
+        <% end %>
       </div>
-      <%= link_to documents_path, class: "dashboard-card__link dashboard-card__link--orange" do %>
-        Ver Documentos <span>→</span>
-      <% end %>
-    </div>
+    <% end %>
 
   </div>
+
+  <% unless current_user.superuser? || current_user.readable_modules.any? %>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h2 class="settings-card__title">🔒 Sin módulos asignados</h2>
+      </div>
+      <p class="settings-card__subtitle">
+        Su usuario no tiene acceso a ningún módulo del ERP por el momento.
+        Solicite al superusuario que le asigne permisos desde el panel de usuarios.
+      </p>
+    </div>
+  <% end %>
 </div>

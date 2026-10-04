@@ -2,6 +2,7 @@ require "test_helper"
 
 class VehiclesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as users(:superuser)
     @vehicle = vehicles(:one)
   end
 

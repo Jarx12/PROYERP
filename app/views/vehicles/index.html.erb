@@ -8,7 +8,9 @@
       <p class="page__subtitle">Gestión de la flota, especificaciones y estado operacional.</p>
     </div>
     <div class="page__actions">
-      <%= link_to "+ Nuevo Vehículo", new_vehicle_path, class: "btn btn--dark" %>
+      <% if can?("fleet", :write) %>
+        <%= link_to "+ Nuevo Vehículo", new_vehicle_path, class: "btn btn--dark" %>
+      <% end %>
     </div>
   </header>
 

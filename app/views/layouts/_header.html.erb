@@ -11,32 +11,10 @@
 
     <% if logged_in? %>
       <nav style="display: flex; align-items: center; gap: 6px;">
-        <%= link_to dashboard_root_path, style: "color: #{current_page?(dashboard_root_path) ? '#ffffff' : '#cbd5e0'}; background-color: #{current_page?(dashboard_root_path) ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s;" do %>
-          🏠 Inicio
-        <% end %>
-
-        <%= link_to products_path, style: "color: #{controller_name == 'products' ? '#ffffff' : '#cbd5e0'}; background-color: #{controller_name == 'products' ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500;" do %>
-          📦 Inventario
-        <% end %>
-
-        <%= link_to employees_path, style: "color: #{controller_name == 'employees' ? '#ffffff' : '#cbd5e0'}; background-color: #{controller_name == 'employees' ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500;" do %>
-          👨‍💼 Empleados
-        <% end %>
-
-        <%= link_to documents_path, style: "color: #{controller_name == 'documents' ? '#ffffff' : '#cbd5e0'}; background-color: #{controller_name == 'documents' ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500;" do %>
-          📁 Documentos
-        <% end %>
-
-        <%= link_to financial_transactions_path, style: "color: #{controller_name == 'financial_transactions' ? '#ffffff' : '#cbd5e0'}; background-color: #{controller_name == 'financial_transactions' ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500;" do %>
-          📊 Finanzas
-        <% end %>
-
-        <%= link_to vehicles_path, style: "color: #{controller_name == 'vehicles' ? '#ffffff' : '#cbd5e0'}; background-color: #{controller_name == 'vehicles' ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500;" do %>
-          🚗 Vehículos
-        <% end %>
-
-        <%= link_to settings_path, style: "color: #{controller_name == 'settings' ? '#ffffff' : '#cbd5e0'}; background-color: #{controller_name == 'settings' ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500;" do %>
-          ⚙️ Configuración
+        <% erp_nav_items.each do |item| %>
+          <%= link_to item[:path], style: "color: #{item[:active] ? '#ffffff' : '#cbd5e0'}; background-color: #{item[:active] ? '#2d3748' : 'transparent'}; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s;" do %>
+            <%= item[:icon] %> <%= item[:label] %>
+          <% end %>
         <% end %>
       </nav>
     <% end %>
@@ -46,15 +24,15 @@
       <% if logged_in? %>
         <div style="text-align: right;">
           <span style="display: block; font-size: 13px; font-weight: bold; color: #e2e8f0;">
-            <%= current_user.email %>
+            <%= current_user.display_name %>
           </span>
           <span style="display: block; font-size: 11px; color: #a0aec0; text-transform: capitalize;">
-            <%= current_user.role %>
+            <%= current_user.role_label %>
           </span>
         </div>
 
         <div style="width: 35px; height: 35px; border-radius: 50%; background-color: #3182ce; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
-          <%= current_user.email[0..1].upcase %>
+          <%= current_user.display_name.to_s[0..1].upcase %>
         </div>
 
         <%= button_to logout_path, method: :delete, style: "background-color: #e53e3e; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;" do %>

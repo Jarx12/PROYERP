@@ -1,0 +1,126 @@
+<%= form_with(model: user, data: { controller: "permission-matrix" }) do |form| %>
+
+  <% if user.errors.any? %>
+    <div class="form-alert form-alert--danger">
+      <h2 class="form-alert__title">
+        <%= pluralize(user.errors.count, "error") %> impiden guardar el usuario:
+      </h2>
+      <ul class="form-alert__list">
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- ===================== Datos de acceso ===================== -->
+  <div class="form-section">
+    <h3 class="form-section-title">Datos de acceso</h3>
+
+    <div class="form-row">
+      <div class="form-col">
+        <%= form.label :username, "Nombre de usuario",
+              class: "form-label form-label--required" %>
+        <%= form.text_field :username,
+              placeholder: "Ej. jperez",
+              autocomplete: "off",
+              class: "form-input" %>
+        <span class="form-hint">Es el identificador para iniciar sesión. Puede ser un correo o un nombre corto.</span>
+      </div>
+
+      <div class="form-col">
+        <%= form.label :email, "Correo Electrónico (opcional)", class: "form-label" %>
+        <%= form.email_field :email,
+              placeholder: "Ej. jperez@proyerp.com",
+              class: "form-input" %>
+        <span class="form-hint">Sólo si el usuario desea recibir notificaciones por correo.</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-col">
+        <%= form.label :password, "Contraseña",
+              class: "form-label #{'form-label--required' unless user.persisted?}" %>
+        <%= form.password_field :password,
+              autocomplete: "new-password",
+              class: "form-input" %>
+        <% if user.persisted? %>
+          <span class="form-hint">Déjelo en blanco para conservar la contraseña actual.</span>
+        <% end %>
+      </div>
+
+      <div class="form-col">
+        <%= form.label :password_confirmation, "Confirmar Contraseña",
+              class: "form-label #{'form-label--required' unless user.persisted?}" %>
+        <%= form.password_field :password_confirmation,
+              autocomplete: "new-password",
+              class: "form-input" %>
+      </div>
+    </div>
+
+    <label class="form-check">
+      <%= form.check_box :superuser, class: "form-check__box" %>
+      <span class="form-check__text">
+        <strong>Superusuario</strong>
+        <span class="form-hint">Acceso total a todos los módulos, incluido el panel de usuarios.</span>
+      </span>
+    </label>
+  </div>
+
+  <!-- ===================== Permisos por módulo ===================== -->
+  <div class="form-section form-section-title--spaced">
+    <h3 class="form-section-title">Permisos por módulo</h3>
+    <p class="form-hint">
+      Marque <strong>Leer</strong> para mostrar el módulo en el menú del usuario y
+      <strong>Escribir</strong> para permitir crear, editar y eliminar. Los módulos
+      sin permiso no se muestran ni son accesibles.
+    </p>
+
+    <div class="perm-matrix" data-action="change->permission-matrix#change">
+      <table class="perm-table">
+        <thead>
+          <tr>
+            <th>Módulo</th>
+            <th class="perm-table__th--center">Leer</th>
+            <th class="perm-table__th--center">Escribir</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% ErpModule.grantable.each do |definition| %>
+            <% permission = user.permission_for(definition.key) %>
+            <tr class="perm-row <%= "perm-row--write" if permission&.can_write? %>" data-permission-row>
+              <td class="perm-table__module">
+                <span class="perm-table__icon"><%= definition.icon %></span>
+                <span class="perm-table__label"><%= definition.label %></span>
+              </td>
+
+              <td class="perm-table__td--center">
+                <%= hidden_field_tag "user[permissions][#{definition.key}][can_read]", "0", id: nil %>
+                <%= check_box_tag "user[permissions][#{definition.key}][can_read]", "1",
+                      permission&.can_read?,
+                      id: "user_permission_#{definition.key}_read",
+                      class: "perm-checkbox",
+                      data: { permission_matrix_target: "read" } %>
+              </td>
+
+              <td class="perm-table__td--center">
+                <%= hidden_field_tag "user[permissions][#{definition.key}][can_write]", "0", id: nil %>
+                <%= check_box_tag "user[permissions][#{definition.key}][can_write]", "1",
+                      permission&.can_write?,
+                      id: "user_permission_#{definition.key}_write",
+                      class: "perm-checkbox",
+                      data: { permission_matrix_target: "write" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= link_to "Cancelar", users_path, class: "btn btn--ghost" %>
+    <%= form.submit user.persisted? ? "Guardar Cambios" : "Crear Usuario", class: "btn btn--primary" %>
+  </div>
+
+<% end %>

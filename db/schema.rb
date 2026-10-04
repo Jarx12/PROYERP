@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_24_231243) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_03_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -105,6 +105,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_24_231243) do
     t.index ["transaction_date"], name: "index_financial_transactions_on_transaction_date"
   end
 
+  create_table "permissions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "module_key", null: false
+    t.boolean "can_read", default: false, null: false
+    t.boolean "can_write", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "module_key"], name: "index_permissions_on_user_id_and_module_key", unique: true
+    t.index ["user_id"], name: "index_permissions_on_user_id"
+  end
+
   create_table "positions", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -159,14 +170,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_24_231243) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", null: false
+    t.string "email"
     t.string "password_digest", null: false
     t.integer "role", default: 0, null: false
     t.integer "employee_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
+    t.boolean "superuser", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employee_id"], name: "index_users_on_employee_id"
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   create_table "vehicle_assignments", force: :cascade do |t|
@@ -223,6 +237,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_24_231243) do
   add_foreign_key "financial_transactions", "bank_accounts"
   add_foreign_key "financial_transactions", "employees"
   add_foreign_key "financial_transactions", "transaction_categories"
+  add_foreign_key "permissions", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "warehouses"
   add_foreign_key "stock_movements", "products"

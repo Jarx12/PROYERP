@@ -9,9 +9,11 @@
     </div>
 
     <div class="page__actions">
-      <%= link_to "+ Nuevo Empleado", new_employee_path, class: "navbar__cta" %>
-      <%= link_to "💳 Pago de Nómina en Masa",
-            bulk_payroll_employees_path, class: "btn-primary" %>
+      <% if can?("hr", :write) %>
+        <%= link_to "+ Nuevo Empleado", new_employee_path, class: "btn btn--success" %>
+        <%= link_to "💳 Pago de Nómina en Masa",
+              bulk_payroll_employees_path, class: "btn btn--primary" %>
+      <% end %>
     </div>
   </header>
 

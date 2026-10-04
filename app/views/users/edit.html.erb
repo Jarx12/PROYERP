@@ -1,0 +1,10 @@
+<% content_for :title, "Editar Usuario" %>
+
+<%= render "layouts/form_page",
+      title: "✏️ Editar Usuario",
+      subtitle: "Actualice las credenciales y los permisos de #{@user.username}.",
+      back: { label: "← Volver a Usuarios", path: users_path } do %>
+
+  <%= render "form", user: @user %>
+
+<% end %>

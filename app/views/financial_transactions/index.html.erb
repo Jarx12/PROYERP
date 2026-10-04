@@ -1,145 +1,168 @@
-<div style="font-family: Arial, sans-serif; padding: 40px 20px; max-width: 1200px; margin: 0 auto;">
-  
-  <!-- Encabezado Principal -->
-  <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">
+<% content_for :title, "Finanzas - ProyERP" %>
+
+<% selected_account = @bank_accounts.find_by(id: params[:bank_account_id]) %>
+
+<div class="page page--wide">
+
+  <header class="page__header page__header--bordered">
     <div>
-      <h1 style="color: #1a202c; font-size: 24px; margin: 0;">📊 Historial de Transacciones</h1>
-      <p style="color: #718096; margin: 5px 0 0 0; font-size: 14px;">Registro completo de ingresos y egresos bancarios.</p>
+      <h1 class="page__title">📊 Historial de Transacciones</h1>
+      <p class="page__subtitle">Registro completo de ingresos y egresos bancarios.</p>
     </div>
-    <div style="display: flex; gap: 10px;">
-      <%= link_to "← Panel Principal", root_path, style: "padding: 8px 16px; background: #e5e7eb; color: #374151; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
-      <%= link_to "Importar masivamente", bulk_import_financial_transactions_path, style: "padding: 8px 16px; background: #4b5563; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
-      <%= link_to "+ Nueva Transacción", new_financial_transaction_path, style: "padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 13px;" %>
+    <div class="page__actions">
+      <% if can?("finance", :write) %>
+        <%= link_to "⬇️ Importar masivamente", bulk_import_financial_transactions_path,
+              class: "btn btn--teal" %>
+        <%= link_to "+ Nueva Transacción", new_financial_transaction_path,
+              class: "btn btn--primary" %>
+      <% end %>
     </div>
   </header>
 
-  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
-    <%= form_with url: financial_transactions_path, method: :get, local: true, style: "display: flex; align-items: center; gap: 12px;" do |f| %>
-      <label for="bank_account_id" style="font-size: 13px; font-weight: bold; color: #475569;">
-        🏦 Filtrar por Cuenta:
-      </label>
-      
-      <%= f.select :bank_account_id, 
-          options_from_collection_for_select(@bank_accounts, :id, ->(acc) { "#{acc.institution} (#{acc.currency})" }, params[:bank_account_id]), 
-          { include_blank: "-- Todas las Cuentas --" }, 
-          { 
-            onchange: "this.form.submit();", 
-            style: "padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 13px; background-color: white; cursor: pointer;" 
-          } 
-      %>
+  <!-- Filtro por cuenta -->
+  <div class="filter-bar">
+    <%= form_with url: financial_transactions_path, method: :get, local: true,
+          class: "filter-bar__form" do |f| %>
+      <%= f.label :bank_account_id, "🏦 Filtrar por Cuenta", class: "filter-bar__label" %>
+
+      <%= f.select :bank_account_id,
+            options_from_collection_for_select(
+              @bank_accounts, :id, ->(account) { "#{account.institution} (#{account.currency})" },
+              params[:bank_account_id]
+            ),
+            { include_blank: "-- Todas las Cuentas --" },
+            { onchange: "this.form.submit();", class: "filter-bar__select" } %>
 
       <% if params[:bank_account_id].present? %>
-        <%= link_to "Limpiar filtro", financial_transactions_path, style: "font-size: 12px; color: #ef4444; text-decoration: none; font-weight: 500;" %>
+        <%= link_to "Limpiar filtro", financial_transactions_path, class: "link-inline" %>
       <% end %>
     <% end %>
 
-    <% if params[:bank_account_id].present? %>
-      <% selected_account = @bank_accounts.find_by(id: params[:bank_account_id]) %>
-      <% if selected_account %>
-        <div style="font-size: 13px; color: #334155;">
-          Saldo Actual: <strong><%= selected_account.currency == 'USD' ? '$' : 'Bs.' %> <%= number_to_currency(selected_account.balance, unit: '', delimiter: '.', separator: ',') %></strong>
-        </div>
-      <% end %>
+    <% if selected_account %>
+      <div class="filter-bar__balance">
+        Saldo actual:
+        <strong>
+          <%= selected_account.currency == "USD" ? "$" : "Bs." %>
+          <%= number_to_currency(selected_account.balance, unit: "", delimiter: ".", separator: ",") %>
+        </strong>
+      </div>
     <% end %>
   </div>
 
 
   <!-- Tabla de Resultados -->
-  <div style="background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
-    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-      <thead>
-        <tr style="background-color: #f8fafc; text-align: left; color: #718096; border-bottom: 1px solid #e2e8f0; font-size: 11px; text-transform: uppercase;">
-          <th style="padding: 12px 15px;">Fecha</th>
-          <th style="padding: 12px 15px;">Tipo</th>
-          <th style="padding: 12px 15px;">Cuenta Bancaria</th>
-          <th style="padding: 12px 15px;">Ref. Bancaria</th>
-          <th style="padding: 12px 15px;">Descripción</th>
-          <th style="padding: 12px 15px;">Beneficiario</th>
-          <th style="padding: 12px 15px;">Responsable</th>
-          <th style="padding: 12px 15px; text-align: right;">Monto</th>
-          <th style="padding: 12px 15px; text-align: center;">Adjuntos</th>
-          <th style="padding: 12px 15px; text-align: right;">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @financial_transactions.each do |tx| %>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <!-- 1. Fecha -->
-            <td style="padding: 12px 15px; color: #475569; white-space: nowrap;">
-              <%= tx.transaction_date.strftime("%d/%m/%Y") %>
-            </td>
+  <div class="table-card">
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Cuenta Bancaria</th>
+            <th>Ref. Bancaria</th>
+            <th>Descripción</th>
+            <th>Beneficiario</th>
+            <th>Responsable</th>
+            <th class="data-table__th--right">Monto</th>
+            <th class="data-table__th--center">Adjuntos</th>
+            <th class="data-table__th--right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% if @financial_transactions.any? %>
+          <% @financial_transactions.each do |tx| %>
+            <% invoice_attachment = tx.try(:invoice) || tx.try(:invoice_file) %>
+            <% receipt_attachment = tx.respond_to?(:bank_receipt) ? tx.bank_receipt : nil %>
 
-            <!-- 2. Tipo -->
-            <td style="padding: 12px 15px;">
-              <span style="background-color: <%= tx.transaction_type == 'income' ? '#c6f6d5' : '#fed7d7' %>; color: <%= tx.transaction_type == 'income' ? '#22543d' : '#9b2c2c' %>; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
-                <%= tx.transaction_type == 'income' ? '📥 Ingreso' : '📤 Egreso' %>
-              </span>
-            </td>
+            <tr>
+              <!-- 1. Fecha -->
+              <td class="data-table__td--code"><%= tx.transaction_date.strftime("%d/%m/%Y") %></td>
 
-            <!-- 3. Cuenta Bancaria -->
-            <td style="padding: 12px 15px; font-weight: bold; color: #1e293b;">
-              <%= tx.bank_account.institution %> 
-              <span style="font-size: 11px; color: #64748b; font-weight: normal;">(<%= tx.bank_account.currency %>)</span>
-            </td>
+              <!-- 2. Tipo -->
+              <td>
+                <% if tx.transaction_type == "income" %>
+                  <span class="badge badge--success">📥 Ingreso</span>
+                <% else %>
+                  <span class="badge badge--danger">📤 Egreso</span>
+                <% end %>
+              </td>
 
-            <!-- 4. Referencia Bancaria -->
-            <td style="padding: 12px 15px; color: #475569; font-family: monospace; font-size: 12px;">
-              <%= tx.bank_reference.presence || "N/A" %>
-            </td>
+              <!-- 3. Cuenta Bancaria -->
+              <td>
+                <span class="data-table__name"><%= tx.bank_account.institution %></span>
+                <span class="data-table__meta"><%= tx.bank_account.currency %></span>
+              </td>
 
-            <!-- 5. Descripción -->
-            <td style="padding: 12px 15px; color: #334155; max-width: 200px;"><%= tx.description %></td>
+              <!-- 4. Referencia Bancaria -->
+              <td class="data-table__td--code"><%= tx.bank_reference.presence || "N/A" %></td>
 
-            <!-- 6. Beneficiario -->
-            <td style="padding: 12px 15px; color: #475569; font-weight: 500;"><%= tx.beneficiary.presence || 'N/A' %></td>
+              <!-- 5. Descripción -->
+              <td><%= truncate(tx.description.to_s, length: 40) %></td>
 
-            <!-- 7. Responsable -->
-            <td style="padding: 12px 15px; color: #64748b;"><%= tx.responsible_name.presence || 'N/A' %></td>
+              <!-- 6. Beneficiario -->
+              <td><%= tx.beneficiary.presence || "—" %></td>
 
-            <!-- 8. Monto -->
-            <td style="padding: 12px 15px; text-align: right; font-weight: bold; color: <%= tx.transaction_type == 'income' ? '#16a34a' : '#dc2626' %>;">
-              <%= tx.bank_account.currency == 'USD' ? '$' : 'Bs.' %> <%= number_to_currency(tx.amount, unit: '', delimiter: '.', separator: ',') %>
-            </td>
+              <!-- 7. Responsable -->
+              <td class="data-table__td--muted"><%= tx.responsible_name.presence || "—" %></td>
+
+              <!-- 8. Monto -->
+              <td class="data-table__td--right <%= tx.transaction_type == "income" ? "text-success" : "text-danger" %>">
+                <%= tx.bank_account.currency == "USD" ? "$" : "Bs." %>
+                <%= number_to_currency(tx.amount, unit: "", delimiter: ".", separator: ",") %>
+              </td>
 
             <!-- 9. Adjuntos (Factura + Comprobante Bancario) -->
-            <td style="padding: 12px 15px; text-align: center;">
-              <% invoice_blob = tx.try(:invoice) || tx.try(:invoice_file) %>
-              
-              <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
-                <% if invoice_blob&.attached? %>
-                  <%= link_to "📄 Factura", rails_blob_path(invoice_blob, disposition: "inline"), target: "_blank", style: "color: #2563eb; text-decoration: underline; font-size: 11px;" %>
-                <% end %>
+              <td class="data-table__td--center">
+                <div class="attachments">
+                  <% if invoice_attachment&.attached? %>
+                    <%= link_to rails_blob_path(invoice_attachment, disposition: "inline"),
+                          target: "_blank",
+                          title: "Factura",
+                          class: "attachment-link" do %>
+                      📄
+                    <% end %>
+                  <% end %>
 
-                <% if tx.respond_to?(:bank_receipt) && tx.bank_receipt.attached? %>
-                  <%= link_to "🏦 Comprobante", rails_blob_path(tx.bank_receipt, disposition: "inline"), target: "_blank", style: "color: #059669; text-decoration: underline; font-size: 11px;" %>
-                <% end %>
+                  <% if receipt_attachment&.attached? %>
+                    <%= link_to rails_blob_path(receipt_attachment, disposition: "inline"),
+                          target: "_blank",
+                          title: "Comprobante bancario",
+                          class: "attachment-link" do %>
+                      🏦
+                    <% end %>
+                  <% end %>
 
-                <% unless invoice_blob&.attached? || (tx.respond_to?(:bank_receipt) && tx.bank_receipt.attached?) %>
-                  <span style="color: #cbd5e1; font-size: 11px;">Sin adjuntos</span>
-                <% end %>
-              </div>
-            </td>
+                  <% unless invoice_attachment&.attached? || receipt_attachment&.attached? %>
+                    <span class="attachments__empty">Sin adjuntos</span>
+                  <% end %>
+                </div>
+              </td>
 
-            <!-- 10. Acciones -->
-            <td style="padding: 12px 15px; text-align: right;">
-              <%= button_to "Eliminar", financial_transaction_path(tx), method: :delete, data: { turbo_confirm: "¿Estás seguro de eliminar esta transacción? Se revertirá el saldo de la cuenta." }, style: "background: #fee2e2; color: #991b1b; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;" %>
-            </td>
-          </tr>
-        <% end %>
-
-        <% if @financial_transactions.none? %>
+              <!-- 10. Acciones -->
+              <td class="data-table__td--right">
+                <div class="data-table__actions">
+                  <%= button_to "Eliminar", financial_transaction_path(tx),
+                        method: :delete,
+                        data: { turbo_confirm: "¿Estás seguro de eliminar esta transacción? Se revertirá el saldo de la cuenta." },
+                        class: "btn btn--sm btn--danger" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
           <tr>
-            <td colspan="10" style="padding: 30px; text-align: center; color: #94a3b8;">
-              No hay transacciones registradas en el sistema.
+            <td colspan="10" class="data-table__empty">
+              📊 No hay transacciones registradas en el sistema.
             </td>
           </tr>
         <% end %>
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 
   <!-- Controles de Paginación -->
-  <div style="margin-top: 20px; display: flex; justify-content: center;">
+  <div class="page__pagination">
     <%= paginate @financial_transactions %>
   </div>
 </div>

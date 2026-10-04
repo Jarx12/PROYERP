@@ -11,15 +11,17 @@ one:
   birthday: 2026-07-20
   hire_date: 2026-07-20
   salary: 9.99
+  position: one
 
 two:
   name: MyString
   surname: MyString
   name2: MyString
   surname2: MyString
-  cedula: 1
+  cedula: 2
   direccion: MyString
   telefono: MyString
   birthday: 2026-07-20
   hire_date: 2026-07-20
   salary: 9.99
+  position: two

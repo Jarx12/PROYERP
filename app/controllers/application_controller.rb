@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Authorization
+
   before_action :require_login
   helper_method :current_user, :logged_in?, :public_layout?
 

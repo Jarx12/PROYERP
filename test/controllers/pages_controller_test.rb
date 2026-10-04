@@ -1,10 +1,6 @@
 require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
-  # Keep these public-layout tests independent of the repository's global
-  # fixture issue.
-  self.fixture_table_names = []
-
   test "should get home with the public layout" do
     get root_path
 
@@ -35,11 +31,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ERP pages retain the ERP header layout" do
-    user = User.create!(
-      email: "public-layout-test-#{SecureRandom.hex(4)}@example.com",
-      password: "password123"
-    )
-    post login_path, params: { email: user.email, password: "password123" }
+    sign_in_as users(:superuser)
 
     get dashboard_root_path
 

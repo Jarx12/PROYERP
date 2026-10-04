@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
   resources :positions
+  resources :users
   get "dashboard", to: "dashboard#index", as: :dashboard_root
   get "settings", to: "settings#index", as: :settings
   get "up" => "rails/health#show", as: :rails_health_check

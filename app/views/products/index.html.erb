@@ -8,7 +8,9 @@
       <p class="page__subtitle">Control de existencias, catálogo y trazabilidad de movimientos.</p>
     </div>
     <div class="page__actions">
-      <%= link_to "+ Nuevo Producto", new_product_path, class: "btn btn--success" %>
+      <% if can?("inventory", :write) %>
+        <%= link_to "+ Nuevo Producto", new_product_path, class: "btn btn--success" %>
+      <% end %>
     </div>
   </header>
 

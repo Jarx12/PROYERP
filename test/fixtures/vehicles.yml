@@ -5,9 +5,11 @@ one:
   brand: MyString
   model: MyString
   status: 1
+  vehicle_category: one
 
 two:
   plate: MyString
   brand: MyString
   model: MyString
   status: 1
+  vehicle_category: two

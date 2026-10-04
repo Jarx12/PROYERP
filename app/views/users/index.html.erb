@@ -1,0 +1,93 @@
+<% content_for :title, "Usuarios - ProyERP" %>
+
+<div class="page page--wide">
+
+  <header class="page__header page__header--bordered">
+    <div>
+      <h1 class="page__title">🔐 Usuarios y Permisos</h1>
+      <p class="page__subtitle">Cree usuarios y asigne acceso de lectura o escritura módulo por módulo.</p>
+    </div>
+    <div class="page__actions">
+      <%= link_to "← Volver a Configuración", settings_path, class: "btn btn--ghost" %>
+      <%= link_to "+ Nuevo Usuario", new_user_path, class: "btn btn--primary" %>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat__label">Usuarios Totales</span>
+      <p class="stat__value"><%= @users.size %></p>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Superusuarios</span>
+      <p class="stat__value"><%= @superusers_count %></p>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Usuarios Restringidos</span>
+      <p class="stat__value"><%= @users.size - @superusers_count %></p>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Perfil</th>
+            <th>Módulos</th>
+            <th class="data-table__th--right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @users.any? %>
+            <% @users.each do |user| %>
+              <tr>
+                <td class="data-table__td--strong">
+                  <%= link_to user.username, edit_user_path(user), class: "data-table__product-link" %>
+                </td>
+                <td class="data-table__td--muted"><%= user.email.presence || "—" %></td>
+                <td>
+                  <span class="badge <%= user.superuser? ? "badge--purple" : "badge--muted" %>">
+                    <%= user.role_label %>
+                  </span>
+                </td>
+                <td>
+                  <% if user.superuser? %>
+                    <span class="badge badge--success">Acceso total</span>
+                  <% elsif user.permissions.any? %>
+                    <div class="user-modules">
+                      <% user.permissions.each do |permission| %>
+                        <span class="user-modules__chip <%= permission.can_write? ? "user-modules__chip--write" : "user-modules__chip--read" %>">
+                          <%= permission.module_icon %> <%= permission.module_label %>
+                        </span>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <span class="badge badge--danger">Sin acceso</span>
+                  <% end %>
+                </td>
+                <td>
+                  <div class="data-table__actions">
+                    <%= link_to "Editar", edit_user_path(user), class: "action-link action-link--edit" %>
+                    <% if user != current_user %>
+                      <%= button_to "Eliminar", user_path(user),
+                            method: :delete,
+                            data: { turbo_confirm: "¿Eliminar el usuario #{user.username}?" },
+                            class: "action-link action-link--delete" %>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td class="data-table__empty" colspan="5">Todavía no hay usuarios registrados.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

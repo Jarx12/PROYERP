@@ -1,13 +1,28 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# La contraseña de todos los usuarios del fixture es "secret123".
+<% digest = BCrypt::Password.create("secret123", cost: 4) %>
 
-one:
-  email: MyString
-  password_digest: MyString
-  role: 1
+superuser:
+  username: admin
+  email: admin@proyerp.test
+  password_digest: <%= digest %>
+  superuser: true
+  role: 0
   employee: one
 
-two:
-  email: MyString
-  password_digest: MyString
+manager:
+  username: gerente
+  email: gerente@proyerp.test
+  password_digest: <%= digest %>
+  superuser: false
   role: 1
   employee: two
+
+# Usuario sin correo electrónico: se identifica únicamente por su username.
+restricted:
+  username: solo_documentos
+  email:
+  password_digest: <%= digest %>
+  superuser: false
+  role: 2

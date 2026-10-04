@@ -2,6 +2,7 @@ require "test_helper"
 
 class CategoriesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as users(:superuser)
     @category = categories(:one)
   end
 

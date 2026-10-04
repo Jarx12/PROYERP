@@ -2,6 +2,7 @@ require "test_helper"
 
 class PositionsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as users(:superuser)
     @position = positions(:one)
   end
 

@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+manager_hr:
+  user: manager
+  module_key: hr
+  can_read: true
+  can_write: true
+
+manager_finance:
+  user: manager
+  module_key: finance
+  can_read: true
+  can_write: false
+
+restricted_documents:
+  user: restricted
+  module_key: documents
+  can_read: true
+  can_write: false

@@ -1,17 +1,8 @@
 require "test_helper"
 
 class ProjectsControllerTest < ActionDispatch::IntegrationTest
-  # The application-wide fixture set currently includes an invalid employee
-  # position association. These tests use the database transaction directly.
-  self.fixture_table_names = []
-
   setup do
-    @user = User.create!(
-      email: "projects-test-#{SecureRandom.hex(4)}@example.com",
-      password: "password123"
-    )
-
-    post login_path, params: { email: @user.email, password: "password123" }
+    sign_in_as users(:superuser)
   end
 
   test "should show the new project form" do

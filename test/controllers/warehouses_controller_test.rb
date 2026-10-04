@@ -2,6 +2,7 @@ require "test_helper"
 
 class WarehousesControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as users(:superuser)
     @warehouse = warehouses(:one)
   end
 

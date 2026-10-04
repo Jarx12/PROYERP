@@ -2,6 +2,7 @@ require "test_helper"
 
 class DocumentsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as users(:superuser)
     @document = documents(:one)
   end
 

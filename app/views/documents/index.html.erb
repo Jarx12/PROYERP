@@ -8,7 +8,9 @@
       <p class="page__subtitle">Gestión de archivos, contratos y anexos del personal.</p>
     </div>
     <div class="page__actions">
-      <%= link_to "➕ Nuevo Documento", new_document_path, class: "btn btn--warning" %>
+      <% if can?("documents", :write) %>
+        <%= link_to "➕ Nuevo Documento", new_document_path, class: "btn btn--warning" %>
+      <% end %>
     </div>
   </header>
 

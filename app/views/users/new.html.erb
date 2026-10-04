@@ -1,0 +1,10 @@
+<% content_for :title, "Nuevo Usuario" %>
+
+<%= render "layouts/form_page",
+      title: "➕ Nuevo Usuario",
+      subtitle: "Defina las credenciales y los módulos a los que podrá acceder.",
+      back: { label: "← Volver a Usuarios", path: users_path } do %>
+
+  <%= render "form", user: @user %>
+
+<% end %>
