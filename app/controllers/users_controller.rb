@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :require_superuser!
   before_action :set_user, only: %i[ edit update destroy ]
 
   def index
@@ -53,6 +54,12 @@ class UsersController < ApplicationController
 
   private
 
+
+  def require_superuser!
+    return if current_user&.superuser?
+    redirect_to root_path, alert: "No autorizado."
+  end
+
   def set_user
     @user = User.find(params.expect(:id))
   end
@@ -91,9 +98,14 @@ class UsersController < ApplicationController
   end
 
   def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(
-      :username, :email, :password, :password_confirmation, :superuser, :role,
-      permissions: {}
-    )
+    @permitted_user_params ||= if current_user.superuser?
+      params.require(:user).permit(
+        :username, :email, :password, :password_confirmation,
+        :superuser, :role,
+        permissions: {}
+      )
+    else
+      params.require(:user).permit(:username, :email, :password, :password_confirmation)
+    end
   end
 end

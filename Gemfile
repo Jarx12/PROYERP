@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.1.0"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -21,9 +21,9 @@ gem "jbuilder"
 gem "bcrypt", "~> 3.1.7"
 
 # Pagination
-gem 'kaminari'
+gem "kaminari"
 
-#Logical Delete
+# Logical Delete
 gem "discard"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -6,7 +6,7 @@
     <div>
       <h1 class="page__title">🔐 Usuarios y Permisos</h1>
       <p class="page__subtitle">Cree usuarios y asigne acceso de lectura o escritura módulo por módulo.</p>
-    </div>
+    </div>s
     <div class="page__actions">
       <%= link_to "← Volver a Configuración", settings_path, class: "btn btn--ghost" %>
       <%= link_to "+ Nuevo Usuario", new_user_path, class: "btn btn--primary" %>
@@ -23,7 +23,7 @@
       <p class="stat__value"><%= @superusers_count %></p>
     </div>
     <div class="stat">
-      <span class="stat__label">Usuarios Restringidos</span>
+      <span class="stat__label">Usuarios</span>
       <p class="stat__value"><%= @users.size - @superusers_count %></p>
     </div>
   </div>
