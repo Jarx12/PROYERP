@@ -60,7 +60,6 @@ class EmployeesController < ApplicationController
     @bank_accounts = BankAccount.all
   end
 
-   
  def process_bulk_payroll
   employee_ids = params[:employee_ids] || []
   exchange_rate = params[:exchange_rate].to_f
@@ -75,8 +74,7 @@ class EmployeesController < ApplicationController
 
   # Verificar que hay al menos un empleado (fijo u ocasional)
   if (employee_ids.empty? && extra_workers.empty?) || exchange_rate <= 0 || bank_account_id.blank?
-    redirect_to bulk_payroll_employees_path, 
-      alert: "Por favor seleccione al menos un empleado, agregue un trabajador ocasional, la cuenta bancaria y una tasa de cambio válida."
+    redirect_to bulk_payroll_employees_path, alert: "Por favor seleccione al menos un empleado, agregue un trabajador ocasional, la cuenta bancaria y una tasa de cambio válida."
     return
   end
 
@@ -125,9 +123,9 @@ class EmployeesController < ApplicationController
     # --- 2. PROCESAR TRABAJADORES OCASIONALES ---
     extra_workers.each do |uid, worker_data|
       begin
-        worker_name = worker_data[:name].presence || worker_data['name'].presence
-        worker_cedula = worker_data[:cedula].presence || worker_data['cedula'].presence
-        base_salary = (worker_data[:base_salary].presence || worker_data['base_salary'].presence || 0).to_f
+        worker_name = worker_data[:name].presence || worker_data["name"].presence
+        worker_cedula = worker_data[:cedula].presence || worker_data["cedula"].presence
+        base_salary = (worker_data[:base_salary].presence || worker_data["base_salary"].presence || 0).to_f
         
         if worker_name.blank?
           validation_errors << "Trabajador ocasional #{(uid.to_i + 1)}: Nombre es requerido"
