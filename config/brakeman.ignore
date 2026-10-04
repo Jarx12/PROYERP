@@ -1,0 +1,28 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "7844bbaafa0e522eae09cdaa8dbd3218374a9669c18f6d4c823268ebf5134a95",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/users_controller.rb",
+      "line": 104,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:user).permit(:username, :email, :password, :password_confirmation, :superuser, :role, :permissions => ({}))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "permitted_user_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": "Guarded by current_user.superuser? in permitted_user_params. Non-superusers hit the else branch, which permits only :username, :email, :password, :password_confirmation. Self-promotion is not possible."
+    }
+  ],
+  "brakeman_version": "8.1.0"
+}

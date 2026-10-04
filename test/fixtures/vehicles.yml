@@ -1,15 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  plate: MyString
-  brand: MyString
-  model: MyString
+  plate: ABC-123
+  brand: Toyota
+  model: Hilux
   status: 1
   vehicle_category: one
 
 two:
-  plate: MyString
-  brand: MyString
-  model: MyString
+  plate: XYZ-789
+  brand: Ford
+  model: Ranger
   status: 1
   vehicle_category: two

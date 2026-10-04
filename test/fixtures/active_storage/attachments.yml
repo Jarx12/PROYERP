@@ -1,0 +1,9 @@
+contract_file:
+  name: file
+  record: one (Document)
+  blob: contract_blob
+
+invoice_file:
+  name: file
+  record: two (Document)
+  blob: invoice_blob

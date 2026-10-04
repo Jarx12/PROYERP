@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  code: MyString
-  address: MyString
+  name: Almacén Central
+  code: ALM-001
+  address: Av. Principal, Caracas
 
 two:
-  name: MyString
-  code: MyString
-  address: MyString
+  name: Almacén Norte
+  code: ALM-002
+  address: Av. Norte, Maracay

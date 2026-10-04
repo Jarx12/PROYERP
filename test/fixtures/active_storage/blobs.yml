@@ -1,0 +1,9 @@
+contract_blob: <%= ActiveStorage::FixtureSet.blob(
+  filename: "documento_contrato.txt",
+  content_type: "text/plain"
+) %>
+
+invoice_blob: <%= ActiveStorage::FixtureSet.blob(
+  filename: "documento_contrato.txt",
+  content_type: "text/plain"
+) %>

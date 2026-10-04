@@ -106,7 +106,7 @@ class EmployeesController < ApplicationController
         bank_account_id: bank_account_id,
         transaction_category_id: payroll_category.id,
         employee_id: emp.id,
-        transaction_type: 'expense',
+        transaction_type: "expense",
         amount: amount_in_bs,
         transaction_date: Date.today,
         bank_reference: emp_reference,
@@ -126,7 +126,7 @@ class EmployeesController < ApplicationController
         worker_name = worker_data[:name].presence || worker_data["name"].presence
         worker_cedula = worker_data[:cedula].presence || worker_data["cedula"].presence
         base_salary = (worker_data[:base_salary].presence || worker_data["base_salary"].presence || 0).to_f
-        
+
         if worker_name.blank?
           validation_errors << "Trabajador ocasional #{(uid.to_i + 1)}: Nombre es requerido"
           next
@@ -137,7 +137,7 @@ class EmployeesController < ApplicationController
           next
         end
 
-        extra_adj = (worker_data[:adjustment].presence || worker_data['adjustment'].presence || 0).to_f
+        extra_adj = (worker_data[:adjustment].presence || worker_data["adjustment"].presence || 0).to_f
         total_usd = base_salary + extra_adj
 
         amount_in_bs = (total_usd * exchange_rate).round(2)
@@ -146,9 +146,9 @@ class EmployeesController < ApplicationController
           next
         end
 
-        emp_commission = worker_data[:commission].presence || worker_data['commission'].presence || "0.3%"
-        emp_reference = worker_data[:bank_reference].presence || worker_data['bank_reference'].presence
-        emp_receipt = worker_data[:bank_receipt].presence || worker_data['bank_receipt'].presence
+        emp_commission = worker_data[:commission].presence || worker_data["commission"].presence || "0.3%"
+        emp_reference = worker_data[:bank_reference].presence || worker_data["bank_reference"].presence
+        emp_receipt = worker_data[:bank_receipt].presence || worker_data["bank_receipt"].presence
 
         adj_text = extra_adj != 0 ? " (Ajuste extra: #{extra_adj >= 0 ? '+' : ''}$#{'%.2f' % extra_adj})" : ""
         cedula_text = worker_cedula.present? ? " (C.I: #{worker_cedula})" : ""
@@ -158,7 +158,7 @@ class EmployeesController < ApplicationController
           bank_account_id: bank_account_id,
           transaction_category_id: payroll_category.id,
           employee_id: nil,
-          transaction_type: 'expense',
+          transaction_type: "expense",
           amount: amount_in_bs,
           transaction_date: Date.today,
           bank_reference: emp_reference,
@@ -184,14 +184,14 @@ class EmployeesController < ApplicationController
     redirect_to financial_transactions_path, notice: message
   else
     error_message = "No se pudo procesar ningún pago. "
-    error_message += validation_errors.join('; ') if validation_errors.any?
+    error_message += validation_errors.join("; ") if validation_errors.any?
     error_message += " Verifique los datos ingresados." if validation_errors.empty?
     redirect_to bulk_payroll_employees_path, alert: error_message
   end
 
 rescue StandardError => e
   Rails.logger.error "Error en process_bulk_payroll: #{e.message}\n#{e.backtrace.join("\n")}"
-  
+
   error_msg = "Error al procesar la nómina: #{e.message}"
   error_msg += " - #{e.record.errors.full_messages.join(', ')}" if e.respond_to?(:record) && e.record.present?
   redirect_to bulk_payroll_employees_path, alert: error_msg

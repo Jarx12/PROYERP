@@ -1,15 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  institution: MyString
-  currency: MyString
-  account_number: MyString
-  email: MyString
+  institution: Banco de Venezuela
+  currency: VES
+  account_number: 0102-0000-01
+  email: pagos@example.com
   balance: 9.99
 
 two:
-  institution: MyString
-  currency: MyString
-  account_number: MyString
-  email: MyString
+  institution: Bancamiga
+  currency: USD
+  account_number: 0102-0000-02
+  email: pagos2@example.com
   balance: 9.99

@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
-  description: MyText
+  title: Gerente de proyecto
+  description: Coordina la ejecución de obras
 
 two:
-  title: MyString
-  description: MyText
+  title: Operario
+  description: Personal de construcción en campo

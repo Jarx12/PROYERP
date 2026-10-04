@@ -1,27 +1,27 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  surname: MyString
-  name2: MyString
-  surname2: MyString
-  cedula: 1
-  direccion: MyString
-  telefono: MyString
-  birthday: 2026-07-20
-  hire_date: 2026-07-20
+  name: Juan
+  surname: Pérez
+  name2: Carlos
+  surname2: Ramón
+  cedula: 12345678
+  direccion: Av. Bolívar, Caracas
+  telefono: 0412-1234567
+  birthday: 1990-05-15
+  hire_date: 2020-01-15
   salary: 9.99
   position: one
 
 two:
-  name: MyString
-  surname: MyString
-  name2: MyString
-  surname2: MyString
-  cedula: 2
-  direccion: MyString
-  telefono: MyString
-  birthday: 2026-07-20
-  hire_date: 2026-07-20
+  name: María
+  surname: González
+  name2: Isabel
+  surname2: Rosa
+  cedula: 87654321
+  direccion: Av. Norte, Maracay
+  telefono: 0424-7654321
+  birthday: 1992-09-20
+  hire_date: 2021-03-01
   salary: 9.99
   position: two

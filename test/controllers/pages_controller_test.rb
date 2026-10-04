@@ -12,7 +12,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "public pages consistently use the public shell" do
-    [about_path, soluciones_path, contactanos_path, proyectos_path].each do |path|
+    [ about_path, soluciones_path, contactanos_path, proyectos_path ].each do |path|
       get path
 
       assert_response :success

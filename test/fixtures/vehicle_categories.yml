@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyText
+  name: Camión basculante
+  description: Vehículo pesado para carga
 
 two:
-  name: MyString
-  description: MyText
+  name: Pick-up
+  description: Camioneta Pick-up

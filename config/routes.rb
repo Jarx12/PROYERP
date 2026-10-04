@@ -7,22 +7,22 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
-  resources :positions
+  resources :positions, except: [ :index, :show ]
   resources :users
   get "dashboard", to: "dashboard#index", as: :dashboard_root
   get "settings", to: "settings#index", as: :settings
   get "up" => "rails/health#show", as: :rails_health_check
-  
+
   root "pages#home"
 
-  resources :warehouses, except: [:index, :show]
-  resources :categories, except: [:index, :show]
-  resources :projects, except: [:index, :show]
+  resources :warehouses, except: [ :index, :show ]
+  resources :categories, except: [ :index, :show ]
+  resources :projects, except: [ :index, :show ]
   resources :vehicles
-  resources :vehicle_categories, except: [:index, :show]
+  resources :vehicle_categories, except: [ :index, :show ]
   resources :documents
-  resources :transaction_categories, except: [:index, :show]
-  resources :bank_accounts, except: [:index, :show]
+  resources :transaction_categories, except: [ :index, :show ]
+  resources :bank_accounts, except: [ :index, :show ]
   resources :financial_transactions, only: %w[index show new create destroy] do
   collection do
     get :bulk_import
@@ -46,9 +46,4 @@ end
       post :create_movement
     end
   end
-  
-  
-
-  
-  
 end

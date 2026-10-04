@@ -6,8 +6,8 @@ def index
 
   @financial_transactions = FinancialTransaction
     .includes(:bank_account, :transaction_category, :employee)
-    .with_attached_invoice_file   
-    .with_attached_bank_receipt  
+    .with_attached_invoice_file
+    .with_attached_bank_receipt
     .order(transaction_date: :desc, id: :desc)
 
   if params[:bank_account_id].present?
@@ -23,13 +23,13 @@ end
   def new
     @financial_transaction = FinancialTransaction.new
     @bank_accounts = BankAccount.all
-    @employees = Employee.all 
+    @employees = Employee.all
     @transaction_categories = TransactionCategory.all
   end
 
   def create
     @financial_transaction = FinancialTransaction.new(financial_transaction_params)
-    
+
     # Si seleccionaron un empleado pero escribieron un nombre libre, podemos priorizar el nombre del empleado o dejar el texto libre
     if @financial_transaction.employee_id.present?
       emp = Employee.find_by(id: @financial_transaction.employee_id)
@@ -101,8 +101,8 @@ end
       :responsible_name,
       :beneficiary,
       :transaction_date,
-      :bank_reference,  
-      :invoice_file,         
+      :bank_reference,
+      :invoice_file,
       :bank_receipt,
       :commission_percentage
     )

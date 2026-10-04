@@ -1,10 +1,6 @@
 class BankAccountsController < ApplicationController
   before_action :set_bank_account, only: %i[edit update destroy]
 
-  def index
-    redirect_to settings_path
-  end
-
   def new
     @bank_account = BankAccount.new
   end

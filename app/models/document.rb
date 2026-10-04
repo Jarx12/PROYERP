@@ -1,6 +1,4 @@
 class Document < ApplicationRecord
-
-
     belongs_to :employee, optional: true
     has_one_attached :file
     enum :category, { contract: 0, invoice: 1, legal: 2, manual: 3 }, default: :contract

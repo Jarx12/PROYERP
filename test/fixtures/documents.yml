@@ -1,11 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
-  category: 1
+  title: Contrato de trabajo de Juan Pérez
+  category: 0
   status: 1
+  employee: one
 
 two:
-  title: MyString
+  title: Factura de proveedor
   category: 1
-  status: 1
+  status: 2

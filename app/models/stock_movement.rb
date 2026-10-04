@@ -7,7 +7,7 @@ class StockMovement < ApplicationRecord
   # Validaciones
   validates :quantity, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :movement_type, :reason, presence: true
-  
+
   # Validación con helper generado por Rails
   validate :sufficient_stock_for_output, if: :output?
 

@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyText
+  name: Nómina
+  description: Pagos de nómina al personal
 
 two:
-  name: MyString
-  description: MyText
+  name: Materiales
+  description: Compra de materiales y herramientas

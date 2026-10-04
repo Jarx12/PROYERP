@@ -1,14 +1,5 @@
 class PositionsController < ApplicationController
-  before_action :set_position, only: %i[ show edit update destroy ]
-
-  # GET /positions or /positions.json
-  def index
-    @positions = Position.all
-  end
-
-  # GET /positions/1 or /positions/1.json
-  def show
-  end
+  before_action :set_position, only: %i[edit update destroy]
 
   # GET /positions/new
   def new
