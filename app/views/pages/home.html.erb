@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="hero__media">
-        <%= image_tag "labor.jpg", alt: "Dashboard Corporativo", class: "hero__img" %>
+        <%= safe_image_tag "labor.jpg", alt: "Trabajo", class: "hero-image" %>
       </div>
     </div>
   </section>
@@ -23,7 +23,7 @@
   <section id="nosotros" class="about">
     <div class="about__inner">
       <div class="about__media">
-        <%= image_tag "carrete.jpg", alt: "Equipo de Trabajo", class: "about__img" %>
+        <%= safe_image_tag "carrete.jpg", alt: "Equipo de Trabajo", class: "carousel-image" %>
       </div>
       <div class="about__content">
         <h2 class="about__title">Quiénes Somos</h2>
