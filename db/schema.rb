@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_04_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_04_120100) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -218,7 +218,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_04_120000) do
     t.integer "condition"
     t.string "policy_number"
     t.date "policy_expiration"
-    t.integer "vehicle_category_id", null: false
+    t.integer "vehicle_category_id"
     t.index ["vehicle_category_id"], name: "index_vehicles_on_vehicle_category_id"
   end
 

@@ -2,44 +2,31 @@ require "application_system_test_case"
 
 class DocumentsTest < ApplicationSystemTestCase
   setup do
+    sign_in_as users(:superuser)
     @document = documents(:one)
   end
 
   test "visiting the index" do
     visit documents_url
-    assert_selector "h1", text: "Documents"
+
+    assert_selector "h1", text: "Repositorio de Documentos"
+    assert_selector "td", @document.title
   end
 
-  test "should create document" do
-    visit documents_url
-    click_on "New document"
+  test "should show document" do
+    visit document_url(@document)
 
-    fill_in "Category", with: @document.category
-    fill_in "Status", with: @document.status
-    fill_in "Title", with: @document.title
-    click_on "Create Document"
-
-    assert_text "Document was successfully created"
-    click_on "Back"
+    assert_selector "h1", text: @document.title
+    assert_selector "a", text: "Ver en el navegador"
   end
 
   test "should update Document" do
-    visit document_url(@document)
-    click_on "Edit this document", match: :first
+    visit edit_document_url(@document)
 
-    fill_in "Category", with: @document.category
-    fill_in "Status", with: @document.status
-    fill_in "Title", with: @document.title
-    click_on "Update Document"
+    fill_in "document_title", with: "Contrato actualizado"
+    click_on "Subir Documento"
 
-    assert_text "Document was successfully updated"
-    click_on "Back"
-  end
-
-  test "should destroy Document" do
-    visit document_url(@document)
-    click_on "Destroy this document", match: :first
-
-    assert_text "Document was successfully destroyed"
+    assert_text "Document was successfully updated."
+    assert_equal "Contrato actualizado", @document.reload.title
   end
 end

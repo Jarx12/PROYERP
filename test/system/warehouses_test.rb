@@ -1,45 +1,48 @@
 require "application_system_test_case"
 
+# Los almacenes se administran desde Configuración; no existe índice ni ficha propia.
 class WarehousesTest < ApplicationSystemTestCase
   setup do
+    sign_in_as users(:superuser)
     @warehouse = warehouses(:one)
   end
 
-  test "visiting the index" do
-    visit warehouses_url
-    assert_selector "h1", text: "Warehouses"
-  end
-
   test "should create warehouse" do
-    visit warehouses_url
-    click_on "New warehouse"
+    visit settings_path
 
-    fill_in "Address", with: @warehouse.address
-    fill_in "Code", with: @warehouse.code
-    fill_in "Name", with: @warehouse.name
-    click_on "Create Warehouse"
+    within "#tab-inventario" do
+      click_on "+ Nuevo", match: :first
+    end
 
-    assert_text "Warehouse was successfully created"
-    click_on "Back"
+    fill_in "warehouse_name", with: "Depósito Sur"
+    fill_in "warehouse_code", with: "ALM-010"
+    fill_in "warehouse_address", with: "Av. Sur, Valencia"
+    click_on "Guardar Almacén"
+
+    assert_text "Almacén creado exitosamente."
+    assert_selector "#tab-inventario", text: "Depósito Sur"
   end
 
   test "should update Warehouse" do
-    visit warehouse_url(@warehouse)
-    click_on "Edit this warehouse", match: :first
+    visit edit_warehouse_path(@warehouse)
 
-    fill_in "Address", with: @warehouse.address
-    fill_in "Code", with: @warehouse.code
-    fill_in "Name", with: @warehouse.name
-    click_on "Update Warehouse"
+    fill_in "warehouse_address", with: "Nueva ubicación"
+    click_on "Guardar Almacén"
 
-    assert_text "Warehouse was successfully updated"
-    click_on "Back"
+    assert_text "Almacén actualizado exitosamente."
+    assert_equal "Nueva ubicación", @warehouse.reload.address
   end
 
   test "should destroy Warehouse" do
-    visit warehouse_url(@warehouse)
-    click_on "Destroy this warehouse", match: :first
+    visit settings_path
 
-    assert_text "Warehouse was successfully destroyed"
+    accept_confirm do
+      within "#tab-inventario" do
+        first("form[action='#{warehouse_path(@warehouse)}']").find("button").click
+      end
+    end
+
+    assert_text "Almacén eliminado exitosamente."
+    assert_not Warehouse.exists?(@warehouse.id)
   end
 end

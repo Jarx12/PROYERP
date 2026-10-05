@@ -1,43 +1,47 @@
 require "application_system_test_case"
 
+# Las categorías se administran desde Configuración; no existe índice ni ficha propia.
 class CategoriesTest < ApplicationSystemTestCase
   setup do
+    sign_in_as users(:superuser)
     @category = categories(:one)
   end
 
-  test "visiting the index" do
-    visit categories_url
-    assert_selector "h1", text: "Categories"
-  end
-
   test "should create category" do
-    visit categories_url
-    click_on "New category"
+    visit settings_path
 
-    fill_in "Description", with: @category.description
-    fill_in "Name", with: @category.name
-    click_on "Create Category"
+    within "#tab-inventario" do
+      click_on "+ Nueva"
+    end
 
-    assert_text "Category was successfully created"
-    click_on "Back"
+    fill_in "category_name", with: "Tornillería"
+    fill_in "category_description", with: "Tornillos y tucas"
+    click_on "Guardar Categoría"
+
+    assert_text "Categoría creada exitosamente."
+    assert_selector "#tab-inventario", text: "Tornillería"
   end
 
   test "should update Category" do
-    visit category_url(@category)
-    click_on "Edit this category", match: :first
+    visit edit_category_path(@category)
 
-    fill_in "Description", with: @category.description
-    fill_in "Name", with: @category.name
-    click_on "Update Category"
+    fill_in "category_name", with: "Materiales eléctrico"
+    click_on "Guardar Categoría"
 
-    assert_text "Category was successfully updated"
-    click_on "Back"
+    assert_text "Categoría actualizada exitosamente."
+    assert_equal "Materiales eléctrico", @category.reload.name
   end
 
   test "should destroy Category" do
-    visit category_url(@category)
-    click_on "Destroy this category", match: :first
+    visit settings_path
 
-    assert_text "Category was successfully destroyed"
+    accept_confirm do
+      within "#tab-inventario" do
+        first("form[action='#{category_path(@category)}']").find("button").click
+      end
+    end
+
+    assert_text "Categoría eliminada exitosamente."
+    assert_not Category.exists?(@category.id)
   end
 end

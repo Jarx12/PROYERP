@@ -18,10 +18,26 @@ class VehiclesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create vehicle" do
     assert_difference("Vehicle.count") do
-      post vehicles_url, params: { vehicle: { brand: @vehicle.brand, model: @vehicle.model, plate: @vehicle.plate, status: @vehicle.status } }
+      post vehicles_url, params: { vehicle: {
+        brand: "Toyota", model: "Hilux", plate: "DEF-456", status: "available"
+      } }
     end
 
-    assert_redirected_to vehicle_url(Vehicle.last)
+    assert_redirected_to vehicles_path
+    assert_equal "Vehículo registrado exitosamente.", flash[:notice]
+    assert_equal "DEF-456", Vehicle.order(:id).last.plate
+  end
+
+  test "should reject a duplicate plate" do
+    other = vehicles(:two)
+
+    assert_no_difference("Vehicle.count") do
+      post vehicles_url, params: { vehicle: {
+        brand: "Ford", model: "Ranger", plate: other.plate, status: "available"
+      } }
+    end
+
+    assert_response :unprocessable_entity
   end
 
   test "should show vehicle" do
@@ -35,8 +51,13 @@ class VehiclesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update vehicle" do
-    patch vehicle_url(@vehicle), params: { vehicle: { brand: @vehicle.brand, model: @vehicle.model, plate: @vehicle.plate, status: @vehicle.status } }
-    assert_redirected_to vehicle_url(@vehicle)
+    patch vehicle_url(@vehicle), params: { vehicle: {
+      brand: "Toyota", model: "Land Cruiser", plate: @vehicle.plate, status: "in_use"
+    } }
+
+    assert_redirected_to vehicles_path
+    assert_equal "Vehículo actualizado exitosamente.", flash[:notice]
+    assert_equal "Land Cruiser", @vehicle.reload.model
   end
 
   test "should destroy vehicle" do
@@ -44,6 +65,6 @@ class VehiclesControllerTest < ActionDispatch::IntegrationTest
       delete vehicle_url(@vehicle)
     end
 
-    assert_redirected_to vehicles_url
+    assert_redirected_to vehicles_path
   end
 end

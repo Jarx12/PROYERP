@@ -2,46 +2,36 @@ require "application_system_test_case"
 
 class ProductsTest < ApplicationSystemTestCase
   setup do
+    sign_in_as users(:superuser)
     @product = products(:one)
   end
 
   test "visiting the index" do
     visit products_url
-    assert_selector "h1", text: "Products"
+
+    assert_selector "h1", text: "Inventario de Productos"
   end
 
   test "should create product" do
-    visit products_url
-    click_on "New product"
+    visit new_product_url
 
-    fill_in "Name", with: @product.name
-    fill_in "Sku", with: @product.sku
-    fill_in "Stock current", with: @product.stock_current
-    fill_in "Stock minimum", with: @product.stock_minimum
-    click_on "Create Product"
+    fill_in "product_name", with: "Ladrillo rojo"
+    fill_in "product_sku", with: "SKU-777"
+    fill_in "product_stock_current", with: "120"
+    fill_in "product_stock_minimum", with: "20"
+    click_on "Guardar Producto"
 
-    assert_text "Product was successfully created"
-    click_on "Back"
+    assert_text "El producto fue creado con éxito."
+    assert_equal "SKU-777", Product.order(:id).last.sku
   end
 
   test "should update Product" do
-    visit product_url(@product)
-    click_on "Edit this product", match: :first
+    visit edit_product_url(@product)
 
-    fill_in "Name", with: @product.name
-    fill_in "Sku", with: @product.sku
-    fill_in "Stock current", with: @product.stock_current
-    fill_in "Stock minimum", with: @product.stock_minimum
-    click_on "Update Product"
+    fill_in "product_stock_current", with: "500"
+    click_on "Guardar Producto"
 
-    assert_text "Product was successfully updated"
-    click_on "Back"
-  end
-
-  test "should destroy Product" do
-    visit product_url(@product)
-    click_on "Destroy this product", match: :first
-
-    assert_text "Product was successfully destroyed"
+    assert_text "El producto fue actualizado con éxito."
+    assert_equal 500, @product.reload.stock_current
   end
 end

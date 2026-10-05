@@ -2,46 +2,48 @@ require "application_system_test_case"
 
 class VehiclesTest < ApplicationSystemTestCase
   setup do
+    sign_in_as users(:superuser)
     @vehicle = vehicles(:one)
   end
 
   test "visiting the index" do
     visit vehicles_url
-    assert_selector "h1", text: "Vehicles"
+
+    assert_selector "h1", text: "Flota Vehicular"
   end
 
   test "should create vehicle" do
+    visit new_vehicle_url
+
+    fill_in "vehicle_plate", with: "DEF-456"
+    fill_in "vehicle_brand", with: "Toyota"
+    fill_in "vehicle_model", with: "Hilux"
+    click_on "Guardar Vehículo"
+
+    assert_text "Vehículo registrado exitosamente."
+    assert_equal "DEF-456", Vehicle.order(:id).last.plate
+  end
+
+  test "should update vehicle" do
+    visit edit_vehicle_url(@vehicle)
+
+    fill_in "vehicle_model", with: "Land Cruiser"
+    click_on "Guardar Vehículo"
+
+    assert_text "Vehículo actualizado exitosamente."
+    assert_equal "Land Cruiser", @vehicle.reload.model
+  end
+
+  test "should destroy vehicle" do
     visit vehicles_url
-    click_on "New vehicle"
 
-    fill_in "Brand", with: @vehicle.brand
-    fill_in "Model", with: @vehicle.model
-    fill_in "Plate", with: @vehicle.plate
-    fill_in "Status", with: @vehicle.status
-    click_on "Create Vehicle"
+    accept_confirm do
+      within "tr", text: @vehicle.plate do
+        click_on "Eliminar"
+      end
+    end
 
-    assert_text "Vehicle was successfully created"
-    click_on "Back"
-  end
-
-  test "should update Vehicle" do
-    visit vehicle_url(@vehicle)
-    click_on "Edit this vehicle", match: :first
-
-    fill_in "Brand", with: @vehicle.brand
-    fill_in "Model", with: @vehicle.model
-    fill_in "Plate", with: @vehicle.plate
-    fill_in "Status", with: @vehicle.status
-    click_on "Update Vehicle"
-
-    assert_text "Vehicle was successfully updated"
-    click_on "Back"
-  end
-
-  test "should destroy Vehicle" do
-    visit vehicle_url(@vehicle)
-    click_on "Destroy this vehicle", match: :first
-
-    assert_text "Vehicle was successfully destroyed"
+    assert_text "Vehículo eliminado exitosamente."
+    assert_not Vehicle.exists?(@vehicle.id)
   end
 end

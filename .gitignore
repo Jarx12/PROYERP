@@ -32,3 +32,6 @@
 /app/assets/images
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore Windows Zone.Identifier alternate data streams.
+*:Zone.Identifier

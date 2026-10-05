@@ -1,43 +1,53 @@
 require "application_system_test_case"
 
+# Los cargos se administran desde Configuración; no existe índice ni ficha propia.
 class PositionsTest < ApplicationSystemTestCase
   setup do
+    sign_in_as users(:superuser)
     @position = positions(:one)
   end
 
-  test "visiting the index" do
-    visit positions_url
-    assert_selector "h1", text: "Positions"
-  end
-
   test "should create position" do
-    visit positions_url
-    click_on "New position"
+    visit settings_path
 
-    fill_in "Description", with: @position.description
-    fill_in "Title", with: @position.title
-    click_on "Create Position"
+    assert_selector "#tab-rrhh", text: "Cargos"
 
-    assert_text "Position was successfully created"
-    click_on "Back"
+    within "#tab-rrhh" do
+      click_on "+ Nuevo"
+    end
+
+    fill_in "position_title", with: "Analista de Sistemas"
+    fill_in "position_description", with: "Soporte tecnológico"
+    click_on "Guardar Cargo"
+
+    assert_text "Position was successfully created."
+    assert_selector "#tab-rrhh", text: "Analista de Sistemas"
   end
 
   test "should update Position" do
-    visit position_url(@position)
-    click_on "Edit this position", match: :first
+    visit edit_position_path(@position)
 
-    fill_in "Description", with: @position.description
-    fill_in "Title", with: @position.title
-    click_on "Update Position"
+    fill_in "position_title", with: "Gerente de Operaciones"
+    click_on "Guardar Cargo"
 
-    assert_text "Position was successfully updated"
-    click_on "Back"
+    assert_text "Position was successfully updated."
+    assert_equal "Gerente de Operaciones", @position.reload.title
   end
 
   test "should destroy Position" do
-    visit position_url(@position)
-    click_on "Destroy this position", match: :first
+    visit settings_path
 
-    assert_text "Position was successfully destroyed"
+    within "#tab-rrhh" do
+      assert_button "Eliminar"
+    end
+
+    accept_confirm do
+      within "#tab-rrhh" do
+        first("form[action='#{position_path(@position)}']").find("button").click
+      end
+    end
+
+    assert_text "Position was successfully destroyed."
+    assert_not Position.exists?(@position.id)
   end
 end
