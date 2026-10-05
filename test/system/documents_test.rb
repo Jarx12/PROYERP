@@ -10,7 +10,7 @@ class DocumentsTest < ApplicationSystemTestCase
     visit documents_url
 
     assert_selector "h1", text: "Repositorio de Documentos"
-    assert_selector "td", @document.title
+    assert_selector "td", text: @document.title
   end
 
   test "should show document" do

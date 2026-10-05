@@ -9,6 +9,7 @@ class PositionsTest < ApplicationSystemTestCase
 
   test "should create position" do
     visit settings_path
+    open_settings_tab "tab-rrhh"
 
     assert_selector "#tab-rrhh", text: "Cargos"
 
@@ -36,10 +37,7 @@ class PositionsTest < ApplicationSystemTestCase
 
   test "should destroy Position" do
     visit settings_path
-
-    within "#tab-rrhh" do
-      assert_button "Eliminar"
-    end
+    open_settings_tab "tab-rrhh"
 
     accept_confirm do
       within "#tab-rrhh" do

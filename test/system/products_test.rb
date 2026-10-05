@@ -28,10 +28,12 @@ class ProductsTest < ApplicationSystemTestCase
   test "should update Product" do
     visit edit_product_url(@product)
 
-    fill_in "product_stock_current", with: "500"
+    # El stock actual no se edita aquí: el formulario lo deshabilita en productos
+    # persistidos porque las entradas y salidas se registran como movimientos.
+    fill_in "product_stock_minimum", with: "75"
     click_on "Guardar Producto"
 
     assert_text "El producto fue actualizado con éxito."
-    assert_equal 500, @product.reload.stock_current
+    assert_equal 75, @product.reload.stock_minimum
   end
 end
