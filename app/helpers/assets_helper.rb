@@ -1,6 +1,6 @@
 module AssetsHelper
   # Renders image_tag when the asset is present, otherwise a text fallback.
-  # Lets CI and fresh clones boot without image files that get synced out-of-band.
+  # Works with Propshaft (Rails 8 default) via the asset resolver.
   def safe_image_tag(path, **options)
     return image_tag(path, **options) if asset_present?(path)
 
@@ -13,7 +13,8 @@ module AssetsHelper
   def asset_present?(path)
     return false if path.blank?
 
-    Rails.application.assets.find_asset(path).present?
+    # Propshaft exposes its resolver through Rails.application.assets
+    Rails.application.assets.resolver.resolve(path).present?
   rescue StandardError
     false
   end
