@@ -1,0 +1,79 @@
+<% content_for :title, "Quiénes Somos" %>
+
+<!-- Hero público -->
+<section class="pub-hero">
+  <div class="pub-hero__inner">
+    <span class="hero__badge">Nuestra Empresa</span>
+    <h1 class="pub-hero__title">Quiénes Somos</h1>
+    <p class="pub-hero__text">
+      Más de 7 años construyendo infraestructura de telecomunicaciones
+      confiable para empresas del oriente de Venezuela.
+    </p>
+  </div>
+</section>
+
+<!-- Historia -->
+<section class="pub-section">
+  <div class="pub-section__inner">
+    <h2 class="pub-section__title">Nuestra Historia</h2>
+    <p class="pub-section__text">
+      Somos una organización orientada...
+    </p>
+    <p class="pub-section__text">
+      Nuestros servicios...
+    </p>
+  </div>
+</section>
+
+<!-- Misión y Visión -->
+<section class="pub-section pub-section--alt">
+  <div class="pub-section__inner">
+    <div class="about__stats">
+      <div class="about__stat">
+        <p class="about__stat-value">Misión</p>
+        <p class="about__stat-label">
+          Garantizar...
+        </p>
+      </div>
+      <div class="about__stat">
+        <p class="about__stat-value">Visión</p>
+        <p class="about__stat-label">
+          Ser...
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Valores -->
+<section class="pub-section">
+  <div class="pub-section__inner">
+    <h2 class="pub-section__title">Nuestros Valores</h2>
+
+    <div class="modules__grid">
+      <div class="module-card">
+        <div class="module-card__icon module-card__icon--blue">🤝</div>
+        <h3 class="module-card__title">Compromiso</h3>
+        <p class="module-card__text">
+          Nos involucramos...
+        </p>
+      </div>
+
+      <div class="module-card">
+        <div class="module-card__icon module-card__icon--teal">⚙️</div>
+        <h3 class="module-card__title">Precisión Técnica</h3>
+        <p class="module-card__text">
+          Ingeniería rigurosa...
+        </p>
+      </div>
+
+      <div class="module-card">
+        <div class="module-card__icon module-card__icon--orange">⚡</div>
+        <h3 class="module-card__title">Respuesta Rápida</h3>
+        <p class="module-card__text">
+          Soporte técnico...
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

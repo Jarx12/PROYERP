@@ -1,0 +1,133 @@
+<% content_for :title, "ERP" %>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__content">
+        <span class="hero__badge">Nuestra Empresa</span>
+        <h1 class="hero__title">Servicios Civiles y de Telecomunicaciones</h1>
+        <p class="hero__text">
+          Enlaces dedicados...
+        </p>
+        <div class="hero__actions">
+          <%= link_to "Contáctanos", contactanos_path, class: "btn-primary" %>
+        </div>
+      </div>
+      <div class="hero__media">
+        <%= safe_image_tag "imagen1.jpg", alt: "Trabajo", class: "hero-image" %>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS -->
+  <section id="nosotros" class="about">
+    <div class="about__inner">
+      <div class="about__media">
+        <%= safe_image_tag "imagen2.jpg", alt: "Equipo de Trabajo", class: "carousel-image" %>
+      </div>
+      <div class="about__content">
+        <h2 class="about__title">Quiénes Somos</h2>
+        <p class="about__text">
+          Somos...
+        </p>
+        <p class="about__text">
+          Nuestros...
+        </p>
+
+        <div class="about__stats">
+          <div class="about__stat">
+            <p class="about__stat-value">+7</p>
+            <p class="about__stat-label">Años de Experiencia</p>
+          </div>
+          <div class="about__stat">
+            <p class="about__stat-value">Garantía Técnica</p>
+            <p class="about__stat-label">Servicios respaldados</p>
+          </div>
+        </div>
+
+        <div class="about__actions">
+          <%= link_to "Ver algunos de nuestros Proyectos", proyectos_path, class: "btn-primary" %>
+          <%= link_to "Conoce más de Nosotros", about_path, class: "btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUCIONES -->
+  <section id="modulos" class="modules">
+    <div class="modules__inner">
+      <div class="modules__header">
+        <h2 class="modules__title">Nuestros Servicios</h2>
+        <p class="modules__subtitle">
+          Telecomunicaciones...
+        </p>
+      </div>
+
+      <div class="modules__grid">
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Fibra Óptica</h3>
+          <p class="module-card__text">
+            Conectividad...
+          </p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Radioenlaces</h3>
+          <p class="module-card__text">
+            Conectividad...
+          </p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--teal">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Telefonía Corporativa</h3>
+          <p class="module-card__text">
+            Sistemas...
+          </p>
+        </div>
+
+        <div class="module-card">
+          <div class="module-card__icon module-card__icon--gray">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="module-card__title">Redes Empresariales</h3>
+          <p class="module-card__text">
+            Diseño...
+          </p>
+        </div>
+
+      </div>
+
+      <div class="modules__actions">
+        <%= link_to "Conoce más sobre nuestros servicios", soluciones_path,
+              class: "btn btn--primary" %>
+      </div>
+    </div>
+  </section>
